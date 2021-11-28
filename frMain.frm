@@ -316,14 +316,13 @@ btnInstall2.SetFocus
 End Sub
 
 Private Sub btnInstall2_Click()
-If UpdateMode Then
-btnInstall2.Visible = False
-btnInstall4_Click
-Else
 btnInstall2.Visible = False
 'step 2
 Combo1.Visible = False
 Specs(2) = "https://hub.fastgit.org/PineappleEA/pineapple-src/releases/download/EA-" & CStr(CInt(Combo1.Text)) & "/Windows-Yuzu-EA-" & CStr(CInt(Combo1.Text)) & ".7z"
+If UpdateMode Then
+btnInstall4_Click
+Else
 Label1.Caption = "安装密钥"
 Label4.Caption = "请选择你在群文件中下载的 keys（密钥）文件。" & vbCrLf & "它的文件名是 prod.keys 。"
 txtKeys.Text = "<请点击“浏览”>"
