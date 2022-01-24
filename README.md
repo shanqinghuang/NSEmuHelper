@@ -1,7 +1,9 @@
 # 🕹️ NS 模拟器助手
 
 ⚙️ 这是一个 NS 模拟器 Yuzu ~~和 Ryujinx~~ 的第三方安装 / 配置工具。
+
 ⌨️ 受到 [Yuzu Tool](https://tieba.baidu.com/p/7482949878) 启发，使用 VB6 语言编写，100% 开源。
+
 🚧 本项目正在开发，暂未实现 Ryujinx 相关功能，欢迎提交 Pull Request～
 
 ---
@@ -32,8 +34,10 @@
 
 其实本工具就是我一时兴起诞生的产物，本来想给 Yuzu Tool 提交 Pull Request，奈何人家不开源，只能自己写个同类软件咯～
 
+---
 
 2022 是一刀斩哒 
 
 联系我：📺 [哔哩哔哩](https://b23.tv/29j35Sc) 
+
 或加入 🐧 [QQ 群](https://jq.qq.com/?_wv=1027&k=nhkM2JMU)
