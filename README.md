@@ -4,7 +4,7 @@
 
 ⌨️ 受到 [Yuzu Tool](https://tieba.baidu.com/p/7482949878) 启发，使用 VB6 语言编写，100% 开源。
 
-🚧 本项目正在开发，暂未实现 Ryujinx 相关功能。
+🚧 本项目正在开发，暂未实现 Ryujinx 相关功能，欢迎提交 Pull Request。
 
 ---
 
