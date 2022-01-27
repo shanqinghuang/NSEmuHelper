@@ -9,11 +9,11 @@ Public Declare Sub CoTaskMemFree Lib "ole32.dll" (ByVal pv As Long)
 Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 '公共变量常量
-Public Const Version As String = "Development build 20220124"
+Public Const Version As String = "Development 20220127"
 
 
 '配置设置
-Public YuzuInstallFolder As String, RyujinxInstallFolder As String, AlwaysUseCloudFlare As String, CloudFlareReverseProxyUrl As String
+Public YuzuInstallFolder As String, RyujinxInstallFolder As String, AlwaysUseCloudFlare As String, CloudFlareReverseProxyUrl As String, DownloadSource As String
 Public YuzuVersion As String, YuzuBranch As String, YuzuFirmware As String, YuzuCustomDataFolder As String
 Public InstallMode As Integer
 
@@ -98,17 +98,17 @@ End Function
 
 Public Function CheckFileExists(FilePath As String) As Boolean
 '检查文件夹是否存在
-    On Error GoTo ERR
+    On Error GoTo Err
     If Len(FilePath) < 2 Then CheckFileExists = False: Exit Function
             If Dir$(FilePath, vbAllFileAttrib) <> vbNullString Then CheckFileExists = True
     Exit Function
-ERR:
+Err:
     CheckFileExists = False
 End Function
 
 Public Function GetDataStr(ByVal Url As String) As String
 'xhr get 字符串
-  On Error GoTo ERR:
+  On Error GoTo Err:
   Dim XMLHTTP As Object
   Set XMLHTTP = CreateObject("Microsoft.XMLHTTP")
   XMLHTTP.Open "GET", Url, True
@@ -120,7 +120,7 @@ Public Function GetDataStr(ByVal Url As String) As String
     GetDataStr = XMLHTTP.ResponseText
   Set XMLHTTP = Nothing
   Exit Function
-ERR:
+Err:
   GetDataStr = ""
 End Function
 
@@ -144,6 +144,22 @@ TmpML = GetDataStr(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/yu
 TmpML = Replace(Replace(TmpML, Chr(34), ""), " ", "")
 TmpML = Filter(Split(TmpML, ","), "tag_name:mainline")(0)
 GetYuzuMLVersion = Split(TmpML, "mainline-0-")(1)
+End Function
+
+Public Function GetYuzuVersionAli() As String
+'获取 Yuzu Early Access 版本号 阿里云盘
+Dim TmpEAAli As String
+TmpEAAli = GetDataStr("https://yidaozhan-pan-yidaozhanya.vercel.app/ns_emu_helper/YuzuEAMirror/?json")
+TmpEAAli = Replace(Replace(Join(Filter(Split(TmpEAAli, Chr(34)), "windows-yuzu-ea-"), vbCrLf), "windows-yuzu-ea-", ""), ".7z", "")
+GetYuzuVersionAli = TmpEAAli
+End Function
+
+Public Function GetYuzuMLVersionAli() As String
+'获取 Yuzu 主线版版本号 阿里云盘
+Dim TmpMLAli As String
+TmpMLAli = GetDataStr("https://yidaozhan-pan-yidaozhanya.vercel.app/ns_emu_helper/YuzuMainlineMirror/?json")
+TmpMLAli = Replace(Replace(Join(Filter(Split(Replace(TmpMLAli, Chr(34), ""), ","), "name:yuzu-windows-msvc-"), vbCrLf), "name:yuzu-windows-msvc-", ""), ".7z", "")
+GetYuzuMLVersionAli = TmpMLAli
 End Function
 
 Public Function MkDirs(ByVal PathIn As String) As Boolean

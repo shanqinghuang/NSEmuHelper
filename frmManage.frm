@@ -153,11 +153,14 @@ Private Sub btnFirmware_Click()
 End Sub
 
 Private Sub btnKey_Click()
+On Error GoTo ExitKey
 Dim KeyFile As String
 KeyFile = ChooseFile("选择密钥文件 (prod.keys)", "NS 密钥文件", "prod.keys", frmManage.hWnd)
 Kill YuzuInstallFolder & "\user\keys\prod.keys"
 FileCopy KeyFile, YuzuInstallFolder & "\user\keys\prod.keys"
 MsgBox "密钥文件替换/更新成功！", vbOKOnly + vbInformation, "提示"
+Exit Sub
+ExitKey:
 End Sub
 
 

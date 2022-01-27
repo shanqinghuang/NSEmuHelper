@@ -164,6 +164,7 @@ YuzuInstallFolder = GetIniBase64("Folder", "YuzuInstallFolder", App.Path & "\Con
 RyujinxInstallFolder = GetIniBase64("Folder", "RyujinxInstallFolder", App.Path & "\Config.ini")
 AlwaysUseCloudFlare = GetIni("Network", "AlwaysUseCloudFlare", App.Path & "\Config.ini")
 CloudFlareReverseProxyUrl = GetIni("Network", "CloudFlareReverseProxyUrl", App.Path & "\Config.ini")
+DownloadSource = GetIni("Network", "DownloadSource", App.Path & "\Config.ini")
 End Sub
 
 Private Sub Form_Load()

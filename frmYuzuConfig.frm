@@ -4,9 +4,9 @@ Begin VB.Form frmYuzuConfig
    BackColor       =   &H80000005&
    BorderStyle     =   1  'Fixed Single
    Caption         =   "frmYuzuConfig"
-   ClientHeight    =   4500
-   ClientLeft      =   45
-   ClientTop       =   390
+   ClientHeight    =   4920
+   ClientLeft      =   5625
+   ClientTop       =   3120
    ClientWidth     =   6540
    BeginProperty Font 
       Name            =   "微软雅黑 Light"
@@ -21,15 +21,14 @@ Begin VB.Form frmYuzuConfig
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   4500
+   ScaleHeight     =   4920
    ScaleWidth      =   6540
-   StartUpPosition =   3  '窗口缺省
    Begin VB.CommandButton btnBrowse 
       Caption         =   "浏览"
       Height          =   375
       Left            =   5400
       TabIndex        =   11
-      Top             =   3000
+      Top             =   3240
       Width           =   975
    End
    Begin VB.TextBox txtDataFolder 
@@ -47,7 +46,7 @@ Begin VB.Form frmYuzuConfig
       Left            =   120
       TabIndex        =   10
       Text            =   "<请点击“浏览”>"
-      Top             =   3000
+      Top             =   3240
       Width           =   5175
    End
    Begin VB.CheckBox Checks 
@@ -57,7 +56,7 @@ Begin VB.Form frmYuzuConfig
       Index           =   0
       Left            =   2520
       TabIndex        =   8
-      Top             =   2400
+      Top             =   2760
       Width           =   735
    End
    Begin VB.ComboBox cbFirmware 
@@ -82,7 +81,7 @@ Begin VB.Form frmYuzuConfig
       Height          =   495
       Left            =   3240
       TabIndex        =   5
-      Top             =   3840
+      Top             =   4200
       Width           =   1455
    End
    Begin VB.CommandButton btnCancel 
@@ -90,7 +89,7 @@ Begin VB.Form frmYuzuConfig
       Height          =   495
       Left            =   4920
       TabIndex        =   4
-      Top             =   3840
+      Top             =   4200
       Width           =   1455
    End
    Begin VB.TextBox txtVersion 
@@ -163,7 +162,7 @@ Begin VB.Form frmYuzuConfig
       Index           =   3
       Left            =   120
       TabIndex        =   9
-      Top             =   2400
+      Top             =   2760
       Width           =   2415
    End
    Begin VB.Image Image1 
@@ -241,20 +240,26 @@ Else
 End If
 YuzuVersion = txtVersion.Text
 YuzuFirmware = cbFirmware.Text
-If Checks(0).Value = 0 Then
-    YuzuCustomDataFolder = "False"
-Else
-    If txtDataFolder.Text = "<请点击“浏览”>" Then
-        YuzuCustomDataFolder = "False"
-    Else
-        YuzuCustomDataFolder = txtDataFolder.Text
-    End If
-End If
 WriteIni "Yuzu", "Version", YuzuVersion, YuzuInstallFolder & "\YuzuConfig.ini"
 WriteIni "Yuzu", "Branch", YuzuBranch, YuzuInstallFolder & "\YuzuConfig.ini"
 WriteIni "Yuzu", "Firmware", YuzuFirmware, YuzuInstallFolder & "\YuzuConfig.ini"
-WriteIni "Yuzu", "CustomDataFolder", YuzuCustomDataFolder, YuzuInstallFolder & "\YuzuConfig.ini"
-MoveYuzuDataFolder
+
+If IsMissing = False Then
+    If Checks(0).Value = 0 Then
+        YuzuCustomDataFolder = "False"
+    Else
+        If txtDataFolder.Text = "<请点击“浏览”>" Then
+            YuzuCustomDataFolder = "False"
+        Else
+            YuzuCustomDataFolder = txtDataFolder.Text
+        End If
+    End If
+    MoveYuzuDataFolder
+    WriteIni "Yuzu", "CustomDataFolder", YuzuCustomDataFolder, YuzuInstallFolder & "\YuzuConfig.ini"
+Else
+    YuzuCustomDataFolder = "False"
+    WriteIni "Yuzu", "CustomDataFolder", YuzuCustomDataFolder, YuzuInstallFolder & "\YuzuConfig.ini"
+End If
 If IsMissing Then
     frmMain.Show
 Else
@@ -277,34 +282,46 @@ End Sub
 
 Private Sub Form_Activate()
 '加载设置和界面
-If Left(YuzuBranch, 5) = "预先测试版" Then
-    Image1.Picture = frmYuzuInstaller.ImageList2.ListImages(1).Picture
-Else
-    Image1.Picture = frmYuzuInstaller.ImageList2.ListImages(2).Picture
-End If
 
 If YuzuCustomDataFolder = "False" Then
     Checks(0).Value = 0
     Checks(0).Caption = "否"
     btnBrowse.Visible = False
     txtDataFolder.Visible = False
+    Image1.Picture = frmYuzuInstaller.ImageList2.ListImages(1).Picture
 Else
     Checks(0).Value = 1
     Checks(0).Caption = "是"
     btnBrowse.Visible = True
     txtDataFolder.Visible = True
     txtDataFolder.Text = YuzuCustomDataFolder
+    If Left(YuzuBranch, 5) = "预先测试版" Then
+        Image1.Picture = frmYuzuInstaller.ImageList2.ListImages(1).Picture
+    Else
+        Image1.Picture = frmYuzuInstaller.ImageList2.ListImages(2).Picture
+    End If
 End If
 YuzuPreDataFolder = YuzuCustomDataFolder
 
 Me.Caption = "Yuzu 模拟器相关设置"
 If IsMissing Then
     '没有YuzuConfig.ini
-    Labels(0).Caption = "该模拟器不是用本工具安装的，请先完善它的版本信息。"
+    Labels(0).Caption = "该模拟器不是用本工具安装的，" & vbCrLf & "请先完善它的版本信息。"
+    Labels(3).Visible = False
+    Checks(0).Visible = False
+    txtDataFolder.Visible = False
+    btnBrowse.Visible = fase
+    btnSave.Top = 2520
+    btnCancel.Top = 2520
+    Me.Height = 3650
+    
     frmManage.Hide
     frmYuzuConfig.SetFocus
 Else
-    Labels(0).Caption = "Yuzu 版本信息设置"
+    Labels(0).Caption = "Yuzu 版本信息设置" & vbCrLf & "如果你手动更新了模拟器，可以在此更改版本信息。"
+    btnSave.Top = 4200
+    btnCancel.Top = 4200
+    Me.Height = 5325
 End If
 ImageCombo1.ComboItems.Clear
 ImageCombo1.ComboItems.Add 1, "EA", "预先测试版", 2
