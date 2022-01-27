@@ -1,10 +1,10 @@
 VERSION 5.00
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
-Begin VB.Form frmYuzuInstaller 
+Begin VB.Form frmRyujinxInstaller 
    BackColor       =   &H80000005&
    BorderStyle     =   1  'Fixed Single
-   Caption         =   "安装 Yuzu"
+   Caption         =   "安装 Ryujinx"
    ClientHeight    =   5085
    ClientLeft      =   5625
    ClientTop       =   4485
@@ -18,7 +18,7 @@ Begin VB.Form frmYuzuInstaller
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
-   Icon            =   "frmYuzuInstaller.frx":0000
+   Icon            =   "frmRyujinxInstaller.frx":0000
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
@@ -195,18 +195,18 @@ Begin VB.Form frmYuzuInstaller
       _ExtentX        =   1005
       _ExtentY        =   1005
       BackColor       =   -2147483643
-      ImageWidth      =   256
-      ImageHeight     =   256
+      ImageWidth      =   128
+      ImageHeight     =   128
       MaskColor       =   12632256
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   2
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmYuzuInstaller.frx":54AA
+            Picture         =   "frmRyujinxInstaller.frx":54AA
             Key             =   ""
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmYuzuInstaller.frx":6FAE
+            Picture         =   "frmRyujinxInstaller.frx":5F8B
             Key             =   ""
          EndProperty
       EndProperty
@@ -224,11 +224,11 @@ Begin VB.Form frmYuzuInstaller
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   2
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmYuzuInstaller.frx":B911
+            Picture         =   "frmRyujinxInstaller.frx":7163
             Key             =   ""
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmYuzuInstaller.frx":10DCB
+            Picture         =   "frmRyujinxInstaller.frx":C61D
             Key             =   ""
          EndProperty
       EndProperty
@@ -332,7 +332,7 @@ Begin VB.Form frmYuzuInstaller
    End
    Begin VB.Label Labels 
       BackStyle       =   0  'Transparent
-      Caption         =   "安装 Yuzu"
+      Caption         =   "安装 Ryujinx"
       Height          =   495
       Index           =   0
       Left            =   120
@@ -341,7 +341,7 @@ Begin VB.Form frmYuzuInstaller
       Width           =   3735
    End
 End
-Attribute VB_Name = "frmYuzuInstaller"
+Attribute VB_Name = "frmRyujinxInstaller"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -353,19 +353,19 @@ Attribute SevenZip.VB_VarHelpID = -1
 '1：纯净安装
 '2：更新模拟器
 '3：固件
-Public iIsEarlyAccess As Boolean, iVersion As String, iKeyPath As String, iFirmwareOnline As Boolean, iFirmwarePath As String, iFirmwareVersion As String
+Public iIsMainline As Boolean, iVersion As String, iKeyPath As String, iFirmwareOnline As Boolean, iFirmwarePath As String, iFirmwareVersion As String
 '1：分支 True EA False Mainline
 '2：版本号
-Public CurrentStep As Integer, YuzuVersionName As String
+Public CurrentStep As Integer
 Private Sub btnBrowse_Click()
 Debug.Print CurrentStep
 '浏览
 Select Case CurrentStep
     Case 2
-        txtKey.Text = ChooseFile("选择密钥文件 (prod.keys)", "NS 密钥文件", "prod.keys", frmYuzuInstaller.hWnd)
+        txtKey.Text = ChooseFile("选择密钥文件 (prod.keys)", "NS 密钥文件", "prod.keys", frmRyujinxInstaller.hWnd)
     Case 3
         If opFirmware(0).Value Then
-            txtFirmware.Text = ChooseFile("选择固件包 (zip 压缩文件)", "NS 固件包", "*.zip", frmYuzuInstaller.hWnd)
+            txtFirmware.Text = ChooseFile("选择固件包 (zip 压缩文件)", "NS 固件包", "*.zip", frmRyujinxInstaller.hWnd)
             If txtFirmware.Text <> "" Then
                 Dim TmpName As String
                 TmpName = Split(txtFirmware.Text, "\")(UBound(Split(txtFirmware.Text, "\")))
@@ -410,9 +410,9 @@ On Error Resume Next
 Set sh = CreateObject("wscript.shell") '
 nPath = sh.RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders\Desktop") '获取当前用户的桌面目录
 If Right(nPath, 1) <> "" Then nPath = nPath & "\"
-ShortF = nPath & "Yuzu.lnk"
+ShortF = nPath & "Ryujinx.lnk"
 Set ShortCut = sh.CreateShortcut(ShortF) '开始创建快捷方式对象
-ShortCut.TargetPath = YuzuInstallFolder & "\yuzu.exe" '快捷方式指向的目标文件，写完整路径
+ShortCut.TargetPath = RyujinxInstallFolder & "\Ryujinx.exe" '快捷方式指向的目标文件，写完整路径
 ShortCut.Save
 MsgBox "快捷方式创建成功！", vbOKOnly, "提示"
 End Sub
@@ -420,20 +420,20 @@ End Sub
 Private Sub Form_Activate()
 '加载
 If InstallMode = 1 Then
-    If YuzuInstallFolder = "D:\Yuzu" Then
-        If MsgBox("当前模拟器安装目录为默认的 D:\Yuzu，请确认是否安装到此文件夹？" & vbCrLf & "点“否”以回到主界面，点击左下角的设置更改模拟器文件夹。" & vbCrLf & "你也可以把模拟器文件夹设为你已经装好的模拟器位置，程序会自动识别。", vbQuestion + vbYesNo, "确认吗？") = 7 Then
+    If RyujinxInstallFolder = "D:\Ryujinx" Then
+        If MsgBox("当前模拟器安装目录为默认的 D:\Ryujinx，请确认是否安装到此文件夹？" & vbCrLf & "点“否”以回到主界面，点击左下角的设置更改模拟器文件夹。" & vbCrLf & "你也可以把模拟器文件夹设为你已经装好的模拟器位置，程序会自动识别。", vbQuestion + vbYesNo, "确认吗？") = 7 Then
             frmMain.Show
             Unload Me
             Exit Sub
         End If
     End If
-    TitlePrefix = "安装 Yuzu"
+    TitlePrefix = "安装 Ryujinx"
     Labels(0).Caption = TitlePrefix
     DoEvents
     CurrentStep = 1
     Step1
 ElseIf InstallMode = 2 Then
-    TitlePrefix = "更新 Yuzu"
+    TitlePrefix = "更新 Ryujinx"
     Labels(0).Caption = TitlePrefix
     DoEvents
     CurrentStep = 1
@@ -469,42 +469,44 @@ Image1.Picture = ImageList2.ListImages(1).Picture
 If InstallMode = 1 Then
 Me.Caption = TitlePrefix & " - Step 1"
     Labels(1).Caption = "Step 1 - 选择模拟器版本"
-    Labels(2).Caption = "在安装模拟器之前，你需要先进行几步选择。" & vbCrLf & "如果追求最新功能，就使用预先测试版，如果追求稳定，就使用主线版。"
+    Labels(2).Caption = "在安装模拟器之前，你需要先进行几步选择。" & vbCrLf & "如果想玩本地联网，就使用LDN版，否则推荐使用主线版。"
 Else
     Me.Caption = TitlePrefix
     Labels(1).Caption = "选择模拟器版本"
-    Labels(2).Caption = "请选择要更换到的模拟器版本。" & vbCrLf & "如果追求最新功能，就使用预先测试版，如果追求稳定，就使用主线版。"
+    Labels(2).Caption = "请选择要更换到的模拟器版本。" & vbCrLf & "如果想玩本地联网，就使用LDN版，否则推荐使用主线版。"
 End If
 Labels(3).Caption = "模拟器版本："
 ImageCombo1.ComboItems.Clear
-ImageCombo1.ComboItems.Add 1, "EA", "预先测试版", 1
-ImageCombo1.ComboItems.Add 2, "Mainline", "主线版", 2
+ImageCombo1.ComboItems.Add 1, "Mainline", "主线版", 1
+ImageCombo1.ComboItems.Add 2, "LDN", "LDN联机版", 2
 ImageCombo1.ComboItems(1).Selected = True
 If DownloadSource = "Github" Then
     txtVersion.Visible = True
     ComboVersion.Visible = False
-    txtVersion.Text = GetYuzuVersion
+    txtVersion.Text = GetRyujinxVersion
     txtVersion.SetFocus
 Else
     txtVersion.Visible = False
     ComboVersion.Visible = True
-    Dim YuzuVersion() As String
+    Dim RyujinxVersion() As String
     ComboVersion.Clear
     ComboVersion.Text = "加载中 ..."
-    YuzuVersion = Split(GetYuzuVersionAli, vbCrLf)
+    RyujinxVersion = Split(GetRyujinxVersionAli, vbCrLf)
     Dim i As Integer
-    For i = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
-    ComboVersion.AddItem YuzuVersion(i)
-    ComboVersion.Text = YuzuVersion(i)
+    For i = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
+    ComboVersion.AddItem RyujinxVersion(i)
+    ComboVersion.Text = RyujinxVersion(i)
     ComboVersion.SetFocus
     Next
 End If
 '确保文件夹存在
-MkDirs YuzuInstallFolder
+MkDirs RyujinxInstallFolder
 End Sub
 
 Private Sub Step2()
 On Error GoTo Step2Error
+iIsMainline = False
+If ImageCombo1.SelectedItem.Key = "Mainline" Then iIsMainline = True
 If DownloadSource = "Github" Then
     If txtVersion.Text = "加载中 ..." Then Exit Sub
     iVersion = txtVersion.Text
@@ -514,16 +516,6 @@ Else
 End If
 CurrentStep = 2
 '第二步
-'设置第一步结果
-If ImageCombo1.SelectedItem.Index = 1 Then
-    iIsEarlyAccess = True
-    YuzuVersionName = "yuzu-windows-msvc-early-access"
-ElseIf ImageCombo1.SelectedItem.Index = 2 Then
-    iIsEarlyAccess = False
-    YuzuVersionName = "yuzu-windows-msvc"
-Else
-    Exit Sub
-End If
 '界面
 ImageCombo1.Visible = False
 txtVersion.Visible = False
@@ -567,9 +559,9 @@ opFirmware(1).Visible = True
 If InstallMode = 1 Then
     Me.Caption = TitlePrefix & " - Step 3"
     Labels(1).Caption = "Step 3 - 选择固件"
-    Labels(2).Caption = "Yuzu 需要固件才能使大部分游戏正常运行。" & vbCrLf & "你可以在相关的群中找到固件包，或使用“在线下载”。" & vbCrLf & "固件版本需要小于等于密钥版本。"
+    Labels(2).Caption = "Ryujinx 需要固件才能玩游戏。" & vbCrLf & "你可以在相关的群中找到固件包，或使用“在线下载”。" & vbCrLf & "固件版本需要小于等于密钥版本。"
 ElseIf InstallMode = 3 Then
-    If Left(YuzuBranch, 5) = "预先测试版" Then
+    If Left(RyujinxBranch, 3) = "主线版" Then
         Image1.Picture = ImageList2.ListImages(1).Picture
     Else
         Image1.Picture = ImageList2.ListImages(2).Picture
@@ -592,9 +584,9 @@ cbFirmware.Text = "选择固件版本"
 End Sub
 
 Private Sub Step4()
-Dim fso As Object
 Dim SevenZip As Object
 Set SevenZip = New cVszArchive
+Dim fso As Object
 'dependencies
     
 On Error Resume Next
@@ -619,6 +611,8 @@ If InstallMode = 1 Or InstallMode = 3 Then
         'iFirmwarePath = "https://download.sydzy.workers.dev/api/download?url=https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
     End If
 ElseIf InstallMode = 2 Then
+    iIsMainline = False
+    If ImageCombo1.SelectedItem.Key = "Mainline" Then iIsMainline = True
     If DownloadSource = "Github" Then
         If txtVersion.Text = "加载中 ..." Then Exit Sub
         iVersion = txtVersion.Text
@@ -627,15 +621,6 @@ ElseIf InstallMode = 2 Then
         iVersion = ComboVersion.Text
     End If
     '设置第一步结果
-    If ImageCombo1.SelectedItem.Index = 1 Then
-        iIsEarlyAccess = True
-        YuzuVersionName = "yuzu-windows-msvc-early-access"
-    ElseIf ImageCombo1.SelectedItem.Index = 2 Then
-        iIsEarlyAccess = False
-        YuzuVersionName = "yuzu-windows-msvc"
-    Else
-        Exit Sub
-    End If
 End If
 
 CurrentStep = 4
@@ -655,14 +640,14 @@ Labels(5).Visible = True
 
 Labels(2).Caption = "这可能需要十几分钟，你可以坐下来喝杯茶。" & vbCrLf & "根据网络状况和电脑性能，安装速度会有所不同。"
 If InstallMode = 1 Then
-    Me.Caption = "安装 Yuzu - 正在安装"
+    Me.Caption = "安装 Ryujinx - 正在安装"
     Labels(1).Caption = "正在安装模拟器 ..."
 ElseIf InstallMode = 2 Then
-    Me.Caption = "更新 Yuzu - 正在安装"
-    If iIsEarlyAccess Then
-        Labels(1).Caption = "正在更新模拟器到预先测试版 " & iVersion & " ..."
-    Else
+    Me.Caption = "更新 Ryujinx - 正在安装"
+    If iIsMainline Then
         Labels(1).Caption = "正在更新模拟器到主线版 " & iVersion & " ..."
+    Else
+        Labels(1).Caption = "正在更新模拟器到 LDN 联机版 " & iVersion & " ..."
     End If
 ElseIf InstallMode = 3 Then
     Me.Caption = "更新固件 - 正在安装"
@@ -675,76 +660,62 @@ DoEvents
 Labels(4).Caption = "准备安装 ..."
 Labels(5).Caption = ""
 iVersion = CStr(CInt(iVersion))
-Dim YuzuUrl As String
-If DownloadSource = "Github" Then
-    If iIsEarlyAccess Then
-        YuzuUrl = "https://github.com/PineappleEA/pineapple-src/releases/download/EA-" & iVersion & "/Windows-Yuzu-EA-" & iVersion & ".7z"
+Dim RyujinxUrl As String
+If iIsMainline Then
+    '主线
+    If DownloadSource = "Github" Then
+        RyujinxUrl = "https://github.com/Ryujinx/release-channel-master/releases/download/" & iVersion & "/ryujinx-" & iVersion & "-win_x64.zip"
     Else
-        '主线
-        Dim TmpArr() As String
-        TmpArr = Split(Replace(GetDataStr("https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases"), Chr(34), ""), ",")
-        Dim i As Integer, j As Integer
-        For i = LBound(TmpArr) To UBound(TmpArr)
-            If TmpArr(i) = "tag_name:mainline-0-" & iVersion Then Exit For
-        Next
-        j = i
-        For i = j To UBound(TmpArr)
-            If InStr(TmpArr(i), ".7z") <> 0 Then
-                Exit For
-            End If
-        Next
-        YuzuUrl = "https://github.com/yuzu-emu/yuzu-mainline/releases/download/mainline-0-" & iVersion & "/" & Replace(TmpArr(i), "name:", "")
+        RyujinxUrl = "https://yidaozhan-pan-yidaozhanya.vercel.app/ns_emu_helper/RyujinxMainlineMirror/ryujinx-" & iVersion & "-win_x64.zip"
     End If
 Else
-    '阿里
-    If iIsEarlyAccess Then
-        YuzuUrl = "https://yidaozhan-pan-yidaozhanya.vercel.app/ns_emu_helper/YuzuEAMirror/Windows-Yuzu-EA-" & iVersion & ".7z"
-    Else
-        YuzuUrl = "https://yidaozhan-pan-yidaozhanya.vercel.app/ns_emu_helper/YuzuMainlineMirror/yuzu-windows-msvc-" & iVersion & ".7z"
-    End If
+    'LDN
+    RyujinxUrl = "https://yidaozhan-pan-yidaozhanya.vercel.app/ns_emu_helper/RyujinxLDNMirror/ryujinx-" & iVersion & "-win_x64.zip"
 End If
 
-If CheckFileExists(YuzuInstallFolder & "\Yuzu.7z") = False Then
-If DownloadSource = "Github" Then
-    If AlwaysUseCloudFlare = "False" Then
-        DoEvents
-        'github连通性测试
-        Labels(4).Caption = "正在测试 Github 连通性 ..."
-        Labels(5).Caption = "如果 Github 不能连通，就使用 CloudFlare Workers。"
-        Dim Tmp As String
-        Tmp = "timeout"
-        Inet1.Cancel
-        Inet1.Protocol = icHTTPS
-        Inet1.Url = "https://github.com/opensearch.xml"
-        Inet1.RequestTimeout = 10
-        Tmp = Inet1.OpenURL
-        If Err.Number = 35761 Then
-            Labels(4).Caption = "正在下载模拟器，使用 CloudFlare Workers ..."
-            YuzuUrl = CloudFlareReverseProxyUrl & "\" & YuzuUrl
-        Else
-            If InStr(Tmp, "OpenSearchDescription") = 2 Then
-                Labels(4).Caption = "正在下载模拟器，使用 Github ..."
-            Else
+If CheckFileExists(RyujinxInstallFolder & "\Ryujinx.zip") = False Then
+If iIsMainline Then
+    If DownloadSource = "Github" Then
+        If AlwaysUseCloudFlare = "False" Then
+            DoEvents
+            'github连通性测试
+            Labels(4).Caption = "正在测试 Github 连通性 ..."
+            Labels(5).Caption = "如果 Github 不能连通，就使用 CloudFlare Workers。"
+            Dim Tmp As String
+            Tmp = "timeout"
+            Inet1.Cancel
+            Inet1.Protocol = icHTTPS
+            Inet1.Url = "https://github.com/opensearch.xml"
+            Inet1.RequestTimeout = 10
+            Tmp = Inet1.OpenURL
+            If Err.Number = 35761 Then
                 Labels(4).Caption = "正在下载模拟器，使用 CloudFlare Workers ..."
-                YuzuUrl = CloudFlareReverseProxyUrl & "\" & YuzuUrl
+                RyujinxUrl = CloudFlareReverseProxyUrl & "\" & RyujinxUrl
+            Else
+                If InStr(Tmp, "OpenSearchDescription") = 2 Then
+                    Labels(4).Caption = "正在下载模拟器，使用 Github ..."
+                Else
+                    Labels(4).Caption = "正在下载模拟器，使用 CloudFlare Workers ..."
+                    RyujinxUrl = CloudFlareReverseProxyUrl & "\" & RyujinxUrl
+                End If
             End If
+            Labels(5).Caption = "准备下载 ..."
+        Else
+            RyujinxUrl = CloudFlareReverseProxyUrl & "\" & RyujinxUrl
         End If
-        Labels(5).Caption = "准备下载 ..."
     Else
-        YuzuUrl = CloudFlareReverseProxyUrl & "\" & YuzuUrl
+        Labels(4).Caption = "正在下载模拟器 ..."
     End If
-Else
-    Labels(4).Caption = "正在下载模拟器 ..."
 End If
 End If
 
 DoEvents
 '下载模拟器
-If CheckFileExists(YuzuInstallFolder & "\Yuzu.7z") = False Then
+If CheckFileExists(RyujinxInstallFolder & "\Ryujinx.zip") = False Then
     PBarLoad 1, Me.hWnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
     PBarSetRange 1, 0, 100
     PBarSetPos 1, 0
-    ucDownload1.DownloadFile YuzuUrl, YuzuInstallFolder & "\Yuzu.7z"
+    ucDownload1.DownloadFile RyujinxUrl, RyujinxInstallFolder & "\Ryujinx.zip"
     DoEvents
     DownloadCompleted = False
     Do Until DownloadCompleted
@@ -760,7 +731,7 @@ FirmwareInstallation:
 If InstallMode = 1 Or InstallMode = 3 Then
     '下载固件
     DoEvents
-    If CheckFileExists(YuzuInstallFolder & "\Firmware.zip") = False Then
+    If CheckFileExists(RyujinxInstallFolder & "\Firmware.zip") = False Then
         If iFirmwareOnline Then
             Labels(4).Caption = "正在下载固件，请耐心等待 ..."
             Labels(5).Caption = "准备下载 ..."
@@ -768,7 +739,7 @@ If InstallMode = 1 Or InstallMode = 3 Then
             PBarSetRange 1, 0, 100
             PBarSetPos 1, 0
             DoEvents
-            ucDownload1.DownloadFile iFirmwarePath, YuzuInstallFolder & "\Firmware.zip"
+            ucDownload1.DownloadFile iFirmwarePath, RyujinxInstallFolder & "\Firmware.zip"
             DoEvents
             DownloadCompleted = False
             Do Until DownloadCompleted
@@ -788,27 +759,6 @@ If InstallMode = 1 Or InstallMode = 3 Then
     End If
 End If
 
-If InstallMode = 1 Then
-    DoEvents
-    '下载 Sysdata (shared fonts)
-    If CheckFileExists(YuzuInstallFolder & "\Sysdata.zip") = False Then
-        Labels(4).Caption = "正在下载 Shared fonts ..."
-        PBarLoad 1, Me.hWnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
-        PBarSetRange 1, 0, 100
-        PBarSetPos 1, 0
-        ucDownload1.DownloadFile "https://yidaozhan-pan-yidaozhanya.vercel.app/ali/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/sysdata.zip", YuzuInstallFolder & "\Sysdata.zip"
-        DoEvents
-        DownloadCompleted = False
-        Do Until DownloadCompleted
-            Sleep 100
-            DoEvents
-        Loop
-        Sleep 2000
-        PBarUnload 1
-        DoEvents
-    End If
-End If
-
 If InstallMode = 1 Or InstallMode = 2 Then
 
     '删除旧版本
@@ -816,12 +766,26 @@ If InstallMode = 1 Or InstallMode = 2 Then
         Labels(4).Caption = "正在删除之前的模拟器 ..."
         Labels(5).Caption = ""
         DoEvents
-        Shell "cmd /c rd /s /q " & Chr(34) & YuzuInstallFolder & "\plugins" & Chr(34), vbMinimizedNoFocus
-        Shell "cmd /c cd " & Chr(34) & YuzuInstallFolder & Chr(34) & " && del /s /q *.tar.xz", vbMinimizedNoFocus
+        Shell "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\bin" & Chr(34)
         DoEvents
-        Shell "cmd /c del /s /q " & Chr(34) & YuzuInstallFolder & "\*.dll" & Chr(34)
-        Shell "cmd /c del /s /q " & Chr(34) & YuzuInstallFolder & "\*.conf" & Chr(34)
-        Shell "cmd /c del /s /q " & Chr(34) & YuzuInstallFolder & "\*.exe" & Chr(34)
+        Shell "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\etc" & Chr(34)
+        DoEvents
+        Shell "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\lib" & Chr(34)
+        DoEvents
+        Shell "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\Logs" & Chr(34)
+        DoEvents
+        Shell "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\share" & Chr(34)
+        DoEvents
+        Shell "cmd /c del /s /q " & Chr(34) & RyujinxInstallFolder & "\*.dll" & Chr(34)
+        DoEvents
+        Shell "cmd /c del /s /q " & Chr(34) & RyujinxInstallFolder & "\*.so" & Chr(34)
+        Shell "cmd /c del /s /q " & Chr(34) & RyujinxInstallFolder & "\*.dylib" & Chr(34)
+        DoEvents
+        Shell "cmd /c del /s /q " & Chr(34) & RyujinxInstallFolder & "\*.pdb" & Chr(34)
+        Shell "cmd /c del /s /q " & Chr(34) & RyujinxInstallFolder & "\*.config" & Chr(34)
+        DoEvents
+        Shell "cmd /c del /s /q " & Chr(34) & RyujinxInstallFolder & "\alsoft.ini" & Chr(34)
+        Shell "cmd /c del /s /q " & Chr(34) & RyujinxInstallFolder & "\*.exe" & Chr(34)
         DoEvents
     End If
     '安装模拟器 解压
@@ -831,48 +795,50 @@ If InstallMode = 1 Or InstallMode = 2 Then
     PBarSetRange 1, 0, 100
     PBarSetPos 1, 0
     DoEvents
-        SevenZip.OpenArchive YuzuInstallFolder & "\Yuzu.7z"
-        SevenZip.Extract YuzuInstallFolder
+        SevenZip.OpenArchive RyujinxInstallFolder & "\Ryujinx.zip"
+        SevenZip.Extract RyujinxInstallFolder
     PBarUnload 1
     DoEvents
     '复制文件
     Set fso = CreateObject("scripting.filesystemobject") '创建FSO对象
-    fso.CopyFolder YuzuInstallFolder & "\" & YuzuVersionName & "\plugins", YuzuInstallFolder & "\plugins"
-    fso.CopyFile YuzuInstallFolder & "\" & YuzuVersionName & "\*.*", YuzuInstallFolder & "\", True
+    DoEvents
+    fso.CopyFolder RyujinxInstallFolder & "\publish\bin", RyujinxInstallFolder & "\bin"
+    fso.CopyFolder RyujinxInstallFolder & "\publish\etc", RyujinxInstallFolder & "\etc"
+    fso.CopyFolder RyujinxInstallFolder & "\publish\lib", RyujinxInstallFolder & "\lib"
+    fso.CopyFolder RyujinxInstallFolder & "\publish\share", RyujinxInstallFolder & "\share"
+    fso.CopyFile RyujinxInstallFolder & "\publish\*.*", RyujinxInstallFolder & "\", True
     Dim X As Integer
     For X = 1 To 20 ' 等四秒钟fso操作完成
     Sleep 200
     DoEvents
     Next
     Set fso = Nothing
+    Shell "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\publish" & Chr(34)
     DoEvents
-    Shell "cmd /c rd /s /q " & Chr(34) & YuzuInstallFolder & "\" & YuzuVersionName & "" & Chr(34), vbMinimizedNoFocus
-    DoEvents
-    Shell "cmd /c cd " & Chr(34) & YuzuInstallFolder & Chr(34) & " && del /s /q *.tar.xz", vbMinimizedNoFocus
-    DoEvents
+    ''''''''''''
 End If
     
 If InstallMode = 1 Then
     '安装密钥
     Labels(4).Caption = "正在安装密钥 ..."
     DoEvents
-    MkDirs YuzuInstallFolder & "\user\keys"
-    FileCopy iKeyPath, YuzuInstallFolder & "\user\keys\prod.keys"
+    MkDirs RyujinxInstallFolder & "\portable\system"
+    FileCopy iKeyPath, RyujinxInstallFolder & "\portable\system\prod.keys"
 End If
 
 If InstallMode = 1 Or InstallMode = 3 Then
     If InstallMode = 3 Then
         Labels(4).Caption = "正在删除旧固件 ..."
         DoEvents
-        Shell "cmd /c rd /s /q " & Chr(34) & YuzuInstallFolder & "\user\nand\system\Contents" & Chr(34), vbMinimizedNoFocus
+        Shell "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\portable\bis\system\Contents" & Chr(34), vbMinimizedNoFocus
         Sleep 10000
     End If
     '安装固件
         '文件夹
     Labels(4).Caption = "正在解压缩并安装固件包 ..."
     DoEvents
-    MkDirs YuzuInstallFolder & "\user\nand\system\Contents\registered"
-    MkDirs YuzuInstallFolder & "\FWTMP"
+    MkDirs RyujinxInstallFolder & "\portable\bis\system\Contents\registered"
+    MkDirs RyujinxInstallFolder & "\FWTMP"
     DoEvents
         '解压
     PBarLoad 1, Me.hWnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
@@ -880,111 +846,70 @@ If InstallMode = 1 Or InstallMode = 3 Then
     PBarSetPos 1, 0
     DoEvents
         If iFirmwareOnline Then
-            SevenZip.OpenArchive YuzuInstallFolder & "\Firmware.zip"
+            SevenZip.OpenArchive RyujinxInstallFolder & "\Firmware.zip"
         Else
             SevenZip.OpenArchive iFirmwarePath
         End If
-        SevenZip.Extract YuzuInstallFolder & "\FWTMP"
+        SevenZip.Extract RyujinxInstallFolder & "\FWTMP"
     PBarUnload 1
     DoEvents
-        'Ryujinx固件到Yuzu固件
+        'Ryujinx固件安装
     Dim FileName() As String
     Dim folder As Object
     Dim file As Object
     Set fso = CreateObject("scripting.filesystemobject") '创建FSO对象
-    Set folder = fso.GetFolder(YuzuInstallFolder & "\FWTMP")
+    Set folder = fso.GetFolder(RyujinxInstallFolder & "\FWTMP")
     For Each file In folder.Files '遍历根文件夹下的文件
     DoEvents
-    MkDir YuzuInstallFolder & "\user\nand\system\Contents\registered\" & Replace(Replace(file, YuzuInstallFolder & "\FWTMP", ""), ".cnmt", "")
-    FileCopy file, YuzuInstallFolder & "\user\nand\system\Contents\registered\" & Replace(Replace(file, YuzuInstallFolder & "\FWTMP", ""), ".cnmt", "") & "\00"
+    MkDir RyujinxInstallFolder & "\portable\bis\system\Contents\registered\" & Replace(Replace(file, RyujinxInstallFolder & "\FWTMP", ""), ".cnmt", "")
+    FileCopy file, RyujinxInstallFolder & "\portable\bis\system\Contents\registered\" & Replace(Replace(file, RyujinxInstallFolder & "\FWTMP", ""), ".cnmt", "") & "\00"
     Next
         '释放内存
     Set fso = Nothing
     Set folder = Nothing
     Set file = Nothing
         '删除临时文件
-    Shell "cmd /c rd /s /q " & Chr(34) & YuzuInstallFolder & "\FWTMP" & Chr(34), vbMinimizedNoFocus
-End If
-
-If InstallMode = 1 Then
-    'sysdata
-    Labels(4).Caption = "正在解压缩并安装 Shared fonts ..."
-    MkDirs YuzuInstallFolder & "\user\sysdata"
-    PBarLoad 1, Me.hWnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
-    PBarSetRange 1, 0, 100
-    PBarSetPos 1, 0
-    DoEvents
-        SevenZip.OpenArchive YuzuInstallFolder & "\Sysdata.zip"
-        SevenZip.Extract YuzuInstallFolder & "\user\sysdata"
-    PBarUnload 1
-    DoEvents
-    DoEvents
-    
-    'MSVC
-    If CheckFileExists("C:\Windows\System32\MSVCP140_ATOMIC_WAIT.DLL") = False And CheckFileExists("C:\Windows\System32\msvcp140_atomic_wait.dll") = False Then
-        Labels(4).Caption = "系统中缺少MSVC2019运行库，正在安装 ..."
-        If CheckFileExists(YuzuInstallFolder & "\VC2019.exe") = False Then
-            Labels(5).Caption = "正在下载 MSVC 运行库 ..."
-            PBarLoad 1, Me.hWnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
-            PBarSetRange 1, 0, 100
-            PBarSetPos 1, 0
-            DoEvents
-            ucDownload1.DownloadFile "https://aka.ms/vs/17/release/vc_redist.x64.exe", YuzuInstallFolder & "\VC2019.exe"
-            DoEvents
-            DownloadCompleted = False
-            Do Until DownloadCompleted
-                Sleep 100
-                DoEvents
-            Loop
-            Sleep 1000
-            PBarUnload 1
-            DoEvents
-        End If
-        Labels(5).Caption = "正在安装 MSVC 运行库 ..."
-        Shell YuzuInstallFolder & "\VC2019.exe /quiet"
-        Labels(5).Caption = ""
-    DoEvents
-    End If
+    Shell "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\FWTMP" & Chr(34), vbMinimizedNoFocus
 End If
 
 '生成 ini 和配置
 If InstallMode = 1 Then
-    YuzuVersion = iVersion
-    If iIsEarlyAccess Then
-        YuzuBranch = "预先测试版"
+    RyujinxVersion = iVersion
+    If iIsMainline Then
+        RyujinxBranch = "主线版"
     Else
-        YuzuBranch = "主线版"
+        RyujinxBranch = "LDN联机版"
     End If
-    YuzuFirmware = iFirmwareVersion
-    WriteIni "Yuzu", "Version", YuzuVersion, YuzuInstallFolder & "\YuzuConfig.ini"
-    WriteIni "Yuzu", "Branch", YuzuBranch, YuzuInstallFolder & "\YuzuConfig.ini"
-    WriteIni "Yuzu", "Firmware", YuzuFirmware, YuzuInstallFolder & "\YuzuConfig.ini"
-    MkDirs YuzuInstallFolder & "\user\nand\user\save\0000000000000000"
-    YuzuCustomDataFolder = "False"
-    WriteIni "Yuzu", "CustomDataFolder", "False", YuzuInstallFolder & "\YuzuConfig.ini"
+    RyujinxFirmware = iFirmwareVersion
+    WriteIni "Ryujinx", "Version", RyujinxVersion, RyujinxInstallFolder & "\RyujinxConfig.ini"
+    WriteIni "Ryujinx", "Branch", RyujinxBranch, RyujinxInstallFolder & "\RyujinxConfig.ini"
+    WriteIni "Ryujinx", "Firmware", RyujinxFirmware, RyujinxInstallFolder & "\RyujinxConfig.ini"
+    MkDirs RyujinxInstallFolder & "\portable\bis\user\save"
+    RyujinxCustomDataFolder = "False"
+    WriteIni "Ryujinx", "CustomDataFolder", RyujinxCustomDataFolder, RyujinxInstallFolder & "\RyujinxConfig.ini"
 ElseIf InstallMode = 2 Then
-    YuzuVersion = iVersion
-    If iIsEarlyAccess Then
-        YuzuBranch = "预先测试版"
+    RyujinxVersion = iVersion
+    If iIsMainline Then
+        RyujinxBranch = "主线版"
     Else
-        YuzuBranch = "主线版"
+        RyujinxBranch = "LDN联机版"
     End If
-    WriteIni "Yuzu", "Version", YuzuVersion, YuzuInstallFolder & "\YuzuConfig.ini"
-    WriteIni "Yuzu", "Branch", YuzuBranch, YuzuInstallFolder & "\YuzuConfig.ini"
+    WriteIni "Ryujinx", "Version", RyujinxVersion, RyujinxInstallFolder & "\RyujinxConfig.ini"
+    WriteIni "Ryujinx", "Branch", RyujinxBranch, RyujinxInstallFolder & "\RyujinxConfig.ini"
 ElseIf InstallMode = 3 Then
-    YuzuFirmware = iFirmwareVersion
-    WriteIni "Yuzu", "Firmware", YuzuFirmware, YuzuInstallFolder & "\YuzuConfig.ini"
+    RyujinxFirmware = iFirmwareVersion
+    WriteIni "Ryujinx", "Firmware", RyujinxFirmware, RyujinxInstallFolder & "\RyujinxConfig.ini"
 End If
 
 '完成
 If InstallMode = 1 Or InstallMode = 2 Then
-    If iIsEarlyAccess Then
-        Labels(1).Caption = "Yuzu 预先测试版 " & iVersion & " 安装完成！"
+    If iIsMainline Then
+        Labels(1).Caption = "Ryujinx 主线版 " & iVersion & " 安装完成！"
     Else
-        Labels(1).Caption = "Yuzu 主线版 " & iVersion & " 安装完成！"
+        Labels(1).Caption = "Ryujinx LDN 联机版 " & iVersion & " 安装完成！"
     End If
 ElseIf InstallMode = 3 Then
-    Labels(1).Caption = "Yuzu 固件 " & iFirmwareVersion & " 安装完成！"
+    Labels(1).Caption = "Ryujinx 固件 " & iFirmwareVersion & " 安装完成！"
 End If
 Labels(2).Caption = "是否要删除安装过程中产生的临时文件？"
 Labels(4).Visible = False
@@ -1009,10 +934,8 @@ End Sub
 
 Private Sub RemoveTemps()
 On Error Resume Next
-Kill YuzuInstallFolder & "\Yuzu.7z"
-Kill YuzuInstallFolder & "\Firmware.zip"
-Kill YuzuInstallFolder & "\Sysdata.zip"
-Kill YuzuInstallFolder & "\VC2019.exe"
+Kill RyujinxInstallFolder & "\Ryujinx.zip"
+Kill RyujinxInstallFolder & "\Firmware.zip"
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
@@ -1080,36 +1003,37 @@ End Sub
 
 Private Sub ImageCombo1_Click()
 Image1.Picture = ImageList2.ListImages(ImageCombo1.SelectedItem.Index).Picture
-Dim YuzuVersion() As String
+Dim RyujinxVersion() As String
 Dim i As Integer
 If ImageCombo1.SelectedItem.Index = 1 Then
     If DownloadSource = "Github" Then
+        txtVersion.Visible = True
+        ComboVersion.Visible = False
+        txtVersion.Text = GetRyujinxVersion
         txtVersion.SetFocus
-        txtVersion.Text = "加载中 ..."
-        txtVersion.Text = GetYuzuVersion
     Else
+        txtVersion.Visible = False
+        ComboVersion.Visible = True
         ComboVersion.Clear
         ComboVersion.Text = "加载中 ..."
-        YuzuVersion = Split(GetYuzuVersionAli, vbCrLf)
-        For i = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
-        ComboVersion.AddItem YuzuVersion(i)
-        ComboVersion.Text = YuzuVersion(i)
+        RyujinxVersion = Split(GetRyujinxVersionAli, vbCrLf)
+        For i = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
+        ComboVersion.AddItem RyujinxVersion(i)
+        ComboVersion.Text = RyujinxVersion(i)
+        ComboVersion.SetFocus
         Next
     End If
 Else
-    If DownloadSource = "Github" Then
-        txtVersion.SetFocus
-        txtVersion.Text = "加载中 ..."
-        txtVersion.Text = GetYuzuMLVersion
-    Else
-        ComboVersion.Clear
-        ComboVersion.Text = "加载中 ..."
-        YuzuVersion = Split(GetYuzuMLVersionAli, vbCrLf)
-        For i = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
-        ComboVersion.AddItem YuzuVersion(i)
-        ComboVersion.Text = YuzuVersion(i)
-        Next
-    End If
+    txtVersion.Visible = False
+    ComboVersion.Visible = True
+    ComboVersion.Clear
+    ComboVersion.Text = "加载中 ..."
+    RyujinxVersion = Split(GetRyujinxLDNVersionAli, vbCrLf)
+    For i = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
+    ComboVersion.AddItem RyujinxVersion(i)
+    ComboVersion.Text = RyujinxVersion(i)
+    ComboVersion.SetFocus
+    Next
 End If
 End Sub
 

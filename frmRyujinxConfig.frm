@@ -1,6 +1,6 @@
 VERSION 5.00
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
-Begin VB.Form frmYuzuConfig 
+Begin VB.Form frmRyujinxConfig 
    BackColor       =   &H80000005&
    BorderStyle     =   1  'Fixed Single
    Caption         =   "frmYuzuConfig"
@@ -17,7 +17,7 @@ Begin VB.Form frmYuzuConfig
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
-   Icon            =   "frmYuzuConfig.frx":0000
+   Icon            =   "frmRyujinxConfig.frx":0000
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
@@ -146,11 +146,11 @@ Begin VB.Form frmYuzuConfig
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   2
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmYuzuConfig.frx":54AA
+            Picture         =   "frmRyujinxConfig.frx":54AA
             Key             =   ""
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmYuzuConfig.frx":A964
+            Picture         =   "frmRyujinxConfig.frx":A964
             Key             =   ""
          EndProperty
       EndProperty
@@ -203,16 +203,16 @@ Begin VB.Form frmYuzuConfig
       Width           =   6255
    End
 End
-Attribute VB_Name = "frmYuzuConfig"
+Attribute VB_Name = "frmRyujinxConfig"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Public IsMissing As Boolean, YuzuPreDataFolder As String
+Public IsMissing As Boolean, RyujinxPreDataFolder As String
 
 Private Sub btnBrowse_Click()
 txtDataFolder.Text = ChooseDir("自定义数据文件夹", Me)
-If txtDataFolder.Text = YuzuInstallFolder & "\user" Then
+If txtDataFolder.Text = RyujinxInstallFolder & "\portable" Then
     txtDataFolder.Text = "<请点击“浏览”>"
     btnBrowse.Visible = False
     txtDataFolder.Visible = False
@@ -233,33 +233,33 @@ End Sub
 Private Sub btnSave_Click()
 '保存设置
 If cbFirmware.Text <> "加载中 ..." Then
-If ImageCombo1.SelectedItem.Key = "EA" Then
-    YuzuBranch = "预先测试版"
+If ImageCombo1.SelectedItem.Key = "Mainline" Then
+    RyujinxBranch = "主线版"
 Else
-    YuzuBranch = "主线版"
+    RyujinxBranch = "LDN联机版"
 End If
-YuzuVersion = txtVersion.Text
-YuzuFirmware = cbFirmware.Text
-WriteIni "Yuzu", "Version", YuzuVersion, YuzuInstallFolder & "\YuzuConfig.ini"
-WriteIni "Yuzu", "Branch", YuzuBranch, YuzuInstallFolder & "\YuzuConfig.ini"
-WriteIni "Yuzu", "Firmware", YuzuFirmware, YuzuInstallFolder & "\YuzuConfig.ini"
+RyujinxVersion = txtVersion.Text
+RyujinxFirmware = cbFirmware.Text
+WriteIni "Ryujinx", "Version", RyujinxVersion, RyujinxInstallFolder & "\RyujinxConfig.ini"
+WriteIni "Ryujinx", "Branch", RyujinxBranch, RyujinxInstallFolder & "\RyujinxConfig.ini"
+WriteIni "Ryujinx", "Firmware", RyujinxFirmware, RyujinxInstallFolder & "\RyujinxConfig.ini"
 
 If IsMissing = False Then
     If Checks(0).Value = 0 Then
-        YuzuCustomDataFolder = "False"
+        RyujinxCustomDataFolder = "False"
     Else
         If txtDataFolder.Text = "<请点击“浏览”>" Then
-            YuzuCustomDataFolder = "False"
+            RyujinxCustomDataFolder = "False"
         Else
-            YuzuCustomDataFolder = txtDataFolder.Text
+            RyujinxCustomDataFolder = txtDataFolder.Text
         End If
     End If
-    If YuzuCustomDataFolder = YuzuInstallFolder & "\user" Then YuzuCustomDataFolder = "False"
-    MoveYuzuDataFolder
-    WriteIni "Yuzu", "CustomDataFolder", YuzuCustomDataFolder, YuzuInstallFolder & "\YuzuConfig.ini"
+    If RyujinxCustomDataFolder = RyujinxInstallFolder & "\portable" Then RyujinxCustomDataFolder = "False"
+    MoveRyujinxDataFolder
+    WriteIni "Ryujinx", "CustomDataFolder", RyujinxCustomDataFolder, RyujinxInstallFolder & "\RyujinxConfig.ini"
 Else
-    YuzuCustomDataFolder = "False"
-    WriteIni "Yuzu", "CustomDataFolder", YuzuCustomDataFolder, YuzuInstallFolder & "\YuzuConfig.ini"
+    RyujinxCustomDataFolder = "False"
+    WriteIni "Ryujinx", "CustomDataFolder", RyujinxCustomDataFolder, RyujinxInstallFolder & "\RyujinxConfig.ini"
 End If
 If IsMissing Then
     frmMain.Show
@@ -282,15 +282,14 @@ End If
 End Sub
 
 Private Sub Form_Activate()
-Debug.Print YuzuCustomDataFolder
-If YuzuCustomDataFolder = YuzuInstallFolder & "\user" Then
-    YuzuCustomDataFolder = "False"
-    WriteIni "Yuzu", "CustomDataFolder", YuzuCustomDataFolder, YuzuInstallFolder & "\YuzuConfig.ini"
+'加载设置和界面
+Debug.Print RyujinxCustomDataFolder
+If RyujinxCustomDataFolder = RyujinxInstallFolder & "\portable" Then
+    RyujinxCustomDataFolder = "False"
+    WriteIni "Ryujinx", "CustomDataFolder", RyujinxCustomDataFolder, RyujinxInstallFolder & "\RyujinxConfig.ini"
 End If
 
-'加载设置和界面
-
-If YuzuCustomDataFolder = "False" Then
+If RyujinxCustomDataFolder = "False" Then
     Checks(0).Value = 0
     Checks(0).Caption = "否"
     btnBrowse.Visible = False
@@ -300,18 +299,19 @@ Else
     Checks(0).Caption = "是"
     btnBrowse.Visible = True
     txtDataFolder.Visible = True
-    txtDataFolder.Text = YuzuCustomDataFolder
+    txtDataFolder.Text = RyujinxCustomDataFolder
 End If
-If Left(YuzuBranch, 5) = "预先测试版" Then
-    Image1.Picture = frmYuzuInstaller.ImageList2.ListImages(1).Picture
+If Left(RyujinxBranch, 3) = "主线版" Then
+    Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(1).Picture
 Else
-    Image1.Picture = frmYuzuInstaller.ImageList2.ListImages(2).Picture
+    Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(2).Picture
 End If
-YuzuPreDataFolder = YuzuCustomDataFolder
+'Unload frmRyujinxInstaller
+RyujinxPreDataFolder = RyujinxCustomDataFolder
 
-Me.Caption = "Yuzu 模拟器相关设置"
+Me.Caption = "Ryujinx 模拟器相关设置"
 If IsMissing Then
-    '没有YuzuConfig.ini
+    '没有RyujinxConfig.ini
     Labels(0).Caption = "该模拟器不是用本工具安装的，" & vbCrLf & "请先完善它的版本信息。"
     Labels(3).Visible = False
     Checks(0).Visible = False
@@ -322,21 +322,21 @@ If IsMissing Then
     Me.Height = 3650
     
     frmManage.Hide
-    frmYuzuConfig.SetFocus
+    frmRyujinxConfig.SetFocus
 Else
-    Labels(0).Caption = "Yuzu 版本信息设置" & vbCrLf & "如果你手动更新了模拟器，可以在此更改版本信息。"
+    Labels(0).Caption = "Ryujinx 版本信息设置" & vbCrLf & "如果你手动更新了模拟器，可以在此更改版本信息。"
     btnSave.Top = 4200
     btnCancel.Top = 4200
     Me.Height = 5325
 End If
 ImageCombo1.ComboItems.Clear
-ImageCombo1.ComboItems.Add 1, "EA", "预先测试版", 1
-ImageCombo1.ComboItems.Add 2, "Mainline", "主线版", 2
+ImageCombo1.ComboItems.Add 1, "Mainline", "主线版", 1
+ImageCombo1.ComboItems.Add 2, "LDN", "LDN联机版", 2
 ImageCombo1.ComboItems(1).Selected = True
 txtVersion.SetFocus
 cbFirmware.Text = "加载中 ..."
 
-txtVersion.Text = GetYuzuVersion
+txtVersion.Text = GetRyujinxVersion
 
 Dim FirmwareVersionArr() As String
 FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
@@ -347,7 +347,7 @@ Next
 If IsMissing Then
     cbFirmware.Text = "选择固件版本"
 Else
-    cbFirmware.Text = YuzuFirmware
+    cbFirmware.Text = RyujinxFirmware
 End If
 
 End Sub
@@ -357,13 +357,15 @@ InitCommonControls
 End Sub
 
 Private Sub ImageCombo1_Click()
-Image1.Picture = frmYuzuInstaller.ImageList2.ListImages(ImageCombo1.SelectedItem.Index).Picture
+Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(ImageCombo1.SelectedItem.Index).Picture
 txtVersion.SetFocus
     txtVersion.Text = "加载中 ..."
 If ImageCombo1.SelectedItem.Index = 1 Then
-    txtVersion.Text = GetYuzuVersion
+    txtVersion.Text = GetRyujinxVersion
 Else
-    txtVersion.Text = GetYuzuMLVersion
+    Dim Tmp() As String
+    Tmp = Split(GetRyujinxLDNVersionAli, vbCrLf)
+    txtVersion.Text = Tmp(UBound(Tmp))
 End If
 End Sub
 
@@ -374,56 +376,56 @@ If KeyAscii < 48 Or KeyAscii > 57 Then KeyAscii = 0
 If Len(txtVersion.Text) >= 4 Then KeyAscii = 0
 End Sub
 
-Private Sub MoveYuzuDataFolder()
+Private Sub MoveRyujinxDataFolder()
 On Error GoTo MoveFailed2
 Dim fso As Object, folder As Object
-'迁移 Yuzu 数据文件夹
-'YuzuPreDataFolder 前数据文件夹
-If YuzuPreDataFolder = YuzuCustomDataFolder Then Exit Sub
-If YuzuPreDataFolder = "False" Or YuzuPreDataFolder = "<请点击“浏览”>" Then YuzuPreDataFolder = YuzuInstallFolder & "\user"
-If YuzuCustomDataFolder = "False" Or YuzuCustomDataFolder = "<请点击“浏览”>" Then YuzuCustomDataFolder = YuzuInstallFolder & "\user"
-If TestEmptyFolder(YuzuCustomDataFolder) = False Then
-    MsgBox "新的数据文件夹为:" & YuzuCustomDataFolder & vbCrLf & "这个文件夹非空，迁移失败！" & vbCrLf & "请清空该文件夹之后再试。", vbOKOnly + vbCritical, "错误"
+'迁移 Ryujinx 数据文件夹
+'RyujinxPreDataFolder 前数据文件夹
+If RyujinxPreDataFolder = RyujinxCustomDataFolder Then Exit Sub
+If RyujinxPreDataFolder = "False" Or RyujinxPreDataFolder = "<请点击“浏览”>" Then RyujinxPreDataFolder = RyujinxInstallFolder & "\portable"
+If RyujinxCustomDataFolder = "False" Or RyujinxCustomDataFolder = "<请点击“浏览”>" Then RyujinxCustomDataFolder = RyujinxInstallFolder & "\portable"
+If TestEmptyFolder(RyujinxCustomDataFolder) = False Then
+    MsgBox "新的数据文件夹为:" & RyujinxCustomDataFolder & vbCrLf & "这个文件夹非空，迁移失败！" & vbCrLf & "请清空该文件夹之后再试。", vbOKOnly + vbCritical, "错误"
     GoTo MoveFailed
 End If
-If YuzuCustomDataFolder <> YuzuInstallFolder & "\user" Then
+If RyujinxCustomDataFolder <> RyujinxInstallFolder & "\portable" Then
     '新文件夹空了，继续迁移
     '移动内容
     Set fso = CreateObject("Scripting.FileSystemObject") '创建FSO
-    Set folder = fso.GetFolder(YuzuPreDataFolder)
-    RmDir YuzuCustomDataFolder
-    folder.Move YuzuCustomDataFolder
+    Set folder = fso.GetFolder(RyujinxPreDataFolder)
+    RmDir RyujinxCustomDataFolder
+    folder.Move RyujinxCustomDataFolder
     Set folder = Nothing
     Set fso = Nothing
     '创建符号链接
-    Shell "cmd /c mklink /d /j " & Chr(34) & YuzuInstallFolder & "\user" & Chr(34) & " " & Chr(34) & YuzuCustomDataFolder & Chr(34)
+    Shell "cmd /c mklink /d /j " & Chr(34) & RyujinxInstallFolder & "\portable" & Chr(34) & " " & Chr(34) & RyujinxCustomDataFolder & Chr(34)
 Else
-    '迁移回 User 文件夹
-    Shell "cmd /c rmdir " & Chr(34) & YuzuInstallFolder & "\user" & Chr(34) ' 删除旧的符号链接
+    '迁移回 portable 文件夹
+    Shell "cmd /c rmdir " & Chr(34) & RyujinxInstallFolder & "\portable" & Chr(34) ' 删除旧的符号链接
     '移动内容
     Set fso = CreateObject("Scripting.FileSystemObject") '创建FSO
-    Set folder = fso.GetFolder(YuzuPreDataFolder)
-    RmDir YuzuInstallFolder & "\user"
-    folder.Move YuzuInstallFolder & "\user"
+    Set folder = fso.GetFolder(RyujinxPreDataFolder)
+    RmDir RyujinxInstallFolder & "\portable"
+    folder.Move RyujinxInstallFolder & "\portable"
     Set folder = Nothing
     Set fso = Nothing
 End If
-MsgBox "数据文件夹迁移成功！" & vbCrLf & vbCrLf & "从 " & YuzuPreDataFolder & "，" & vbCrLf & "迁移到了 " & YuzuCustomDataFolder & "。", vbOKOnly + vbInformation, "提示"
+MsgBox "数据文件夹迁移成功！" & vbCrLf & vbCrLf & "从 " & RyujinxPreDataFolder & "，" & vbCrLf & "迁移到了 " & RyujinxCustomDataFolder & "。", vbOKOnly + vbInformation, "提示"
 Exit Sub
 
 MoveFailed:
-    If YuzuPreDataFolder = YuzuInstallFolder & "\user" Then YuzuPreDataFolder = "False"
-    If YuzuCustomDataFolder = YuzuInstallFolder & "\user" Then YuzuCustomDataFolder = "False"
-    YuzuCustomDataFolder = YuzuPreDataFolder
-    WriteIni "Yuzu", "CustomDataFolder", YuzuCustomDataFolder, YuzuInstallFolder & "\YuzuConfig.ini"
+    If RyujinxPreDataFolder = RyujinxInstallFolder & "\portable" Then RyujinxPreDataFolder = "False"
+    If RyujinxCustomDataFolder = RyujinxInstallFolder & "\portable" Then RyujinxCustomDataFolder = "False"
+    RyujinxCustomDataFolder = RyujinxPreDataFolder
+    WriteIni "Ryujinx", "CustomDataFolder", RyujinxCustomDataFolder, RyujinxInstallFolder & "\RyujinxConfig.ini"
 Exit Sub
 
 MoveFailed2:
     MsgBox "迁移失败，发生了未知错误。" & vbCrLf & "运行时错误 " & CStr(Err.Number) & "：" & Err.Description, vbOKOnly + vbCritical, "错误"
-    If YuzuPreDataFolder = YuzuInstallFolder & "\user" Then YuzuPreDataFolder = "False"
-    If YuzuCustomDataFolder = YuzuInstallFolder & "\user" Then YuzuCustomDataFolder = "False"
-    YuzuCustomDataFolder = YuzuPreDataFolder
-    WriteIni "Yuzu", "CustomDataFolder", YuzuCustomDataFolder, YuzuInstallFolder & "\YuzuConfig.ini"
+    If RyujinxPreDataFolder = RyujinxInstallFolder & "\portable" Then RyujinxPreDataFolder = "False"
+    If RyujinxCustomDataFolder = RyujinxInstallFolder & "\portable" Then RyujinxCustomDataFolder = "False"
+    RyujinxCustomDataFolder = RyujinxPreDataFolder
+    WriteIni "Ryujinx", "CustomDataFolder", RyujinxCustomDataFolder, RyujinxInstallFolder & "\RyujinxConfig.ini"
 Exit Sub
 End Sub
 

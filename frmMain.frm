@@ -160,6 +160,10 @@ Option Explicit
 Private Sub Form_Initialize()
 InitCommonControls
 '加载配置
+If CheckFileExists(App.Path & "\Config.Defaults.ini") = True And CheckFileExists(App.Path & "\Config.ini") = False Then
+'创建默认配置
+Name App.Path & "\Config.Defaults.ini" As App.Path & "\Config.ini"
+End If
 YuzuInstallFolder = GetIniBase64("Folder", "YuzuInstallFolder", App.Path & "\Config.ini")
 RyujinxInstallFolder = GetIniBase64("Folder", "RyujinxInstallFolder", App.Path & "\Config.ini")
 AlwaysUseCloudFlare = GetIni("Network", "AlwaysUseCloudFlare", App.Path & "\Config.ini")
@@ -198,12 +202,18 @@ Else
         End If
     Else
         'Ryujinx
-        MsgBox "暂未支持 Ryujinx，请等待下个版本。"
-        End
         frmManage.IsYuzu = False
-        Load frmManage
-        frmManage.Show
-        Me.Hide
+        If CheckFileExists(RyujinxInstallFolder & "\Ryujinx.exe") = False Then
+            If MsgBox("Ryujinx 模拟器没有安装，是否现在安装模拟器？", vbYesNo, "Ryujinx 未找到") = vbYes Then
+                InstallMode = 1
+                frmRyujinxInstaller.Show
+                Me.Hide
+            End If
+        Else
+            Load frmManage
+            frmManage.Show
+            Me.Hide
+        End If
     End If
 End If
 End Sub

@@ -9,12 +9,13 @@ Public Declare Sub CoTaskMemFree Lib "ole32.dll" (ByVal pv As Long)
 Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 '公共变量常量
-Public Const Version As String = "Development 20220127"
+Public Const Version As String = "Development 20220127-2"
 
 
 '配置设置
 Public YuzuInstallFolder As String, RyujinxInstallFolder As String, AlwaysUseCloudFlare As String, CloudFlareReverseProxyUrl As String, DownloadSource As String
 Public YuzuVersion As String, YuzuBranch As String, YuzuFirmware As String, YuzuCustomDataFolder As String
+Public RyujinxVersion As String, RyujinxBranch As String, RyujinxFirmware As String, RyujinxCustomDataFolder As String
 Public InstallMode As Integer
 
 Public Function GetIni(appName As String, keyName As String, mc_strIniFileName As String) As String
@@ -160,6 +161,33 @@ Dim TmpMLAli As String
 TmpMLAli = GetDataStr("https://yidaozhan-pan-yidaozhanya.vercel.app/ns_emu_helper/YuzuMainlineMirror/?json")
 TmpMLAli = Replace(Replace(Join(Filter(Split(Replace(TmpMLAli, Chr(34), ""), ","), "name:yuzu-windows-msvc-"), vbCrLf), "name:yuzu-windows-msvc-", ""), ".7z", "")
 GetYuzuMLVersionAli = TmpMLAli
+End Function
+
+Public Function GetRyujinxVersion() As String
+'获取 Ryujinx 版本号
+On Error GoTo RetryML
+Dim TmpML As String
+RetryML:
+TmpML = GetDataStr(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/Ryujinx/release-channel-master/releases/latest")
+TmpML = Replace(Replace(TmpML, Chr(34), ""), " ", "")
+TmpML = Filter(Split(TmpML, ","), "tag_name:")(0)
+GetRyujinxVersion = Replace(Replace(Replace(TmpML, "tag_name:", ""), vbCrLf, ""), vbLf, "")
+End Function
+
+Public Function GetRyujinxVersionAli() As String
+'获取 Ryujinx 版本号 阿里云盘
+Dim TmpMLAli As String
+TmpMLAli = GetDataStr("https://yidaozhan-pan-yidaozhanya.vercel.app/ns_emu_helper/RyujinxMainlineMirror/?json")
+TmpMLAli = Replace(Replace(Join(Filter(Split(Replace(TmpMLAli, Chr(34), ""), ","), "name:ryujinx-"), vbCrLf), "name:ryujinx-", ""), "-win_x64.zip", "")
+GetRyujinxVersionAli = TmpMLAli
+End Function
+
+Public Function GetRyujinxLDNVersionAli() As String
+'获取 Ryujinx LDN 版本号 阿里云盘
+Dim TmpMLAli As String
+TmpMLAli = GetDataStr("https://yidaozhan-pan-yidaozhanya.vercel.app/ns_emu_helper/RyujinxLDNMirror/?json")
+TmpMLAli = Replace(Replace(Join(Filter(Split(Replace(TmpMLAli, Chr(34), ""), ","), "name:ryujinx-"), vbCrLf), "name:ryujinx-", ""), "-win_x64.zip", "")
+GetRyujinxLDNVersionAli = TmpMLAli
 End Function
 
 Public Function MkDirs(ByVal PathIn As String) As Boolean
