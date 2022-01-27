@@ -266,6 +266,25 @@ If IsMissing Then
 Else
     frmManage.Show
 End If
+
+If IsMissing = True Then
+'迁移数据相关
+Dim fso As Object
+If Dir$(Environ("AppData") & "\yuzu", vbDirectory) <> "" Then
+'appdata存在
+    If Dir$(YuzuInstallFolder & "\user", vbDirectory) <> "" Then
+    Else
+    'user不存在
+        Set fso = CreateObject("Scripting.FileSystemObject") '创建FSO
+        Set folder = fso.GetFolder(Environ("AppData") & "\yuzu")
+        folder.Move YuzuInstallFolder & "\user"
+        Set folder = Nothing
+        Set fso = Nothing
+        MsgBox "之前的模拟器数据存放在 C 盘，已经自动迁移到模拟器文件夹。", vbOKOnly + vbInformation, "提示"
+    End If
+End If
+
+End If
 Unload Me
 End If
 End Sub
@@ -295,6 +314,9 @@ If YuzuCustomDataFolder = "False" Then
     Checks(0).Caption = "否"
     btnBrowse.Visible = False
     txtDataFolder.Visible = False
+    
+    frmManage.Hide
+    frmYuzuConfig.SetFocus
 Else
     Checks(0).Value = 1
     Checks(0).Caption = "是"
@@ -320,20 +342,19 @@ If IsMissing Then
     btnSave.Top = 2520
     btnCancel.Top = 2520
     Me.Height = 3650
-    
-    frmManage.Hide
-    frmYuzuConfig.SetFocus
 Else
     Labels(0).Caption = "Yuzu 版本信息设置" & vbCrLf & "如果你手动更新了模拟器，可以在此更改版本信息。"
     btnSave.Top = 4200
     btnCancel.Top = 4200
     Me.Height = 5325
 End If
+
 ImageCombo1.ComboItems.Clear
 ImageCombo1.ComboItems.Add 1, "EA", "预先测试版", 1
 ImageCombo1.ComboItems.Add 2, "Mainline", "主线版", 2
 ImageCombo1.ComboItems(1).Selected = True
 txtVersion.SetFocus
+
 cbFirmware.Text = "加载中 ..."
 
 txtVersion.Text = GetYuzuVersion
@@ -344,6 +365,7 @@ Dim i As Integer
 For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
 cbFirmware.AddItem FirmwareVersionArr(i)
 Next
+
 If IsMissing Then
     cbFirmware.Text = "选择固件版本"
 Else
@@ -426,13 +448,3 @@ MoveFailed2:
     WriteIni "Yuzu", "CustomDataFolder", YuzuCustomDataFolder, YuzuInstallFolder & "\YuzuConfig.ini"
 Exit Sub
 End Sub
-
-Private Function TestEmptyFolder(FolderName As String) As Boolean
-On Error GoTo Err
-RmDir (FolderName) '删除目录，如果出错表示不为空
-MkDir (FolderName) '重新建目录
-TestEmptyFolder = True
-Exit Function
-Err:
-TestEmptyFolder = False
-End Function

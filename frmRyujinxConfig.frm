@@ -266,6 +266,22 @@ If IsMissing Then
 Else
     frmManage.Show
 End If
+
+'迁移数据相关
+Dim fso As Object
+If Dir$(Environ("AppData") & "\Ryujinx", vbDirectory) <> "" Then
+'appdata存在
+    If Dir$(RyujinxInstallFolder & "\portable", vbDirectory) <> "" Then
+    Else
+    'user不存在
+        Set fso = CreateObject("Scripting.FileSystemObject") '创建FSO
+        Set folder = fso.GetFolder(Environ("AppData") & "\Ryujinx")
+        folder.Move RyujinxInstallFolder & "\portable"
+        Set folder = Nothing
+        Set fso = Nothing
+        MsgBox "之前的模拟器数据存放在 C 盘，已经自动迁移到模拟器文件夹。", vbOKOnly + vbInformation, "提示"
+    End If
+End If
 Unload Me
 End If
 End Sub

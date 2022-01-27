@@ -9,7 +9,7 @@ Public Declare Sub CoTaskMemFree Lib "ole32.dll" (ByVal pv As Long)
 Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 '公共变量常量
-Public Const Version As String = "Development 20220127-2"
+Public Const Version As String = "Beta 0.1"
 
 
 '配置设置
@@ -238,3 +238,15 @@ Public Sub WriteIniBase64(appName As String, keyName As String, valueNew As Stri
     X = WritePrivateProfileString(appName, keyName, Base64Encode(valueNew), strIniFile)
     Debug.Print X
 End Sub
+
+Public Function TestEmptyFolder(FolderName As String) As Boolean
+'测试文件夹是否存在
+On Error GoTo Err
+RmDir (FolderName) '删除目录，如果出错表示不为空
+MkDir (FolderName) '重新建目录
+TestEmptyFolder = True
+Exit Function
+Err:
+TestEmptyFolder = False
+End Function
+

@@ -234,47 +234,50 @@ If IsYuzu Then
     If CheckFileExists(YuzuInstallFolder & "\YuzuConfig.ini") = False Then
         frmYuzuConfig.IsMissing = True
         frmYuzuConfig.Show
-    End If
-    YuzuVersion = GetIni("Yuzu", "Version", YuzuInstallFolder & "\YuzuConfig.ini")
-    YuzuBranch = GetIni("Yuzu", "Branch", YuzuInstallFolder & "\YuzuConfig.ini")
-    If Left(YuzuBranch, 3) = "主线版" Then
-        Images(0).Picture = frmYuzuInstaller.ImageList2.ListImages(2).Picture
-        Unload frmYuzuInstaller
+        
     Else
-        Images(0).Picture = frmYuzuInstaller.ImageList2.ListImages(1).Picture
-        Unload frmYuzuInstaller
-    End If
-    YuzuFirmware = GetIni("Yuzu", "Firmware", YuzuInstallFolder & "\YuzuConfig.ini")
-    Labels(0).Caption = "模拟器版本：" & YuzuBranch
-    Labels(0).Caption = Labels(0).Caption & " " & YuzuVersion
-    Labels(1).Caption = "固件版本：" & YuzuFirmware
-    YuzuCustomDataFolder = GetIni("Yuzu", "CustomDataFolder", YuzuInstallFolder & "\YuzuConfig.ini")
-    If YuzuCustomDataFolder <> "False" Then
-        Labels(2).Visible = True
-        Labels(2).Caption = "数据文件夹：" & YuzuCustomDataFolder
+        YuzuVersion = GetIni("Yuzu", "Version", YuzuInstallFolder & "\YuzuConfig.ini")
+        YuzuBranch = GetIni("Yuzu", "Branch", YuzuInstallFolder & "\YuzuConfig.ini")
+        If Left(YuzuBranch, 3) = "主线版" Then
+            Images(0).Picture = frmYuzuInstaller.ImageList2.ListImages(2).Picture
+            Unload frmYuzuInstaller
+        Else
+            Images(0).Picture = frmYuzuInstaller.ImageList2.ListImages(1).Picture
+            Unload frmYuzuInstaller
+        End If
+        YuzuFirmware = GetIni("Yuzu", "Firmware", YuzuInstallFolder & "\YuzuConfig.ini")
+        Labels(0).Caption = "模拟器版本：" & YuzuBranch
+        Labels(0).Caption = Labels(0).Caption & " " & YuzuVersion
+        Labels(1).Caption = "固件版本：" & YuzuFirmware
+        YuzuCustomDataFolder = GetIni("Yuzu", "CustomDataFolder", YuzuInstallFolder & "\YuzuConfig.ini")
+        If YuzuCustomDataFolder <> "False" Then
+            Labels(2).Visible = True
+            Labels(2).Caption = "数据文件夹：" & YuzuCustomDataFolder
+        End If
     End If
 Else
     If CheckFileExists(RyujinxInstallFolder & "\RyujinxConfig.ini") = False Then
         frmRyujinxConfig.IsMissing = True
         frmRyujinxConfig.Show
-    End If
-    RyujinxVersion = GetIni("Ryujinx", "Version", RyujinxInstallFolder & "\RyujinxConfig.ini")
-    RyujinxBranch = GetIni("Ryujinx", "Branch", RyujinxInstallFolder & "\RyujinxConfig.ini")
-    If Left(RyujinxBranch, 3) = "主线版" Then
-        Images(0).Picture = frmRyujinxInstaller.ImageList2.ListImages(1).Picture
-        Unload frmRyujinxInstaller
     Else
-        Images(0).Picture = frmRyujinxInstaller.ImageList2.ListImages(2).Picture
-        Unload frmRyujinxInstaller
-    End If
-    RyujinxFirmware = GetIni("Ryujinx", "Firmware", RyujinxInstallFolder & "\RyujinxConfig.ini")
-    Labels(0).Caption = "模拟器版本：" & RyujinxBranch
-    Labels(0).Caption = Labels(0).Caption & " " & RyujinxVersion
-    Labels(1).Caption = "固件版本：" & RyujinxFirmware
-    RyujinxCustomDataFolder = GetIni("Ryujinx", "CustomDataFolder", RyujinxInstallFolder & "\RyujinxConfig.ini")
-    If RyujinxCustomDataFolder <> "False" Then
-        Labels(2).Visible = True
-        Labels(2).Caption = "数据文件夹：" & RyujinxCustomDataFolder
+        RyujinxVersion = GetIni("Ryujinx", "Version", RyujinxInstallFolder & "\RyujinxConfig.ini")
+        RyujinxBranch = GetIni("Ryujinx", "Branch", RyujinxInstallFolder & "\RyujinxConfig.ini")
+        If Left(RyujinxBranch, 3) = "主线版" Then
+            Images(0).Picture = frmRyujinxInstaller.ImageList2.ListImages(1).Picture
+            Unload frmRyujinxInstaller
+        Else
+            Images(0).Picture = frmRyujinxInstaller.ImageList2.ListImages(2).Picture
+            Unload frmRyujinxInstaller
+        End If
+        RyujinxFirmware = GetIni("Ryujinx", "Firmware", RyujinxInstallFolder & "\RyujinxConfig.ini")
+        Labels(0).Caption = "模拟器版本：" & RyujinxBranch
+        Labels(0).Caption = Labels(0).Caption & " " & RyujinxVersion
+        Labels(1).Caption = "固件版本：" & RyujinxFirmware
+        RyujinxCustomDataFolder = GetIni("Ryujinx", "CustomDataFolder", RyujinxInstallFolder & "\RyujinxConfig.ini")
+        If RyujinxCustomDataFolder <> "False" Then
+            Labels(2).Visible = True
+            Labels(2).Caption = "数据文件夹：" & RyujinxCustomDataFolder
+        End If
     End If
 End If
 End Sub
