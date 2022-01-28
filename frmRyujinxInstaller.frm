@@ -586,7 +586,7 @@ End Sub
 Private Sub Step4()
 Dim SevenZip As Object
 Set SevenZip = New cVszArchive
-Dim fso As Object
+Dim fso As Object, folder As Object
 'dependencies
     
 On Error Resume Next
@@ -605,7 +605,7 @@ If InstallMode = 1 Or InstallMode = 3 Then
         If DownloadSource = "Github" Then
             iFirmwarePath = CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
         Else
-            iFirmwarePath = "https://yidaozhan-pan-yidaozhanya.vercel.app/ns_emu_helper/NSFirmwareMirror/Firmware_" & cbFirmware.Text & ".zip"
+            iFirmwarePath = "https://" & AliyundriveDomain & "/ns_emu_helper/NSFirmwareMirror/Firmware_" & cbFirmware.Text & ".zip"
         End If
         'Legacy reverse proxy for testing purpose, uncomment it when new reverse proxy is not work
         'iFirmwarePath = "https://download.sydzy.workers.dev/api/download?url=https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
@@ -666,11 +666,11 @@ If iIsMainline Then
     If DownloadSource = "Github" Then
         RyujinxUrl = "https://github.com/Ryujinx/release-channel-master/releases/download/" & iVersion & "/ryujinx-" & iVersion & "-win_x64.zip"
     Else
-        RyujinxUrl = "https://yidaozhan-pan-yidaozhanya.vercel.app/ns_emu_helper/RyujinxMainlineMirror/ryujinx-" & iVersion & "-win_x64.zip"
+        RyujinxUrl = "https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxMainlineMirror/ryujinx-" & iVersion & "-win_x64.zip"
     End If
 Else
     'LDN
-    RyujinxUrl = "https://yidaozhan-pan-yidaozhanya.vercel.app/ns_emu_helper/RyujinxLDNMirror/ryujinx-" & iVersion & "-win_x64.zip"
+    RyujinxUrl = "https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxLDNMirror/ryujinx-" & iVersion & "-win_x64.zip"
 End If
 
 If CheckFileExists(RyujinxInstallFolder & "\Ryujinx.zip") = False Then
@@ -802,16 +802,16 @@ If InstallMode = 1 Or InstallMode = 2 Then
     '复制文件
     Set fso = CreateObject("scripting.filesystemobject") '创建FSO对象
     DoEvents
-    fso.CopyFolder RyujinxInstallFolder & "\publish\bin", RyujinxInstallFolder & "\bin"
-    fso.CopyFolder RyujinxInstallFolder & "\publish\etc", RyujinxInstallFolder & "\etc"
-    fso.CopyFolder RyujinxInstallFolder & "\publish\lib", RyujinxInstallFolder & "\lib"
-    fso.CopyFolder RyujinxInstallFolder & "\publish\share", RyujinxInstallFolder & "\share"
-    fso.CopyFile RyujinxInstallFolder & "\publish\*.*", RyujinxInstallFolder & "\", True
-    Dim X As Integer
-    For X = 1 To 20 ' 等四秒钟fso操作完成
-    Sleep 200
+    Set folder = fso.GetFolder(RyujinxInstallFolder & "\publish\bin")
+    folder.Move RyujinxInstallFolder & "\bin"
+    Set folder = fso.GetFolder(RyujinxInstallFolder & "\publish\etc")
+    folder.Move RyujinxInstallFolder & "\etc"
+    Set folder = fso.GetFolder(RyujinxInstallFolder & "\publish\lib")
+    folder.Move RyujinxInstallFolder & "\lib"
+    Set folder = fso.GetFolder(RyujinxInstallFolder & "\publish\share")
+    folder.Move RyujinxInstallFolder & "\share"
     DoEvents
-    Next
+    fso.CopyFile RyujinxInstallFolder & "\publish\*.*", RyujinxInstallFolder & "\", True
     Set fso = Nothing
     Shell "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\publish" & Chr(34)
     DoEvents
@@ -855,7 +855,6 @@ If InstallMode = 1 Or InstallMode = 3 Then
     DoEvents
         'Ryujinx固件安装
     Dim FileName() As String
-    Dim folder As Object
     Dim file As Object
     Set fso = CreateObject("scripting.filesystemobject") '创建FSO对象
     Set folder = fso.GetFolder(RyujinxInstallFolder & "\FWTMP")
@@ -957,7 +956,7 @@ If Index = 1 Then
     cbFirmware.Top = 2520
     cbFirmware.Clear
     cbFirmware.Text = "加载中 ..."
-    FirmwareVersionArr = Filter(Split(GetDataStr("https://yidaozhan-pan-yidaozhanya.vercel.app/ns_emu_helper/NSFirmwareMirror/?json"), Chr(34)), "firmware_")
+    FirmwareVersionArr = Filter(Split(GetDataStr("https://" & AliyundriveDomain & "/ns_emu_helper/NSFirmwareMirror/?json"), Chr(34)), "firmware_")
     For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
         cbFirmware.AddItem Replace(Replace(FirmwareVersionArr(i), "firmware_", ""), ".zip", "")
     Next

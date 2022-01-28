@@ -592,7 +592,7 @@ cbFirmware.Text = "选择固件版本"
 End Sub
 
 Private Sub Step4()
-Dim fso As Object
+Dim fso As Object, folder As Object
 Dim SevenZip As Object
 Set SevenZip = New cVszArchive
 'dependencies
@@ -613,7 +613,7 @@ If InstallMode = 1 Or InstallMode = 3 Then
         If DownloadSource = "Github" Then
             iFirmwarePath = CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
         Else
-            iFirmwarePath = "https://yidaozhan-pan-yidaozhanya.vercel.app/ns_emu_helper/NSFirmwareMirror/Firmware_" & cbFirmware.Text & ".zip"
+            iFirmwarePath = "https://" & AliyundriveDomain & "/ns_emu_helper/NSFirmwareMirror/Firmware_" & cbFirmware.Text & ".zip"
         End If
         'Legacy reverse proxy for testing purpose, uncomment it when new reverse proxy is not work
         'iFirmwarePath = "https://download.sydzy.workers.dev/api/download?url=https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
@@ -698,9 +698,9 @@ If DownloadSource = "Github" Then
 Else
     '阿里
     If iIsEarlyAccess Then
-        YuzuUrl = "https://yidaozhan-pan-yidaozhanya.vercel.app/ns_emu_helper/YuzuEAMirror/Windows-Yuzu-EA-" & iVersion & ".7z"
+        YuzuUrl = "https://" & AliyundriveDomain & "/ns_emu_helper/YuzuEAMirror/Windows-Yuzu-EA-" & iVersion & ".7z"
     Else
-        YuzuUrl = "https://yidaozhan-pan-yidaozhanya.vercel.app/ns_emu_helper/YuzuMainlineMirror/yuzu-windows-msvc-" & iVersion & ".7z"
+        YuzuUrl = "https://" & AliyundriveDomain & "/ns_emu_helper/YuzuMainlineMirror/yuzu-windows-msvc-" & iVersion & ".7z"
     End If
 End If
 
@@ -796,7 +796,7 @@ If InstallMode = 1 Then
         PBarLoad 1, Me.hWnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
         PBarSetRange 1, 0, 100
         PBarSetPos 1, 0
-        ucDownload1.DownloadFile "https://yidaozhan-pan-yidaozhanya.vercel.app/ali/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/sysdata.zip", YuzuInstallFolder & "\Sysdata.zip"
+        ucDownload1.DownloadFile "https://" & AliyundriveDomain & "/ali/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/sysdata.zip", YuzuInstallFolder & "\Sysdata.zip"
         DoEvents
         DownloadCompleted = False
         Do Until DownloadCompleted
@@ -837,13 +837,10 @@ If InstallMode = 1 Or InstallMode = 2 Then
     DoEvents
     '复制文件
     Set fso = CreateObject("scripting.filesystemobject") '创建FSO对象
-    fso.CopyFolder YuzuInstallFolder & "\" & YuzuVersionName & "\plugins", YuzuInstallFolder & "\plugins"
+    Set folder = fso.GetFolder(YuzuInstallFolder & "\" & YuzuVersionName & "\plugins")
+    folder.Move YuzuInstallFolder & "\plugins"
     fso.CopyFile YuzuInstallFolder & "\" & YuzuVersionName & "\*.*", YuzuInstallFolder & "\", True
-    Dim X As Integer
-    For X = 1 To 20 ' 等四秒钟fso操作完成
-    Sleep 200
-    DoEvents
-    Next
+    Set folder = Nothing
     Set fso = Nothing
     DoEvents
     Shell "cmd /c rd /s /q " & Chr(34) & YuzuInstallFolder & "\" & YuzuVersionName & "" & Chr(34), vbMinimizedNoFocus
@@ -889,7 +886,6 @@ If InstallMode = 1 Or InstallMode = 3 Then
     DoEvents
         'Ryujinx固件到Yuzu固件
     Dim FileName() As String
-    Dim folder As Object
     Dim file As Object
     Set fso = CreateObject("scripting.filesystemobject") '创建FSO对象
     Set folder = fso.GetFolder(YuzuInstallFolder & "\FWTMP")
@@ -1034,7 +1030,7 @@ If Index = 1 Then
     cbFirmware.Top = 2520
     cbFirmware.Clear
     cbFirmware.Text = "加载中 ..."
-    FirmwareVersionArr = Filter(Split(GetDataStr("https://yidaozhan-pan-yidaozhanya.vercel.app/ns_emu_helper/NSFirmwareMirror/?json"), Chr(34)), "firmware_")
+    FirmwareVersionArr = Filter(Split(GetDataStr("https://" & AliyundriveDomain & "/ns_emu_helper/NSFirmwareMirror/?json"), Chr(34)), "firmware_")
     For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
         cbFirmware.AddItem Replace(Replace(FirmwareVersionArr(i), "firmware_", ""), ".zip", "")
     Next
