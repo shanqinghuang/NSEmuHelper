@@ -178,6 +178,10 @@ Me.Caption = "NS模拟器助手 " & Version
 Labels(4).Caption = "高效全能的 NS 模拟器辅助工具" & vbCrLf & Version
 End Sub
 
+Private Sub Form_Terminate()
+End
+End Sub
+
 Private Sub Form_Unload(Cancel As Integer)
 End
 End Sub

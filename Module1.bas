@@ -9,7 +9,7 @@ Public Declare Sub CoTaskMemFree Lib "ole32.dll" (ByVal pv As Long)
 Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 '公共变量常量
-Public Const Version As String = "Beta 0.2"
+Public Const Version As String = "Beta 0.2.1"
 
 
 '配置设置
@@ -115,7 +115,7 @@ Public Function GetDataStr(ByVal Url As String) As String
   Set XMLHTTP = CreateObject("Microsoft.XMLHTTP")
   XMLHTTP.Open "GET", Url, True
   XMLHTTP.send
-  While XMLHTTP.ReadyState <> 4
+  While XMLHTTP.readystate <> 4
   Sleep 10
     DoEvents
   Wend
@@ -126,32 +126,60 @@ Err:
   GetDataStr = ""
 End Function
 
+Public Function GetDataStr2(ByVal Url As String) As String
+'server xhr get 字符串
+  On Error GoTo Err:
+  Dim XMLHTTP As Object
+  Set XMLHTTP = CreateObject("MSXML2.ServerXMLHTTP.6.0")
+  XMLHTTP.Open "GET", Url, False
+  XMLHTTP.setRequestHeader "User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36"
+  'XMLHTTP.SetOption 2, 13056 'ignore cert errors
+  XMLHTTP.send
+  While XMLHTTP.Status <> 200
+    Sleep 10
+    DoEvents
+  Wend
+    GetDataStr2 = XMLHTTP.ResponseText
+  Set XMLHTTP = Nothing
+  Exit Function
+Err:
+  GetDataStr2 = ""
+End Function
+
 Public Function GetYuzuVersion() As String
 '获取 Yuzu Early Access 版本号
-On Error GoTo RetryEA
+On Error GoTo ExitEA
 Dim TmpEA As String
-RetryEA:
-TmpEA = GetDataStr(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/pineappleea/pineapple-src/releases")
+TmpEA = GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/pineappleea/pineapple-src/releases")
 TmpEA = Replace(Replace(TmpEA, Chr(34), ""), " ", "")
 TmpEA = Filter(Split(TmpEA, ","), "tag_name:EA")(0)
 GetYuzuVersion = Split(TmpEA, "EA-")(1)
+Exit Function
+ExitEA:
+MsgBox "Github API 调用超出限制，请等一会重试，或者使用阿里云盘下载源。", vbCritical + vbOKOnly
+GetYuzuVersion = "错误"
 End Function
 
 Public Function GetYuzuMLVersion() As String
 '获取 Yuzu 主线版版本号
-On Error GoTo RetryML
+On Error GoTo ExitEA
 Dim TmpML As String
-RetryML:
 TmpML = GetDataStr(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases")
 TmpML = Replace(Replace(TmpML, Chr(34), ""), " ", "")
 TmpML = Filter(Split(TmpML, ","), "tag_name:mainline")(0)
 GetYuzuMLVersion = Split(TmpML, "mainline-0-")(1)
+Exit Function
+ExitEA:
+MsgBox "Github API 调用超出限制，请等一会重试，或者使用阿里云盘下载源。", vbCritical + vbOKOnly
+GetYuzuMLVersion = "错误"
 End Function
 
 Public Function GetYuzuVersionAli() As String
 '获取 Yuzu Early Access 版本号 阿里云盘
 Dim TmpEAAli As String
-TmpEAAli = GetDataStr("https://" & AliyundriveDomain & "/ns_emu_helper/YuzuEAMirror/?json")
+Do Until TmpEAAli <> ""
+    TmpEAAli = GetDataStr("https://" & AliyundriveDomain & "/ns_emu_helper/YuzuEAMirror/?json")
+Loop
 TmpEAAli = Replace(Replace(Join(Filter(Split(TmpEAAli, Chr(34)), "windows-yuzu-ea-"), vbCrLf), "windows-yuzu-ea-", ""), ".7z", "")
 GetYuzuVersionAli = TmpEAAli
 End Function
@@ -159,7 +187,9 @@ End Function
 Public Function GetYuzuMLVersionAli() As String
 '获取 Yuzu 主线版版本号 阿里云盘
 Dim TmpMLAli As String
-TmpMLAli = GetDataStr("https://" & AliyundriveDomain & "/ns_emu_helper/YuzuMainlineMirror/?json")
+Do Until TmpMLAli <> ""
+    TmpMLAli = GetDataStr("https://" & AliyundriveDomain & "/ns_emu_helper/YuzuMainlineMirror/?json")
+Loop
 TmpMLAli = Replace(Replace(Join(Filter(Split(Replace(TmpMLAli, Chr(34), ""), ","), "name:yuzu-windows-msvc-"), vbCrLf), "name:yuzu-windows-msvc-", ""), ".7z", "")
 GetYuzuMLVersionAli = TmpMLAli
 End Function
@@ -169,7 +199,7 @@ Public Function GetRyujinxVersion() As String
 On Error GoTo RetryML
 Dim TmpML As String
 RetryML:
-TmpML = GetDataStr(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/Ryujinx/release-channel-master/releases/latest")
+TmpML = GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/Ryujinx/release-channel-master/releases/latest")
 TmpML = Replace(Replace(TmpML, Chr(34), ""), " ", "")
 TmpML = Filter(Split(TmpML, ","), "tag_name:")(0)
 GetRyujinxVersion = Replace(Replace(Replace(TmpML, "tag_name:", ""), vbCrLf, ""), vbLf, "")
@@ -178,7 +208,9 @@ End Function
 Public Function GetRyujinxVersionAli() As String
 '获取 Ryujinx 版本号 阿里云盘
 Dim TmpMLAli As String
-TmpMLAli = GetDataStr("https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxMainlineMirror/?json")
+Do Until TmpMLAli <> ""
+    TmpMLAli = GetDataStr("https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxMainlineMirror/?json")
+Loop
 TmpMLAli = Replace(Replace(Join(Filter(Split(Replace(TmpMLAli, Chr(34), ""), ","), "name:ryujinx-"), vbCrLf), "name:ryujinx-", ""), "-win_x64.zip", "")
 GetRyujinxVersionAli = TmpMLAli
 End Function
@@ -186,7 +218,9 @@ End Function
 Public Function GetRyujinxLDNVersionAli() As String
 '获取 Ryujinx LDN 版本号 阿里云盘
 Dim TmpMLAli As String
-TmpMLAli = GetDataStr("https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxLDNMirror/?json")
+Do Until TmpMLAli <> ""
+    TmpMLAli = GetDataStr("https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxLDNMirror/?json")
+Loop
 TmpMLAli = Replace(Replace(Join(Filter(Split(Replace(TmpMLAli, Chr(34), ""), ","), "name:ryujinx-"), vbCrLf), "name:ryujinx-", ""), "-win_x64.zip", "")
 GetRyujinxLDNVersionAli = TmpMLAli
 End Function

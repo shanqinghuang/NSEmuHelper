@@ -138,22 +138,23 @@ frmManage.Hide
 End Sub
 
 Private Sub btnKey_Click()
-    On Error GoTo ExitKey
+    On Error Resume Next
     Dim KeyFile As String
 If IsYuzu Then
     KeyFile = ChooseFile("选择密钥文件 (prod.keys)", "NS 密钥文件", "prod.keys", frmManage.hWnd)
+    If KeyFile = "" Then Exit Sub
     Kill YuzuInstallFolder & "\user\keys\prod.keys"
     FileCopy KeyFile, YuzuInstallFolder & "\user\keys\prod.keys"
-    MsgBox "Yuzu 密钥文件更新 / 替换成功功！", vbOKOnly + vbInformation, "提示"
+    MsgBox "Yuzu 密钥文件更新 / 替换成功！", vbOKOnly + vbInformation, "提示"
     Exit Sub
 Else
     KeyFile = ChooseFile("选择密钥文件 (prod.keys)", "NS 密钥文件", "prod.keys", frmManage.hWnd)
+    If KeyFile = "" Then Exit Sub
     Kill RyujinxInstallFolder & "\portable\system\prod.keys"
     FileCopy KeyFile, RyujinxInstallFolder & "\portable\system\prod.keys"
     MsgBox "Ryujinx 密钥文件更新 / 替换成功！", vbOKOnly + vbInformation, "提示"
     Exit Sub
 End If
-ExitKey:
 End Sub
 
 
