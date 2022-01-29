@@ -348,8 +348,6 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Public DownloadCompleted As Boolean, TitlePrefix As String
 Attribute DownloadCompleted.VB_VarHelpID = -1
-Private WithEvents SevenZip As cVszArchive
-Attribute SevenZip.VB_VarHelpID = -1
 '1：纯净安装
 '2：更新模拟器
 '3：固件
@@ -593,8 +591,7 @@ End Sub
 
 Private Sub Step4()
 Dim fso As Object, folder As Object
-Dim SevenZip As Object
-Set SevenZip = New cVszArchive
+Set fso = CreateObject("scripting.filesystemobject") '创建FSO对象
 'dependencies
     
 On Error Resume Next
@@ -715,7 +712,7 @@ If DownloadSource = "Github" Then
         Tmp = "timeout"
         Inet1.Cancel
         Inet1.Protocol = icHTTPS
-        Inet1.URL = "https://github.com/opensearch.xml"
+        Inet1.Url = "https://github.com/opensearch.xml"
         Inet1.RequestTimeout = 10
         Tmp = Inet1.OpenURL
         If Err.Number = 35761 Then
@@ -829,23 +826,18 @@ If InstallMode = 1 Or InstallMode = 2 Then
     Labels(5).Caption = ""
     PBarLoad 1, Me.hWnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
     PBarSetRange 1, 0, 100
-    PBarSetPos 1, 0
+    PBarSetPos 1, 100
     DoEvents
-        SevenZip.OpenArchive YuzuInstallFolder & "\Yuzu.7z"
-        SevenZip.Extract YuzuInstallFolder
+    Unzip YuzuInstallFolder & "\Yuzu.7z", YuzuInstallFolder
     PBarUnload 1
     DoEvents
     '复制文件
-    Set fso = CreateObject("scripting.filesystemobject") '创建FSO对象
-    Set folder = fso.GetFolder(YuzuInstallFolder & "\" & YuzuVersionName & "\plugins")
-    folder.Move YuzuInstallFolder & "\plugins"
+    XCopy YuzuInstallFolder & "\" & YuzuVersionName & "\plugins", YuzuInstallFolder & "\plugins"
     fso.CopyFile YuzuInstallFolder & "\" & YuzuVersionName & "\*.*", YuzuInstallFolder & "\", True
-    Set folder = Nothing
-    Set fso = Nothing
     DoEvents
-    Shell "cmd /c rd /s /q " & Chr(34) & YuzuInstallFolder & "\" & YuzuVersionName & "" & Chr(34), vbMinimizedNoFocus
+    ShellAndWait "cmd /c rd /s /q " & Chr(34) & YuzuInstallFolder & "\" & YuzuVersionName & "" & Chr(34)
     DoEvents
-    Shell "cmd /c cd " & Chr(34) & YuzuInstallFolder & Chr(34) & " && del /s /q *.tar.xz", vbMinimizedNoFocus
+    ShellAndWait "cmd /c cd " & Chr(34) & YuzuInstallFolder & Chr(34) & " && del /s /q *.tar.xz"
     DoEvents
 End If
     
@@ -877,27 +869,22 @@ If InstallMode = 1 Or InstallMode = 3 Then
     PBarSetPos 1, 0
     DoEvents
         If iFirmwareOnline Then
-            SevenZip.OpenArchive YuzuInstallFolder & "\Firmware.zip"
+            Unzip YuzuInstallFolder & "\Firmware.zip", YuzuInstallFolder & "\FWTMP"
         Else
-            SevenZip.OpenArchive iFirmwarePath
+            Unzip iFirmwarePath, YuzuInstallFolder & "\FWTMP"
         End If
-        SevenZip.Extract YuzuInstallFolder & "\FWTMP"
     PBarUnload 1
     DoEvents
         'Ryujinx固件到Yuzu固件
     Dim FileName() As String
     Dim file As Object
-    Set fso = CreateObject("scripting.filesystemobject") '创建FSO对象
     Set folder = fso.GetFolder(YuzuInstallFolder & "\FWTMP")
     For Each file In folder.Files '遍历根文件夹下的文件
     DoEvents
     MkDir YuzuInstallFolder & "\user\nand\system\Contents\registered\" & Replace(Replace(file, YuzuInstallFolder & "\FWTMP", ""), ".cnmt", "")
     FileCopy file, YuzuInstallFolder & "\user\nand\system\Contents\registered\" & Replace(Replace(file, YuzuInstallFolder & "\FWTMP", ""), ".cnmt", "") & "\00"
     Next
-        '释放内存
-    Set fso = Nothing
-    Set folder = Nothing
-    Set file = Nothing
+    Sleep 200
         '删除临时文件
     Shell "cmd /c rd /s /q " & Chr(34) & YuzuInstallFolder & "\FWTMP" & Chr(34), vbMinimizedNoFocus
 End If
@@ -910,8 +897,7 @@ If InstallMode = 1 Then
     PBarSetRange 1, 0, 100
     PBarSetPos 1, 0
     DoEvents
-        SevenZip.OpenArchive YuzuInstallFolder & "\Sysdata.zip"
-        SevenZip.Extract YuzuInstallFolder & "\user\sysdata"
+    Unzip YuzuInstallFolder & "\Sysdata.zip", YuzuInstallFolder & "\user\sysdata"
     PBarUnload 1
     DoEvents
     DoEvents
@@ -988,6 +974,11 @@ Labels(5).Visible = False
 btnDelYes.Visible = True
 btnDelNo.Visible = True
 
+        '释放内存
+    Set fso = Nothing
+    Set folder = Nothing
+    Set file = Nothing
+    
 If InstallMode = 1 Then
     btnShortcut.Visible = True
 End If
@@ -1051,11 +1042,6 @@ End If
 
 End Sub
 
-Private Sub SevenZip_Progress(ByVal FileIdx As Long, ByVal Current As Double, ByVal Total As Double, Cancel As Boolean)
-    '刷新进度条
-    PBarSetPos 1, CInt(Current / Total * 100)
-    DoEvents
-End Sub
 
 Private Sub ucDownload1_DownloadProgress(ByVal BytesRead As Long, ByVal BytesTotal As Long)
 '刷新进度条

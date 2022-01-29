@@ -9,8 +9,8 @@ Public Declare Sub CoTaskMemFree Lib "ole32.dll" (ByVal pv As Long)
 Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 '公共变量常量
-Public Const Version As String = "Beta 0.2.3"
-Public Const InternalVersion As String = "b0.2.3"
+Public Const Version As String = "Beta 0.2.4"
+Public Const InternalVersion As String = "b0.2.4"
 Public Const InternalConfigFileVersion As String = "v2"
 
 
@@ -26,25 +26,25 @@ Public Function GetIni(appName As String, KeyName As String, mc_strIniFileName A
     Dim strDefault As String
     Dim lngBuffLen As Long
     Dim strResu As String
-    Dim X As Long
+    Dim x As Long
     Dim strIniFile As String
         strIniFile = mc_strIniFileName
     strResu = String(1025, vbNullChar): lngBuffLen = 1025
     strDefault = ""
-    X = GetPrivateProfileString(appName, KeyName, strDefault, strResu, lngBuffLen, strIniFile)
-    Debug.Print X
+    x = GetPrivateProfileString(appName, KeyName, strDefault, strResu, lngBuffLen, strIniFile)
+    Debug.Print x
     Debug.Print strResu
-    GetIni = Left(strResu, X)
+    GetIni = Left(strResu, x)
     'GetIni = Left(GetIni, Len(GetIni) - 3)
 End Function
 
 Public Sub WriteIni(appName As String, KeyName As String, valueNew As String, mc_strIniFileName As String)
 '写入 ini
-    Dim X As Long
+    Dim x As Long
     Dim strIniFile As String
         strIniFile = mc_strIniFileName
-    X = WritePrivateProfileString(appName, KeyName, valueNew, strIniFile)
-    Debug.Print X
+    x = WritePrivateProfileString(appName, KeyName, valueNew, strIniFile)
+    Debug.Print x
 End Sub
 
 Public Function BStrFromLPWStr(lpWStr As Long) As String
@@ -293,4 +293,20 @@ End Sub
 
 Public Sub OpenLink(Url As String)
 Shell "cmd /c start " & Chr(34) & " " & Chr(34) & " " & Chr(34) & Url & Chr(34), vbNormalFocus
+End Sub
+
+Public Sub XCopy(From As String, Destination As String)
+    With CreateObject("WScript.Shell")
+        .Run "cmd /c xcopy /e /i /y " & Chr(34) & From & Chr(34) & " " & Chr(34) & Destination & Chr(34), 0, True
+    End With
+End Sub
+
+Public Sub ShellAndWait(pathFile As String)
+    With CreateObject("WScript.Shell")
+        .Run pathFile, 0, True
+    End With
+End Sub
+
+Public Sub Unzip(ZipPath As String, UnzipTo As String)
+ShellAndWait "cmd /c " & App.Path & "\Dependencies\7z.exe x " & Chr(34) & ZipPath & Chr(34) & " -o" & Chr(34) & UnzipTo & Chr(34) & " -aoa"
 End Sub

@@ -348,8 +348,6 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Public DownloadCompleted As Boolean, TitlePrefix As String
 Attribute DownloadCompleted.VB_VarHelpID = -1
-Private WithEvents SevenZip As cVszArchive
-Attribute SevenZip.VB_VarHelpID = -1
 '1：纯净安装
 '2：更新模拟器
 '3：固件
@@ -584,9 +582,8 @@ cbFirmware.Text = "选择固件版本"
 End Sub
 
 Private Sub Step4()
-Dim SevenZip As Object
-Set SevenZip = New cVszArchive
 Dim fso As Object, folder As Object
+Set fso = CreateObject("scripting.filesystemobject") '创建FSO对象
 'dependencies
     
 On Error Resume Next
@@ -685,7 +682,7 @@ If iIsMainline Then
             Tmp = "timeout"
             Inet1.Cancel
             Inet1.Protocol = icHTTPS
-            Inet1.URL = "https://github.com/opensearch.xml"
+            Inet1.Url = "https://github.com/opensearch.xml"
             Inet1.RequestTimeout = 10
             Tmp = Inet1.OpenURL
             If Err.Number = 35761 Then
@@ -789,31 +786,20 @@ If InstallMode = 1 Or InstallMode = 2 Then
         DoEvents
     End If
     '安装模拟器 解压
-    Labels(4).Caption = "正在解压缩并安装模拟器 ..."
+    Labels(4).Caption = "正在解压缩模拟器 ..."
     Labels(5).Caption = ""
     PBarLoad 1, Me.hWnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
     PBarSetRange 1, 0, 100
-    PBarSetPos 1, 0
+    PBarSetPos 1, 100
     DoEvents
-        SevenZip.OpenArchive RyujinxInstallFolder & "\Ryujinx.zip"
-        SevenZip.Extract RyujinxInstallFolder
+    Unzip RyujinxInstallFolder & "\Ryujinx.zip", RyujinxInstallFolder
     PBarUnload 1
     DoEvents
+    Labels(4).Caption = "正在安装模拟器 ..."
     '复制文件
-    Set fso = CreateObject("scripting.filesystemobject") '创建FSO对象
     DoEvents
-    Set folder = fso.GetFolder(RyujinxInstallFolder & "\publish\bin")
-    folder.Move RyujinxInstallFolder & "\bin"
-    Set folder = fso.GetFolder(RyujinxInstallFolder & "\publish\etc")
-    folder.Move RyujinxInstallFolder & "\etc"
-    Set folder = fso.GetFolder(RyujinxInstallFolder & "\publish\lib")
-    folder.Move RyujinxInstallFolder & "\lib"
-    Set folder = fso.GetFolder(RyujinxInstallFolder & "\publish\share")
-    folder.Move RyujinxInstallFolder & "\share"
-    DoEvents
-    fso.CopyFile RyujinxInstallFolder & "\publish\*.*", RyujinxInstallFolder & "\", True
-    Set fso = Nothing
-    Shell "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\publish" & Chr(34)
+    XCopy RyujinxInstallFolder & "\publish", RyujinxInstallFolder
+    ShellAndWait "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\publish" & Chr(34)
     DoEvents
     ''''''''''''
 End If
@@ -846,27 +832,21 @@ If InstallMode = 1 Or InstallMode = 3 Then
     PBarSetPos 1, 0
     DoEvents
         If iFirmwareOnline Then
-            SevenZip.OpenArchive RyujinxInstallFolder & "\Firmware.zip"
+            Unzip RyujinxInstallFolder & "\Firmware.zip", RyujinxInstallFolder & "\FWTMP"
         Else
-            SevenZip.OpenArchive iFirmwarePath
+            Unzip iFirmwarePath, RyujinxInstallFolder & "\FWTMP"
         End If
-        SevenZip.Extract RyujinxInstallFolder & "\FWTMP"
     PBarUnload 1
     DoEvents
         'Ryujinx固件安装
     Dim FileName() As String
     Dim file As Object
-    Set fso = CreateObject("scripting.filesystemobject") '创建FSO对象
     Set folder = fso.GetFolder(RyujinxInstallFolder & "\FWTMP")
     For Each file In folder.Files '遍历根文件夹下的文件
     DoEvents
     MkDir RyujinxInstallFolder & "\portable\bis\system\Contents\registered\" & Replace(Replace(file, RyujinxInstallFolder & "\FWTMP", ""), ".cnmt", "")
     FileCopy file, RyujinxInstallFolder & "\portable\bis\system\Contents\registered\" & Replace(Replace(file, RyujinxInstallFolder & "\FWTMP", ""), ".cnmt", "") & "\00"
     Next
-        '释放内存
-    Set fso = Nothing
-    Set folder = Nothing
-    Set file = Nothing
         '删除临时文件
     Shell "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\FWTMP" & Chr(34), vbMinimizedNoFocus
 End If
@@ -915,7 +895,10 @@ Labels(4).Visible = False
 Labels(5).Visible = False
 btnDelYes.Visible = True
 btnDelNo.Visible = True
-
+'释放内存
+    Set fso = Nothing
+    Set folder = Nothing
+    Set file = Nothing
 If InstallMode = 1 Then
     btnShortcut.Visible = True
 End If
@@ -975,12 +958,6 @@ Else
     cbFirmware.Text = "选择固件版本"
 End If
 
-End Sub
-
-Private Sub SevenZip_Progress(ByVal FileIdx As Long, ByVal Current As Double, ByVal Total As Double, Cancel As Boolean)
-    '刷新进度条
-    PBarSetPos 1, CInt(Current / Total * 100)
-    DoEvents
 End Sub
 
 Private Sub ucDownload1_DownloadProgress(ByVal BytesRead As Long, ByVal BytesTotal As Long)
