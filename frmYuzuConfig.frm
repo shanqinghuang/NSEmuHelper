@@ -357,6 +357,7 @@ txtVersion.SetFocus
 
 cbFirmware.Text = "Мгдижа ..."
 
+DoEvents
 txtVersion.Text = GetYuzuVersion
 
 Dim FirmwareVersionArr() As String
@@ -374,8 +375,17 @@ End If
 
 End Sub
 
+
 Private Sub Form_Initialize()
 InitCommonControls
+End Sub
+
+Private Sub Form_Unload(Cancel As Integer)
+    If IsMissing Then
+        frmMain.Show
+    Else
+        frmManage.Show
+    End If
 End Sub
 
 Private Sub ImageCombo1_Click()

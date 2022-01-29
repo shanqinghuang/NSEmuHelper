@@ -164,15 +164,17 @@ End Sub
 Private Sub Form_Initialize()
 InitCommonControls
 '加载配置
+ConfigFileVersion = ""
 If CheckFileExists(App.Path & "\Config.Defaults.ini") = True And CheckFileExists(App.Path & "\Config.ini") = False Then
 '创建默认配置
 Name App.Path & "\Config.Defaults.ini" As App.Path & "\Config.ini"
 End If
-YuzuInstallFolder = GetIniBase64("Folder", "YuzuInstallFolder", App.Path & "\Config.ini")
-RyujinxInstallFolder = GetIniBase64("Folder", "RyujinxInstallFolder", App.Path & "\Config.ini")
+YuzuInstallFolder = Replace(GetIni("Folder", "YuzuInstallFolder", App.Path & "\Config.ini"), vbCrLf, "")
+RyujinxInstallFolder = Replace(GetIni("Folder", "RyujinxInstallFolder", App.Path & "\Config.ini"), vbCrLf, "")
 CloudFlareReverseProxyUrl = GetIni("Network", "CloudFlareReverseProxyUrl", App.Path & "\Config.ini")
 DownloadSource = GetIni("Network", "DownloadSource", App.Path & "\Config.ini")
 AliyundriveDomain = GetIni("Network", "AliyundriveDomain", App.Path & "\Config.ini")
+ConfigFileVersion = GetIni("Tool", "ConfigFileVersion", App.Path & "\Config.ini")
 If Left(GetIni("Network", "AlwaysUseCloudFlare", App.Path & "\Config.ini"), 4) = "True" Then
     AlwaysUseCloudFlare = True
 Else
@@ -182,6 +184,12 @@ If Left(GetIni("Tool", "AutoCheckForUpdate", App.Path & "\Config.ini"), 4) = "Tr
     AutoCheckForUpdate = True
 Else
     AutoCheckForUpdate = False
+End If
+If ConfigFileVersion <> InternalConfigFileVersion Then
+    MsgBox "本次更新升级了配置文件，你需要重新设置 Yuzu 和 Ryujinx 的路径。", vbExclamation
+    WriteIni "Folder", "YuzuInstallFolder", "D:\Yuzu", App.Path & "\Config.ini"
+    WriteIni "Folder", "RyujinxInstallFolder", "D:\Ryujinx", App.Path & "\Config.ini"
+    End
 End If
 End Sub
 

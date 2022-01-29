@@ -350,8 +350,8 @@ Else
     AutoCheckForUpdate = False
 End If
 DownloadSource = ImageCombo1.SelectedItem.Key
-WriteIniBase64 "Folder", "YuzuInstallFolder", YuzuInstallFolder, App.Path & "\Config.ini"
-WriteIniBase64 "Folder", "RyujinxInstallFolder", RyujinxInstallFolder, App.Path & "\Config.ini"
+WriteIni "Folder", "YuzuInstallFolder", YuzuInstallFolder, App.Path & "\Config.ini"
+WriteIni "Folder", "RyujinxInstallFolder", RyujinxInstallFolder, App.Path & "\Config.ini"
 WriteIni "Network", "AlwaysUseCloudFlare", CStr(AlwaysUseCloudFlare), App.Path & "\Config.ini"
 WriteIni "Network", "DownloadSource", DownloadSource, App.Path & "\Config.ini"
 WriteIni "Tool", "AutoCheckForUpdate", CStr(AutoCheckForUpdate), App.Path & "\Config.ini"
