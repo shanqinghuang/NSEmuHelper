@@ -9,8 +9,8 @@ Public Declare Sub CoTaskMemFree Lib "ole32.dll" (ByVal pv As Long)
 Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 '公共变量常量
-Public Const Version As String = "Beta 0.2.4"
-Public Const InternalVersion As String = "b0.2.4"
+Public Const Version As String = "Beta 0.2.5"
+Public Const InternalVersion As String = "b0.2.5"
 Public Const InternalConfigFileVersion As String = "v2"
 
 
@@ -26,25 +26,25 @@ Public Function GetIni(appName As String, KeyName As String, mc_strIniFileName A
     Dim strDefault As String
     Dim lngBuffLen As Long
     Dim strResu As String
-    Dim x As Long
+    Dim X As Long
     Dim strIniFile As String
         strIniFile = mc_strIniFileName
     strResu = String(1025, vbNullChar): lngBuffLen = 1025
     strDefault = ""
-    x = GetPrivateProfileString(appName, KeyName, strDefault, strResu, lngBuffLen, strIniFile)
-    Debug.Print x
+    X = GetPrivateProfileString(appName, KeyName, strDefault, strResu, lngBuffLen, strIniFile)
+    Debug.Print X
     Debug.Print strResu
-    GetIni = Left(strResu, x)
+    GetIni = Left(strResu, X)
     'GetIni = Left(GetIni, Len(GetIni) - 3)
 End Function
 
 Public Sub WriteIni(appName As String, KeyName As String, valueNew As String, mc_strIniFileName As String)
 '写入 ini
-    Dim x As Long
+    Dim X As Long
     Dim strIniFile As String
         strIniFile = mc_strIniFileName
-    x = WritePrivateProfileString(appName, KeyName, valueNew, strIniFile)
-    Debug.Print x
+    X = WritePrivateProfileString(appName, KeyName, valueNew, strIniFile)
+    Debug.Print X
 End Sub
 
 Public Function BStrFromLPWStr(lpWStr As Long) As String
@@ -308,5 +308,5 @@ Public Sub ShellAndWait(pathFile As String)
 End Sub
 
 Public Sub Unzip(ZipPath As String, UnzipTo As String)
-ShellAndWait "cmd /c " & App.Path & "\Dependencies\7z.exe x " & Chr(34) & ZipPath & Chr(34) & " -o" & Chr(34) & UnzipTo & Chr(34) & " -aoa"
+ShellAndWait Chr(34) & App.Path & "\Dependencies\7z.exe" & Chr(34) & " x " & Chr(34) & ZipPath & Chr(34) & " -o" & Chr(34) & UnzipTo & Chr(34) & " -aoa"
 End Sub
