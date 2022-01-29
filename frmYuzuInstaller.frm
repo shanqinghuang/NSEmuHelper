@@ -706,7 +706,7 @@ End If
 
 If CheckFileExists(YuzuInstallFolder & "\Yuzu.7z") = False Then
 If DownloadSource = "Github" Then
-    If AlwaysUseCloudFlare = "False" Then
+    If AlwaysUseCloudFlare = False Then
         DoEvents
         'github连通性测试
         Labels(4).Caption = "正在测试 Github 连通性 ..."
@@ -715,7 +715,7 @@ If DownloadSource = "Github" Then
         Tmp = "timeout"
         Inet1.Cancel
         Inet1.Protocol = icHTTPS
-        Inet1.Url = "https://github.com/opensearch.xml"
+        Inet1.URL = "https://github.com/opensearch.xml"
         Inet1.RequestTimeout = 10
         Tmp = Inet1.OpenURL
         If Err.Number = 35761 Then

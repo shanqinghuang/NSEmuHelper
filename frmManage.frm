@@ -187,7 +187,7 @@ Else
     If Right(nPath, 1) <> "" Then nPath = nPath & "\"
     ShortF = nPath & "Ryujinx.lnk"
     Set ShortCut = sh.CreateShortcut(ShortF) '开始创建快捷方式对象
-    ShortCut.TargetPath = ryujinsintallfolder & "\Ryujinx.exe" '快捷方式指向的目标文件，写完整路径
+    ShortCut.TargetPath = RyujinxInstallFolder & "\Ryujinx.exe" '快捷方式指向的目标文件，写完整路径
     ShortCut.Save
     MsgBox "Ryujinx 快捷方式创建成功！", vbOKOnly + vbInformation, "提示"
 End If

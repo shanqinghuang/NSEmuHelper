@@ -407,7 +407,7 @@ End Sub
 Private Sub btnShortcut_Click()
 Dim nPath As String, sh, ShortCut
 On Error Resume Next
-Set sh = CreateObject("wscript.shell") '
+Set sh = CreateObject("wscript.shell")
 nPath = sh.RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders\Desktop") '获取当前用户的桌面目录
 If Right(nPath, 1) <> "" Then nPath = nPath & "\"
 ShortF = nPath & "Ryujinx.lnk"
@@ -676,7 +676,7 @@ End If
 If CheckFileExists(RyujinxInstallFolder & "\Ryujinx.zip") = False Then
 If iIsMainline Then
     If DownloadSource = "Github" Then
-        If AlwaysUseCloudFlare = "False" Then
+        If AlwaysUseCloudFlare = False Then
             DoEvents
             'github连通性测试
             Labels(4).Caption = "正在测试 Github 连通性 ..."
@@ -685,7 +685,7 @@ If iIsMainline Then
             Tmp = "timeout"
             Inet1.Cancel
             Inet1.Protocol = icHTTPS
-            Inet1.Url = "https://github.com/opensearch.xml"
+            Inet1.URL = "https://github.com/opensearch.xml"
             Inet1.RequestTimeout = 10
             Tmp = Inet1.OpenURL
             If Err.Number = 35761 Then

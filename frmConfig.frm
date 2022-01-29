@@ -24,6 +24,24 @@ Begin VB.Form frmConfig
    ScaleHeight     =   6705
    ScaleWidth      =   7425
    StartUpPosition =   3  '窗口缺省
+   Begin VB.CheckBox Checks 
+      BackColor       =   &H80000005&
+      Caption         =   "否"
+      Height          =   420
+      Index           =   1
+      Left            =   5880
+      TabIndex        =   16
+      Top             =   4920
+      Width           =   735
+   End
+   Begin VB.CommandButton btnAbout 
+      Caption         =   "关于"
+      Height          =   495
+      Left            =   240
+      TabIndex        =   14
+      Top             =   5880
+      Width           =   1455
+   End
    Begin MSComctlLib.ImageCombo ImageCombo1 
       Height          =   435
       Left            =   240
@@ -76,7 +94,7 @@ Begin VB.Form frmConfig
       Index           =   0
       Left            =   5880
       TabIndex        =   11
-      Top             =   4560
+      Top             =   4320
       Width           =   735
    End
    Begin VB.CommandButton btnCancel 
@@ -89,9 +107,10 @@ Begin VB.Form frmConfig
    End
    Begin VB.CommandButton btnSave 
       Caption         =   "保存"
+      Default         =   -1  'True
       Height          =   495
       Left            =   3960
-      TabIndex        =   6
+      TabIndex        =   0
       Top             =   5880
       Width           =   1455
    End
@@ -100,7 +119,7 @@ Begin VB.Form frmConfig
       Height          =   375
       Index           =   1
       Left            =   5880
-      TabIndex        =   5
+      TabIndex        =   6
       Top             =   2400
       Width           =   1215
    End
@@ -110,7 +129,7 @@ Begin VB.Form frmConfig
       Index           =   1
       Left            =   240
       Locked          =   -1  'True
-      TabIndex        =   4
+      TabIndex        =   5
       Text            =   "Text1"
       Top             =   2400
       Width           =   5415
@@ -120,7 +139,7 @@ Begin VB.Form frmConfig
       Height          =   375
       Index           =   0
       Left            =   5880
-      TabIndex        =   2
+      TabIndex        =   3
       Top             =   960
       Width           =   1215
    End
@@ -130,10 +149,38 @@ Begin VB.Form frmConfig
       Index           =   0
       Left            =   240
       Locked          =   -1  'True
-      TabIndex        =   1
+      TabIndex        =   2
       Text            =   "Text1"
       Top             =   960
       Width           =   5415
+   End
+   Begin VB.Label Labels 
+      BackStyle       =   0  'Transparent
+      Caption         =   "自动检查本工具更新"
+      BeginProperty Font 
+         Name            =   "微软雅黑 Light"
+         Size            =   12
+         Charset         =   134
+         Weight          =   290
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   375
+      Index           =   4
+      Left            =   720
+      TabIndex        =   15
+      Top             =   4920
+      Width           =   4575
+   End
+   Begin VB.Image Images 
+      Height          =   360
+      Index           =   4
+      Left            =   240
+      Picture         =   "frmConfig.frx":1081E
+      Stretch         =   -1  'True
+      Top             =   4920
+      Width           =   375
    End
    Begin VB.Label Labels 
       BackStyle       =   0  'Transparent
@@ -158,7 +205,7 @@ Begin VB.Form frmConfig
       Height          =   360
       Index           =   3
       Left            =   240
-      Picture         =   "frmConfig.frx":1081E
+      Picture         =   "frmConfig.frx":12312
       Stretch         =   -1  'True
       Top             =   3120
       Width           =   375
@@ -167,9 +214,9 @@ Begin VB.Form frmConfig
       Height          =   360
       Index           =   2
       Left            =   240
-      Picture         =   "frmConfig.frx":11207
+      Picture         =   "frmConfig.frx":12CFB
       Stretch         =   -1  'True
-      Top             =   4560
+      Top             =   4320
       Width           =   375
    End
    Begin VB.Label Labels 
@@ -188,7 +235,7 @@ Begin VB.Form frmConfig
       Index           =   2
       Left            =   720
       TabIndex        =   10
-      Top             =   4560
+      Top             =   4320
       Width           =   4575
    End
    Begin VB.Label Labels2 
@@ -217,7 +264,7 @@ Begin VB.Form frmConfig
       Height          =   360
       Index           =   1
       Left            =   240
-      Picture         =   "frmConfig.frx":11BF0
+      Picture         =   "frmConfig.frx":136E4
       Stretch         =   -1  'True
       Top             =   1680
       Width           =   375
@@ -226,7 +273,7 @@ Begin VB.Form frmConfig
       Height          =   360
       Index           =   0
       Left            =   240
-      Picture         =   "frmConfig.frx":126C1
+      Picture         =   "frmConfig.frx":141B5
       Stretch         =   -1  'True
       Top             =   240
       Width           =   375
@@ -246,7 +293,7 @@ Begin VB.Form frmConfig
       Height          =   375
       Index           =   1
       Left            =   720
-      TabIndex        =   3
+      TabIndex        =   4
       Top             =   1680
       Width           =   3375
    End
@@ -265,7 +312,7 @@ Begin VB.Form frmConfig
       Height          =   375
       Index           =   0
       Left            =   720
-      TabIndex        =   0
+      TabIndex        =   1
       Top             =   240
       Width           =   3375
    End
@@ -275,11 +322,16 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+Private Sub btnAbout_Click()
+frmAbout.Show
+End Sub
+
 Private Sub btnBrowse_Click(Index As Integer)
 CfgTexts(Index).Text = ChooseDir(Labels(Index).Caption, Me)
 End Sub
 
 Private Sub btnCancel_Click()
+Unload frmAbout
 Unload Me
 End Sub
 
@@ -288,15 +340,21 @@ Private Sub btnSave_Click()
 YuzuInstallFolder = CfgTexts(0).Text
 RyujinxInstallFolder = CfgTexts(1).Text
 If Checks(0).Value = 1 Then
-    AlwaysUseCloudFlare = "True"
+    AlwaysUseCloudFlare = True
 Else
-    AlwaysUseCloudFlare = "False"
+    AlwaysUseCloudFlare = False
+End If
+If Checks(1).Value = 1 Then
+    AutoCheckForUpdate = True
+Else
+    AutoCheckForUpdate = False
 End If
 DownloadSource = ImageCombo1.SelectedItem.Key
 WriteIniBase64 "Folder", "YuzuInstallFolder", YuzuInstallFolder, App.Path & "\Config.ini"
 WriteIniBase64 "Folder", "RyujinxInstallFolder", RyujinxInstallFolder, App.Path & "\Config.ini"
-WriteIni "Network", "AlwaysUseCloudFlare", AlwaysUseCloudFlare, App.Path & "\Config.ini"
+WriteIni "Network", "AlwaysUseCloudFlare", CStr(AlwaysUseCloudFlare), App.Path & "\Config.ini"
 WriteIni "Network", "DownloadSource", DownloadSource, App.Path & "\Config.ini"
+WriteIni "Tool", "AutoCheckForUpdate", CStr(AutoCheckForUpdate), App.Path & "\Config.ini"
 Unload Me
 End Sub
 
@@ -325,6 +383,8 @@ ElseIf DownloadSource = "Github" Then
 End If
 Images(3).Picture = ImageList1.ListImages(ImageCombo1.SelectedItem.Index).Picture
 
+If AutoCheckForUpdate Then Checks(1).Value = 1
+
 btnSave.SetFocus
 End Sub
 
@@ -339,6 +399,10 @@ End Sub
 
 Private Sub Form_Initialize()
 InitCommonControls
+End Sub
+
+Private Sub Form_Unload(Cancel As Integer)
+Unload frmAbout
 End Sub
 
 Private Sub ImageCombo1_Click()

@@ -9,17 +9,18 @@ Public Declare Sub CoTaskMemFree Lib "ole32.dll" (ByVal pv As Long)
 Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 '公共变量常量
-Public Const Version As String = "Beta 0.2.1"
+Public Const Version As String = "Beta 0.2.2"
+Public Const InternalVersion As String = "b0.2.2"
 
 
 '配置设置
-Public YuzuInstallFolder As String, RyujinxInstallFolder As String, AlwaysUseCloudFlare As String, CloudFlareReverseProxyUrl As String, DownloadSource As String
+Public YuzuInstallFolder As String, RyujinxInstallFolder As String, AlwaysUseCloudFlare As Boolean, CloudFlareReverseProxyUrl As String, DownloadSource As String
 Public YuzuVersion As String, YuzuBranch As String, YuzuFirmware As String, YuzuCustomDataFolder As String
 Public RyujinxVersion As String, RyujinxBranch As String, RyujinxFirmware As String, RyujinxCustomDataFolder As String
-Public AliyundriveDomain As String
+Public AliyundriveDomain As String, AutoCheckForUpdate As Boolean
 Public InstallMode As Integer
 
-Public Function GetIni(appName As String, keyName As String, mc_strIniFileName As String) As String
+Public Function GetIni(appName As String, KeyName As String, mc_strIniFileName As String) As String
 '读取 ini
     Dim strDefault As String
     Dim lngBuffLen As Long
@@ -29,19 +30,19 @@ Public Function GetIni(appName As String, keyName As String, mc_strIniFileName A
         strIniFile = mc_strIniFileName
     strResu = String(1025, vbNullChar): lngBuffLen = 1025
     strDefault = ""
-    X = GetPrivateProfileString(appName, keyName, strDefault, strResu, lngBuffLen, strIniFile)
+    X = GetPrivateProfileString(appName, KeyName, strDefault, strResu, lngBuffLen, strIniFile)
     Debug.Print X
     Debug.Print strResu
     GetIni = Left(strResu, X)
     'GetIni = Left(GetIni, Len(GetIni) - 3)
 End Function
 
-Public Sub WriteIni(appName As String, keyName As String, valueNew As String, mc_strIniFileName As String)
+Public Sub WriteIni(appName As String, KeyName As String, valueNew As String, mc_strIniFileName As String)
 '写入 ini
     Dim X As Long
     Dim strIniFile As String
         strIniFile = mc_strIniFileName
-    X = WritePrivateProfileString(appName, keyName, valueNew, strIniFile)
+    X = WritePrivateProfileString(appName, KeyName, valueNew, strIniFile)
     Debug.Print X
 End Sub
 
@@ -108,38 +109,39 @@ Err:
     CheckFileExists = False
 End Function
 
-Public Function GetDataStr(ByVal Url As String) As String
+Public Function GetDataStr(ByVal URL As String) As String
 'xhr get 字符串
   On Error GoTo Err:
   Dim XMLHTTP As Object
   Set XMLHTTP = CreateObject("Microsoft.XMLHTTP")
-  XMLHTTP.Open "GET", Url, True
+  XMLHTTP.Open "GET", URL, True
   XMLHTTP.send
-  While XMLHTTP.readystate <> 4
+  While XMLHTTP.readyState <> 4
   Sleep 10
     DoEvents
   Wend
-    GetDataStr = XMLHTTP.ResponseText
+    GetDataStr = XMLHTTP.responseText
   Set XMLHTTP = Nothing
   Exit Function
 Err:
   GetDataStr = ""
 End Function
 
-Public Function GetDataStr2(ByVal Url As String) As String
-'server xhr get 字符串
+Public Function GetDataStr2(ByVal URL As String) As String
+'server xhr get 字符串 (for github)
   On Error GoTo Err:
   Dim XMLHTTP As Object
   Set XMLHTTP = CreateObject("MSXML2.ServerXMLHTTP.6.0")
-  XMLHTTP.Open "GET", Url, False
+  XMLHTTP.Open "GET", URL, False
   XMLHTTP.setRequestHeader "User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36"
+  XMLHTTP.setRequestHeader "Authorization", "token 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"
   'XMLHTTP.SetOption 2, 13056 'ignore cert errors
   XMLHTTP.send
   While XMLHTTP.Status <> 200
     Sleep 10
     DoEvents
   Wend
-    GetDataStr2 = XMLHTTP.ResponseText
+    GetDataStr2 = XMLHTTP.responseText
   Set XMLHTTP = Nothing
   Exit Function
 Err:
@@ -150,7 +152,7 @@ Public Function GetYuzuVersion() As String
 '获取 Yuzu Early Access 版本号
 On Error GoTo ExitEA
 Dim TmpEA As String
-TmpEA = GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/pineappleea/pineapple-src/releases")
+TmpEA = GetDataStr2("https://api.github.com/repos/pineappleea/pineapple-src/releases")
 TmpEA = Replace(Replace(TmpEA, Chr(34), ""), " ", "")
 TmpEA = Filter(Split(TmpEA, ","), "tag_name:EA")(0)
 GetYuzuVersion = Split(TmpEA, "EA-")(1)
@@ -164,7 +166,7 @@ Public Function GetYuzuMLVersion() As String
 '获取 Yuzu 主线版版本号
 On Error GoTo ExitEA
 Dim TmpML As String
-TmpML = GetDataStr(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases")
+TmpML = GetDataStr("https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases")
 TmpML = Replace(Replace(TmpML, Chr(34), ""), " ", "")
 TmpML = Filter(Split(TmpML, ","), "tag_name:mainline")(0)
 GetYuzuMLVersion = Split(TmpML, "mainline-0-")(1)
@@ -199,7 +201,7 @@ Public Function GetRyujinxVersion() As String
 On Error GoTo RetryML
 Dim TmpML As String
 RetryML:
-TmpML = GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/Ryujinx/release-channel-master/releases/latest")
+TmpML = GetDataStr2("https://api.github.com/repos/Ryujinx/release-channel-master/releases/latest")
 TmpML = Replace(Replace(TmpML, Chr(34), ""), " ", "")
 TmpML = Filter(Split(TmpML, ","), "tag_name:")(0)
 GetRyujinxVersion = Replace(Replace(Replace(TmpML, "tag_name:", ""), vbCrLf, ""), vbLf, "")
@@ -246,7 +248,7 @@ Failed:
    MkDirs = False
 End Function
 
-Public Function GetIniBase64(appName As String, keyName As String, mc_strIniFileName As String) As String
+Public Function GetIniBase64(appName As String, KeyName As String, mc_strIniFileName As String) As String
 '读取 ini base64
     Dim strDefault As String
     Dim lngBuffLen As Long
@@ -257,7 +259,7 @@ Public Function GetIniBase64(appName As String, keyName As String, mc_strIniFile
     strResu = String(1025, vbNullChar)
     lngBuffLen = 1025
     strDefault = ""
-    X = GetPrivateProfileString(appName, keyName, strDefault, strResu, lngBuffLen, strIniFile)
+    X = GetPrivateProfileString(appName, KeyName, strDefault, strResu, lngBuffLen, strIniFile)
     Debug.Print X
     Debug.Print strResu
     'GetIniBase64 = Base64Decode(Left(strResu, X))
@@ -265,12 +267,12 @@ Public Function GetIniBase64(appName As String, keyName As String, mc_strIniFile
     GetIniBase64 = Left(GetIniBase64, Len(GetIniBase64) - 3)
 End Function
 
-Public Sub WriteIniBase64(appName As String, keyName As String, valueNew As String, mc_strIniFileName As String)
+Public Sub WriteIniBase64(appName As String, KeyName As String, valueNew As String, mc_strIniFileName As String)
 '写入 ini base64
     Dim X As Long
     Dim strIniFile As String
         strIniFile = mc_strIniFileName
-    X = WritePrivateProfileString(appName, keyName, Base64Encode(valueNew), strIniFile)
+    X = WritePrivateProfileString(appName, KeyName, Base64Encode(valueNew), strIniFile)
     Debug.Print X
 End Sub
 
@@ -285,3 +287,34 @@ Err:
 TestEmptyFolder = False
 End Function
 
+Public Sub CheckUpdate(Slient As Boolean)
+'检查更新
+On Error GoTo ExitUpd
+Dim Tmp As String
+If Slient Then
+    Tmp = GetDataStr("https://api.github.com/repos/YidaozhanYa/NSEmuHelper/releases/latest")
+Else
+    Tmp = GetDataStr2("https://api.github.com/repos/YidaozhanYa/NSEmuHelper/releases/latest")
+End If
+Tmp = Replace(Replace(Tmp, Chr(34), ""), " ", "")
+Tmp = Split(Filter(Split(Tmp, ","), "tag_name:")(0), "tag_name:")(1)
+If Tmp <> InternalVersion Then
+    '有更新！
+    frmMain.Hide
+    frmConfig.Hide
+    frmAbout.Hide
+    Tmp = Replace(Tmp, "b", "Beta ")
+    MsgBox "检测到更新！" & vbCrLf & vbCrLf & "最新版本：" & Tmp & vbCrLf & "当前版本：" & Version, vbInformation
+    OpenLink "https://pan.baidu.com/s/10ZS58nejQ5k43mfaJdv5ZQ?pwd=67d3"
+    End
+End If
+Exit Sub
+ExitUpd:
+If Slient = False Then
+    MsgBox "Github API 调用超出限制，请等一会重试。", vbCritical + vbOKOnly
+End If
+End Sub
+
+Public Sub OpenLink(URL As String)
+Shell "cmd /c start " & Chr(34) & " " & Chr(34) & " " & Chr(34) & URL & Chr(34), vbNormalFocus
+End Sub

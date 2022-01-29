@@ -157,6 +157,10 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+Private Sub Form_Activate()
+If AutoCheckForUpdate Then CheckUpdate (True)
+End Sub
+
 Private Sub Form_Initialize()
 InitCommonControls
 'º”‘ÿ≈‰÷√
@@ -166,10 +170,19 @@ Name App.Path & "\Config.Defaults.ini" As App.Path & "\Config.ini"
 End If
 YuzuInstallFolder = GetIniBase64("Folder", "YuzuInstallFolder", App.Path & "\Config.ini")
 RyujinxInstallFolder = GetIniBase64("Folder", "RyujinxInstallFolder", App.Path & "\Config.ini")
-AlwaysUseCloudFlare = GetIni("Network", "AlwaysUseCloudFlare", App.Path & "\Config.ini")
 CloudFlareReverseProxyUrl = GetIni("Network", "CloudFlareReverseProxyUrl", App.Path & "\Config.ini")
 DownloadSource = GetIni("Network", "DownloadSource", App.Path & "\Config.ini")
 AliyundriveDomain = GetIni("Network", "AliyundriveDomain", App.Path & "\Config.ini")
+If Left(GetIni("Network", "AlwaysUseCloudFlare", App.Path & "\Config.ini"), 4) = "True" Then
+    AlwaysUseCloudFlare = True
+Else
+    AlwaysUseCloudFlare = False
+End If
+If Left(GetIni("Tool", "AutoCheckForUpdate", App.Path & "\Config.ini"), 4) = "True" Then
+    AutoCheckForUpdate = True
+Else
+    AutoCheckForUpdate = False
+End If
 End Sub
 
 Private Sub Form_Load()
