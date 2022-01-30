@@ -9,8 +9,8 @@ Public Declare Sub CoTaskMemFree Lib "ole32.dll" (ByVal pv As Long)
 Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 '公共变量常量
-Public Const Version As String = "Beta 0.2.5"
-Public Const InternalVersion As String = "b0.2.5"
+Public Const Version As String = "Beta 0.2.6"
+Public Const InternalVersion As String = "b0.2.6"
 Public Const InternalConfigFileVersion As String = "v2"
 
 
@@ -21,31 +21,8 @@ Public RyujinxVersion As String, RyujinxBranch As String, RyujinxFirmware As Str
 Public AliyundriveDomain As String, AutoCheckForUpdate As Boolean, ConfigFileVersion As String
 Public InstallMode As Integer
 
-Public Function GetIni(appName As String, KeyName As String, mc_strIniFileName As String) As String
-'读取 ini
-    Dim strDefault As String
-    Dim lngBuffLen As Long
-    Dim strResu As String
-    Dim X As Long
-    Dim strIniFile As String
-        strIniFile = mc_strIniFileName
-    strResu = String(1025, vbNullChar): lngBuffLen = 1025
-    strDefault = ""
-    X = GetPrivateProfileString(appName, KeyName, strDefault, strResu, lngBuffLen, strIniFile)
-    Debug.Print X
-    Debug.Print strResu
-    GetIni = Left(strResu, X)
-    'GetIni = Left(GetIni, Len(GetIni) - 3)
-End Function
-
-Public Sub WriteIni(appName As String, KeyName As String, valueNew As String, mc_strIniFileName As String)
-'写入 ini
-    Dim X As Long
-    Dim strIniFile As String
-        strIniFile = mc_strIniFileName
-    X = WritePrivateProfileString(appName, KeyName, valueNew, strIniFile)
-    Debug.Print X
-End Sub
+'下载链接暂存
+Public AsyncReads(0 To 1) As String
 
 Public Function BStrFromLPWStr(lpWStr As Long) As String
 SysReAllocString VarPtr(BStrFromLPWStr), lpWStr
@@ -138,8 +115,8 @@ Public Function GetDataStr2(ByVal Url As String) As String
   XMLHTTP.setRequestHeader "Authorization", "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" ' github oauth token
   XMLHTTP.send
   While XMLHTTP.Status <> 200
+    frmYuzuInstaller.Caption = XMLHTTP.Status
     Sleep 10
-    Debug.Print XMLHTTP.Status
     DoEvents
   Wend
     GetDataStr2 = XMLHTTP.responseText
@@ -181,7 +158,7 @@ Public Function GetYuzuVersionAli() As String
 '获取 Yuzu Early Access 版本号 阿里云盘
 Dim TmpEAAli As String
 Do Until TmpEAAli <> ""
-    TmpEAAli = GetDataStr("https://" & AliyundriveDomain & "/ns_emu_helper/YuzuEAMirror/?json")
+    TmpEAAli = GetDataStr2("https://" & AliyundriveDomain & "/ns_emu_helper/YuzuEAMirror/?json")
 Loop
 TmpEAAli = Replace(Replace(Join(Filter(Split(TmpEAAli, Chr(34)), "windows-yuzu-ea-"), vbCrLf), "windows-yuzu-ea-", ""), ".7z", "")
 GetYuzuVersionAli = TmpEAAli
@@ -191,7 +168,7 @@ Public Function GetYuzuMLVersionAli() As String
 '获取 Yuzu 主线版版本号 阿里云盘
 Dim TmpMLAli As String
 Do Until TmpMLAli <> ""
-    TmpMLAli = GetDataStr("https://" & AliyundriveDomain & "/ns_emu_helper/YuzuMainlineMirror/?json")
+    TmpMLAli = GetDataStr2("https://" & AliyundriveDomain & "/ns_emu_helper/YuzuMainlineMirror/?json")
 Loop
 TmpMLAli = Replace(Replace(Join(Filter(Split(Replace(TmpMLAli, Chr(34), ""), ","), "name:yuzu-windows-msvc-"), vbCrLf), "name:yuzu-windows-msvc-", ""), ".7z", "")
 GetYuzuMLVersionAli = TmpMLAli
@@ -212,7 +189,7 @@ Public Function GetRyujinxVersionAli() As String
 '获取 Ryujinx 版本号 阿里云盘
 Dim TmpMLAli As String
 Do Until TmpMLAli <> ""
-    TmpMLAli = GetDataStr("https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxMainlineMirror/?json")
+    TmpMLAli = GetDataStr2("https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxMainlineMirror/?json")
 Loop
 TmpMLAli = Replace(Replace(Join(Filter(Split(Replace(TmpMLAli, Chr(34), ""), ","), "name:ryujinx-"), vbCrLf), "name:ryujinx-", ""), "-win_x64.zip", "")
 GetRyujinxVersionAli = TmpMLAli
@@ -222,7 +199,7 @@ Public Function GetRyujinxLDNVersionAli() As String
 '获取 Ryujinx LDN 版本号 阿里云盘
 Dim TmpMLAli As String
 Do Until TmpMLAli <> ""
-    TmpMLAli = GetDataStr("https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxLDNMirror/?json")
+    TmpMLAli = GetDataStr2("https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxLDNMirror/?json")
 Loop
 TmpMLAli = Replace(Replace(Join(Filter(Split(Replace(TmpMLAli, Chr(34), ""), ","), "name:ryujinx-"), vbCrLf), "name:ryujinx-", ""), "-win_x64.zip", "")
 GetRyujinxLDNVersionAli = TmpMLAli
@@ -309,4 +286,18 @@ End Sub
 
 Public Sub Unzip(ZipPath As String, UnzipTo As String)
 ShellAndWait Chr(34) & App.Path & "\Dependencies\7z.exe" & Chr(34) & " x " & Chr(34) & ZipPath & Chr(34) & " -o" & Chr(34) & UnzipTo & Chr(34) & " -aoa"
+End Sub
+
+Public Function GetIni(strSection As String, strKey As String, IniFileName As String)
+With New ClassINI
+    .IniFileName = IniFileName
+    GetIni = .GetIniKey(strSection, strKey)
+End With
+End Function
+
+Public Sub WriteIni(strSection As String, strKey As String, strNewValue As String, IniFileName As String)
+With New ClassINI
+    .IniFileName = IniFileName
+    .WriteIniKey strSection, strKey, strNewValue
+End With
 End Sub

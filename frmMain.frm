@@ -169,8 +169,8 @@ If CheckFileExists(App.Path & "\Config.Defaults.ini") = True And CheckFileExists
 '¥¥Ω®ƒ¨»œ≈‰÷√
 Name App.Path & "\Config.Defaults.ini" As App.Path & "\Config.ini"
 End If
-YuzuInstallFolder = Replace(GetIni("Folder", "YuzuInstallFolder", App.Path & "\Config.ini"), vbCrLf, "")
-RyujinxInstallFolder = Replace(GetIni("Folder", "RyujinxInstallFolder", App.Path & "\Config.ini"), vbCrLf, "")
+YuzuInstallFolder = GetIni("Folder", "YuzuInstallFolder", App.Path & "\Config.ini")
+RyujinxInstallFolder = GetIni("Folder", "RyujinxInstallFolder", App.Path & "\Config.ini")
 CloudFlareReverseProxyUrl = GetIni("Network", "CloudFlareReverseProxyUrl", App.Path & "\Config.ini")
 DownloadSource = GetIni("Network", "DownloadSource", App.Path & "\Config.ini")
 AliyundriveDomain = GetIni("Network", "AliyundriveDomain", App.Path & "\Config.ini")

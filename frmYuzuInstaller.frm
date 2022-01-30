@@ -490,10 +490,10 @@ Else
     ComboVersion.Clear
     ComboVersion.Text = "加载中 ..."
     YuzuVersion = Split(GetYuzuVersionAli, vbCrLf)
-    Dim i As Integer
-    For i = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
-    ComboVersion.AddItem YuzuVersion(i)
-    ComboVersion.Text = YuzuVersion(i)
+    Dim I As Integer
+    For I = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
+    ComboVersion.AddItem YuzuVersion(I)
+    ComboVersion.Text = YuzuVersion(I)
     ComboVersion.SetFocus
     Next
 End If
@@ -582,9 +582,9 @@ cbFirmware.Clear
 cbFirmware.Text = "加载中 ..."
 Dim FirmwareVersionArr() As String
 FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
-Dim i As Integer
-For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
-cbFirmware.AddItem FirmwareVersionArr(i)
+Dim I As Integer
+For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+cbFirmware.AddItem FirmwareVersionArr(I)
 Next
 cbFirmware.Text = "选择固件版本"
 End Sub
@@ -680,17 +680,17 @@ If DownloadSource = "Github" Then
         '主线
         Dim TmpArr() As String
         TmpArr = Split(Replace(GetDataStr("https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases"), Chr(34), ""), ",")
-        Dim i As Integer, j As Integer
-        For i = LBound(TmpArr) To UBound(TmpArr)
-            If TmpArr(i) = "tag_name:mainline-0-" & iVersion Then Exit For
+        Dim I As Integer, j As Integer
+        For I = LBound(TmpArr) To UBound(TmpArr)
+            If TmpArr(I) = "tag_name:mainline-0-" & iVersion Then Exit For
         Next
-        j = i
-        For i = j To UBound(TmpArr)
-            If InStr(TmpArr(i), ".7z") <> 0 Then
+        j = I
+        For I = j To UBound(TmpArr)
+            If InStr(TmpArr(I), ".7z") <> 0 Then
                 Exit For
             End If
         Next
-        YuzuUrl = "https://github.com/yuzu-emu/yuzu-mainline/releases/download/mainline-0-" & iVersion & "/" & Replace(TmpArr(i), "name:", "")
+        YuzuUrl = "https://github.com/yuzu-emu/yuzu-mainline/releases/download/mainline-0-" & iVersion & "/" & Replace(TmpArr(I), "name:", "")
     End If
 Else
     '阿里
@@ -741,7 +741,9 @@ If CheckFileExists(YuzuInstallFolder & "\Yuzu.7z") = False Then
     PBarLoad 1, Me.hWnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
     PBarSetRange 1, 0, 100
     PBarSetPos 1, 0
-    ucDownload1.DownloadFile YuzuUrl, YuzuInstallFolder & "\Yuzu.7z"
+    AsyncReads(0) = YuzuUrl
+    AsyncReads(1) = YuzuInstallFolder & "\Yuzu.7z"
+    ucDownload1.DownloadFile AsyncReads(0), AsyncReads(1)
     DoEvents
     DownloadCompleted = False
     Do Until DownloadCompleted
@@ -765,7 +767,9 @@ If InstallMode = 1 Or InstallMode = 3 Then
             PBarSetRange 1, 0, 100
             PBarSetPos 1, 0
             DoEvents
-            ucDownload1.DownloadFile iFirmwarePath, YuzuInstallFolder & "\Firmware.zip"
+            AsyncReads(0) = iFirmwarePath
+            AsyncReads(1) = YuzuInstallFolder & "\Firmware.zip"
+            ucDownload1.DownloadFile AsyncReads(0), AsyncReads(1)
             DoEvents
             DownloadCompleted = False
             Do Until DownloadCompleted
@@ -793,7 +797,9 @@ If InstallMode = 1 Then
         PBarLoad 1, Me.hWnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
         PBarSetRange 1, 0, 100
         PBarSetPos 1, 0
-        ucDownload1.DownloadFile "https://" & AliyundriveDomain & "/ali/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/sysdata.zip", YuzuInstallFolder & "\Sysdata.zip"
+        AsyncReads(0) = "https://" & AliyundriveDomain & "/ali/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/sysdata.zip"
+        AsyncReads(1) = YuzuInstallFolder & "\Sysdata.zip"
+        ucDownload1.DownloadFile AsyncReads(0), AsyncReads(1)
         DoEvents
         DownloadCompleted = False
         Do Until DownloadCompleted
@@ -1013,7 +1019,7 @@ End Sub
 Private Sub opFirmware_Click(Index As Integer)
 '切换固件下载方式
 Dim FirmwareVersionArr() As String
-Dim i As Integer
+Dim I As Integer
 If Index = 1 Then
     '在线
     txtFirmware.Visible = False
@@ -1021,9 +1027,9 @@ If Index = 1 Then
     cbFirmware.Top = 2520
     cbFirmware.Clear
     cbFirmware.Text = "加载中 ..."
-    FirmwareVersionArr = Filter(Split(GetDataStr("https://" & AliyundriveDomain & "/ns_emu_helper/NSFirmwareMirror/?json"), Chr(34)), "firmware_")
-    For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
-        cbFirmware.AddItem Replace(Replace(FirmwareVersionArr(i), "firmware_", ""), ".zip", "")
+    FirmwareVersionArr = Filter(Split(GetDataStr2("https://" & AliyundriveDomain & "/ns_emu_helper/NSFirmwareMirror/?json"), Chr(34)), "firmware_")
+    For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+        cbFirmware.AddItem Replace(Replace(FirmwareVersionArr(I), "firmware_", ""), ".zip", "")
     Next
     cbFirmware.Text = "选择固件版本"
 Else
@@ -1034,8 +1040,8 @@ Else
     cbFirmware.Clear
     cbFirmware.Text = "加载中 ..."
     FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
-    For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
-        cbFirmware.AddItem FirmwareVersionArr(i)
+    For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+        cbFirmware.AddItem FirmwareVersionArr(I)
     Next
     cbFirmware.Text = "选择固件版本"
 End If
@@ -1052,8 +1058,13 @@ End Sub
 Private Sub ucDownload1_DownloadFailed(ByVal Status As String, ByVal StatusCode As AsyncStatusCodeConstants)
 ' Visual Basic, F**K YOU!!!
 ' 干饭王, F**K YOU!!!
-  Labels(5).Caption = "下载失败:" & Status & "，请再试一次，或反馈给作者。"
-  Labels(5).ForeColor = RGB(255, 0, 0)
+Labels(5).Caption = "下载失败，正在尝试使用备用下载 ..."
+DoEvents
+ShellAndWait Chr(34) & App.Path & "\Dependencies\curl.exe" & Chr(34) & " -fkL " & Chr(34) & AsyncReads(0) & Chr(34) & " -o " & Chr(34) & AsyncReads(1) & Chr(34)
+DoEvents
+Labels(5).Caption = "备用下载成功！"
+DoEvents
+DownloadCompleted = True
 End Sub
 Private Sub ucDownload1_DownloadComplete()
 DownloadCompleted = True
@@ -1063,7 +1074,7 @@ End Sub
 Private Sub ImageCombo1_Click()
 Image1.Picture = ImageList2.ListImages(ImageCombo1.SelectedItem.Index).Picture
 Dim YuzuVersion() As String
-Dim i As Integer
+Dim I As Integer
 If ImageCombo1.SelectedItem.Index = 1 Then
     If DownloadSource = "Github" Then
         txtVersion.SetFocus
@@ -1073,9 +1084,9 @@ If ImageCombo1.SelectedItem.Index = 1 Then
         ComboVersion.Clear
         ComboVersion.Text = "加载中 ..."
         YuzuVersion = Split(GetYuzuVersionAli, vbCrLf)
-        For i = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
-        ComboVersion.AddItem YuzuVersion(i)
-        ComboVersion.Text = YuzuVersion(i)
+        For I = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
+        ComboVersion.AddItem YuzuVersion(I)
+        ComboVersion.Text = YuzuVersion(I)
         Next
     End If
 Else
@@ -1087,9 +1098,9 @@ Else
         ComboVersion.Clear
         ComboVersion.Text = "加载中 ..."
         YuzuVersion = Split(GetYuzuMLVersionAli, vbCrLf)
-        For i = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
-        ComboVersion.AddItem YuzuVersion(i)
-        ComboVersion.Text = YuzuVersion(i)
+        For I = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
+        ComboVersion.AddItem YuzuVersion(I)
+        ComboVersion.Text = YuzuVersion(I)
         Next
     End If
 End If
