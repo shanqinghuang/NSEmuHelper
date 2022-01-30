@@ -186,10 +186,19 @@ Else
     AutoCheckForUpdate = False
 End If
 If ConfigFileVersion <> InternalConfigFileVersion Then
-    MsgBox "本次更新升级了配置文件，你需要重新设置 Yuzu 和 Ryujinx 的路径。", vbExclamation
-    WriteIni "Folder", "YuzuInstallFolder", "D:\Yuzu", App.Path & "\Config.ini"
-    WriteIni "Folder", "RyujinxInstallFolder", "D:\Ryujinx", App.Path & "\Config.ini"
-    End
+    If ConfigFileVersion = "" Then
+        MsgBox "本次更新升级了配置文件，你需要重新打开程序，之后重新设置 Yuzu 和 Ryujinx 的路径。", vbExclamation
+        WriteIni "Tool", "ConfigFileVersion", "v2", App.Path & "\Config.ini"
+        WriteIni "Folder", "YuzuInstallFolder", "D:\Yuzu", App.Path & "\Config.ini"
+        WriteIni "Folder", "RyujinxInstallFolder", "D:\Ryujinx", App.Path & "\Config.ini"
+        End
+    End If
+    If ConfigFileVersion = "v2" Then
+        MsgBox "本次更新升级了配置文件，你需要重新打开程序。", vbExclamation
+        WriteIni "Tool", "ConfigFileVersion", "v3", App.Path & "\Config.ini"
+        WriteIni "Network", "CloudFlareReverseProxyUrl", "https://rp.ydz1.gq", App.Path & "\Config.ini"
+        End
+    End If
 End If
 End Sub
 

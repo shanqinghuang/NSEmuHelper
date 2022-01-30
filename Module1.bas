@@ -9,9 +9,9 @@ Public Declare Sub CoTaskMemFree Lib "ole32.dll" (ByVal pv As Long)
 Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 '公共变量常量
-Public Const Version As String = "Beta 0.2.6"
-Public Const InternalVersion As String = "b0.2.6"
-Public Const InternalConfigFileVersion As String = "v2"
+Public Const Version As String = "Beta 0.2.7"
+Public Const InternalVersion As String = "b0.2.7"
+Public Const InternalConfigFileVersion As String = "v3"
 
 
 '配置设置
@@ -240,22 +240,22 @@ End Function
 
 Public Sub CheckUpdate(Slient As Boolean)
 '检查更新
-On Error GoTo ExitUpd
-Dim Tmp As String
+'On Error GoTo ExitUpd
+Dim Tmp As String, Tmp2 As String
 If Slient Then
-    Tmp = GetDataStr(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/YidaozhanYa/NSEmuHelper/releases/latest")
+    Tmp = GetDataStr("https://api.github.com/repos/YidaozhanYa/NSEmuHelper/releases/latest")
 Else
     Tmp = GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/YidaozhanYa/NSEmuHelper/releases/latest")
 End If
-Tmp = Replace(Replace(Tmp, Chr(34), ""), " ", "")
-Tmp = Split(Filter(Split(Tmp, ","), "tag_name:")(0), "tag_name:")(1)
+Tmp = Replace(Tmp, Chr(34), "")
+Tmp2 = Replace(Replace(Replace(Replace(Replace(Filter(Split(Tmp, ","), "body")(0), "}", ""), "\n", ""), "\r", vbCrLf), "#####", ""), "body:", "")
+Tmp = Split(Filter(Split(Replace(Tmp, " ", ""), ","), "tag_name:")(0), "tag_name:")(1)
 If Tmp <> InternalVersion Then
     '有更新！
     frmMain.Hide
     frmConfig.Hide
     frmAbout.Hide
-    Tmp = Replace(Tmp, "b", "Beta ")
-    MsgBox "检测到更新！" & vbCrLf & vbCrLf & "最新版本：" & Tmp & vbCrLf & "当前版本：" & Version, vbInformation
+    MsgBox "检测到更新！" & vbCrLf & vbCrLf & "当前版本：" & Version & vbCrLf & "最新版本：" & Tmp2, vbInformation
     OpenLink "https://pan.baidu.com/s/10ZS58nejQ5k43mfaJdv5ZQ?pwd=67d3"
     End
 Else
@@ -264,7 +264,7 @@ End If
 Exit Sub
 ExitUpd:
 If Slient = False Then
-    MsgBox "Github API 调用超出限制，请等一会重试。", vbCritical + vbOKOnly
+    MsgBox "检查更新失败，本小时 Github API 调用超出限制，请等一会重试。", vbCritical + vbOKOnly
 End If
 End Sub
 
@@ -288,16 +288,16 @@ Public Sub Unzip(ZipPath As String, UnzipTo As String)
 ShellAndWait Chr(34) & App.Path & "\Dependencies\7z.exe" & Chr(34) & " x " & Chr(34) & ZipPath & Chr(34) & " -o" & Chr(34) & UnzipTo & Chr(34) & " -aoa"
 End Sub
 
-Public Function GetIni(strSection As String, strKey As String, IniFileName As String)
+Public Function GetIni(strSection As String, strKey As String, INIFileName As String)
 With New ClassINI
-    .IniFileName = IniFileName
+    .INIFileName = INIFileName
     GetIni = .GetIniKey(strSection, strKey)
 End With
 End Function
 
-Public Sub WriteIni(strSection As String, strKey As String, strNewValue As String, IniFileName As String)
+Public Sub WriteIni(strSection As String, strKey As String, strNewValue As String, INIFileName As String)
 With New ClassINI
-    .IniFileName = IniFileName
+    .INIFileName = INIFileName
     .WriteIniKey strSection, strKey, strNewValue
 End With
 End Sub

@@ -490,10 +490,10 @@ Else
     ComboVersion.Clear
     ComboVersion.Text = "加载中 ..."
     RyujinxVersion = Split(GetRyujinxVersionAli, vbCrLf)
-    Dim I As Integer
-    For I = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
-    ComboVersion.AddItem RyujinxVersion(I)
-    ComboVersion.Text = RyujinxVersion(I)
+    Dim i As Integer
+    For i = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
+    ComboVersion.AddItem RyujinxVersion(i)
+    ComboVersion.Text = RyujinxVersion(i)
     ComboVersion.SetFocus
     Next
 End If
@@ -574,9 +574,9 @@ cbFirmware.Clear
 cbFirmware.Text = "加载中 ..."
 Dim FirmwareVersionArr() As String
 FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
-Dim I As Integer
-For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
-cbFirmware.AddItem FirmwareVersionArr(I)
+Dim i As Integer
+For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+cbFirmware.AddItem FirmwareVersionArr(i)
 Next
 cbFirmware.Text = "选择固件版本"
 End Sub
@@ -803,7 +803,7 @@ If InstallMode = 1 Or InstallMode = 2 Then
     '复制文件
     DoEvents
     XCopy RyujinxInstallFolder & "\publish", RyujinxInstallFolder
-    ShellAndWait "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\publish" & Chr(34)
+    Shell "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\publish" & Chr(34), vbHide
     DoEvents
     ''''''''''''
 End If
@@ -935,7 +935,7 @@ End Sub
 Private Sub opFirmware_Click(Index As Integer)
 '切换固件下载方式
 Dim FirmwareVersionArr() As String
-Dim I As Integer
+Dim i As Integer
 If Index = 1 Then
     '在线
     txtFirmware.Visible = False
@@ -944,8 +944,8 @@ If Index = 1 Then
     cbFirmware.Clear
     cbFirmware.Text = "加载中 ..."
     FirmwareVersionArr = Filter(Split(GetDataStr2("https://" & AliyundriveDomain & "/ns_emu_helper/NSFirmwareMirror/?json"), Chr(34)), "firmware_")
-    For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
-        cbFirmware.AddItem Replace(Replace(FirmwareVersionArr(I), "firmware_", ""), ".zip", "")
+    For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+        cbFirmware.AddItem Replace(Replace(FirmwareVersionArr(i), "firmware_", ""), ".zip", "")
     Next
     cbFirmware.Text = "选择固件版本"
 Else
@@ -956,8 +956,8 @@ Else
     cbFirmware.Clear
     cbFirmware.Text = "加载中 ..."
     FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
-    For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
-        cbFirmware.AddItem FirmwareVersionArr(I)
+    For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+        cbFirmware.AddItem FirmwareVersionArr(i)
     Next
     cbFirmware.Text = "选择固件版本"
 End If
@@ -990,7 +990,7 @@ End Sub
 Private Sub ImageCombo1_Click()
 Image1.Picture = ImageList2.ListImages(ImageCombo1.SelectedItem.Index).Picture
 Dim RyujinxVersion() As String
-Dim I As Integer
+Dim i As Integer
 If ImageCombo1.SelectedItem.Index = 1 Then
     If DownloadSource = "Github" Then
         txtVersion.Visible = True
@@ -1003,9 +1003,9 @@ If ImageCombo1.SelectedItem.Index = 1 Then
         ComboVersion.Clear
         ComboVersion.Text = "加载中 ..."
         RyujinxVersion = Split(GetRyujinxVersionAli, vbCrLf)
-        For I = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
-        ComboVersion.AddItem RyujinxVersion(I)
-        ComboVersion.Text = RyujinxVersion(I)
+        For i = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
+        ComboVersion.AddItem RyujinxVersion(i)
+        ComboVersion.Text = RyujinxVersion(i)
         ComboVersion.SetFocus
         Next
     End If
@@ -1015,9 +1015,9 @@ Else
     ComboVersion.Clear
     ComboVersion.Text = "加载中 ..."
     RyujinxVersion = Split(GetRyujinxLDNVersionAli, vbCrLf)
-    For I = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
-    ComboVersion.AddItem RyujinxVersion(I)
-    ComboVersion.Text = RyujinxVersion(I)
+    For i = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
+    ComboVersion.AddItem RyujinxVersion(i)
+    ComboVersion.Text = RyujinxVersion(i)
     ComboVersion.SetFocus
     Next
 End If

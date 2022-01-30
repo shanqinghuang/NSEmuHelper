@@ -387,9 +387,8 @@ End Sub
 
 Private Sub txtVersion_KeyPress(KeyAscii As Integer)
 '只能输入数字
-If KeyAscii = 8 Then Exit Sub
+If KeyAscii = 8 Or KeyAscii = 46 Then Exit Sub
 If KeyAscii < 48 Or KeyAscii > 57 Then KeyAscii = 0
-If Len(txtVersion.Text) >= 4 Then KeyAscii = 0
 End Sub
 
 Private Sub MoveRyujinxDataFolder()
