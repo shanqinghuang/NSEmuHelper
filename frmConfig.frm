@@ -154,6 +154,17 @@ Begin VB.Form frmConfig
       Top             =   960
       Width           =   5415
    End
+   Begin VB.Label Labels2 
+      BackStyle       =   0  'Transparent
+      Caption         =   "点此从 Yuzu Tool 导入"
+      ForeColor       =   &H8000000D&
+      Height          =   375
+      Index           =   2
+      Left            =   2160
+      TabIndex        =   17
+      Top             =   600
+      Width           =   2295
+   End
    Begin VB.Label Labels 
       BackStyle       =   0  'Transparent
       Caption         =   "自动检查本工具更新"
@@ -251,14 +262,14 @@ Begin VB.Form frmConfig
    End
    Begin VB.Label Labels2 
       BackStyle       =   0  'Transparent
-      Caption         =   "不推荐存放在 C 盘"
+      Caption         =   "不推荐存放在 C 盘，"
       ForeColor       =   &H80000015&
       Height          =   375
       Index           =   0
       Left            =   240
       TabIndex        =   8
       Top             =   600
-      Width           =   3375
+      Width           =   2055
    End
    Begin VB.Image Images 
       Height          =   360
@@ -396,7 +407,6 @@ ImageCombo1.ComboItems.Add 2, "Github", "Github / CloudFlare (速度慢，但保留全部
 ImageCombo1.ComboItems(1).Selected = True
 End Sub
 
-
 Private Sub Form_Initialize()
 InitCommonControls
 End Sub
@@ -407,4 +417,16 @@ End Sub
 
 Private Sub ImageCombo1_Click()
 Images(3).Picture = ImageList1.ListImages(ImageCombo1.SelectedItem.Index).Picture
+
+End Sub
+
+Private Sub Labels2_Click(Index As Integer)
+If Index = 2 Then
+    If CheckFileExists(App.Path & "\ImportRegistry.exe") Then
+        Shell App.Path & "\ImportRegistry.exe", vbNormalFocus
+        End
+    Else
+        MsgBox "ImportRegistry.exe 未找到，请重新安装本工具。", vbCritical, "文件未找到"
+    End If
+End If
 End Sub

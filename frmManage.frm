@@ -235,7 +235,6 @@ If IsYuzu Then
     If CheckFileExists(YuzuInstallFolder & "\YuzuConfig.ini") = False Then
         frmYuzuConfig.IsMissing = True
         frmYuzuConfig.Show
-        
     Else
         YuzuVersion = GetIni("Yuzu", "Version", YuzuInstallFolder & "\YuzuConfig.ini")
         YuzuBranch = GetIni("Yuzu", "Branch", YuzuInstallFolder & "\YuzuConfig.ini")
@@ -255,6 +254,7 @@ If IsYuzu Then
             Labels(2).Visible = True
             Labels(2).Caption = "数据文件夹：" & YuzuCustomDataFolder
         End If
+        DoEvents
     End If
 Else
     If CheckFileExists(RyujinxInstallFolder & "\RyujinxConfig.ini") = False Then
@@ -279,6 +279,7 @@ Else
             Labels(2).Visible = True
             Labels(2).Caption = "数据文件夹：" & RyujinxCustomDataFolder
         End If
+        DoEvents
     End If
 End If
 End Sub

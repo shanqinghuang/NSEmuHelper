@@ -217,6 +217,7 @@ End
 End Sub
 
 Private Sub Images_Click(Index As Integer)
+Dim PopMsgBox As Integer
 '图片按钮被点击
 If Index = 2 Then
     frmConfig.Show
@@ -225,7 +226,12 @@ Else
         'Yuzu
         frmManage.IsYuzu = True
         If CheckFileExists(YuzuInstallFolder & "\yuzu.exe") = False Then
-            If MsgBox("Yuzu 模拟器没有安装，是否现在安装模拟器？", vbYesNo, "Yuzu 未找到") = vbYes Then
+            If YuzuInstallFolder = "D:\Yuzu" Then
+                PopMsgBox = MsgBox("在默认的安装位置 D:\Yuzu 中没有找到 Yuzu 模拟器。" & vbCrLf & "点“是”以在该位置安装模拟器，" & vbCrLf & "你也可以在主界面的设置中选择现有的模拟器位置，" & "或者从 Yuzu Tool 4.6 导入。", vbYesNo, "Yuzu 未找到")
+            Else
+                PopMsgBox = MsgBox("在你选择的安装位置 " & YuzuInstallFolder & " 中没有找到 Yuzu 模拟器。" & vbCrLf & "点 “是” 以在该位置安装模拟器，" & vbCrLf & "也可以在主界面的设置中选择现有的模拟器位置，" & "或者从 Yuzu Tool 4.6 导入。", vbYesNo, "Yuzu 未找到")
+            End If
+            If PopMsgBox = vbYes Then
                 InstallMode = 1
                 frmYuzuInstaller.Show
                 Me.Hide
@@ -239,7 +245,12 @@ Else
         'Ryujinx
         frmManage.IsYuzu = False
         If CheckFileExists(RyujinxInstallFolder & "\Ryujinx.exe") = False Then
-            If MsgBox("Ryujinx 模拟器没有安装，是否现在安装模拟器？", vbYesNo, "Ryujinx 未找到") = vbYes Then
+            If RyujinxInstallFolder = "D:\Ryujinx" Then
+                PopMsgBox = MsgBox("在默认的安装位置 D:\Ryujinx 中没有找到 Ryujinx 模拟器。" & vbCrLf & "点“是”以在默认位置安装模拟器，" & vbCrLf & "你也可以在主界面的设置中选择现有的模拟器位置。", vbYesNo, "Ryujinx 未找到")
+            Else
+                PopMsgBox = MsgBox("在你选择的安装位置 " & RyujinxInstallFolder & " 中没有找到 Yuzu 模拟器。" & vbCrLf & "点 “是” 以在该位置安装模拟器，" & vbCrLf & "也可以在主界面的设置中选择现有的模拟器位置。", vbYesNo, "Ryujinx 未找到")
+            End If
+            If PopMsgBox = vbYes Then
                 InstallMode = 1
                 frmRyujinxInstaller.Show
                 Me.Hide

@@ -9,8 +9,8 @@ Public Declare Sub CoTaskMemFree Lib "ole32.dll" (ByVal pv As Long)
 Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 '公共变量常量
-Public Const Version As String = "Beta 0.2.7"
-Public Const InternalVersion As String = "b0.2.7"
+Public Const Version As String = "V1.0.0"
+Public Const InternalVersion As String = "v1.0.0"
 Public Const InternalConfigFileVersion As String = "v3"
 
 
@@ -78,7 +78,7 @@ If BStrFromLPWStr(lpPath) <> "" Then ChooseFile = BStrFromLPWStr(lpPath)
 End Function
 
 Public Function CheckFileExists(FilePath As String) As Boolean
-'检查文件夹是否存在
+'检查文件是否存在
     On Error GoTo Err
     If Len(FilePath) < 2 Then CheckFileExists = False: Exit Function
             If Dir$(FilePath, vbAllFileAttrib) <> vbNullString Then CheckFileExists = True
@@ -243,12 +243,12 @@ Public Sub CheckUpdate(Slient As Boolean)
 'On Error GoTo ExitUpd
 Dim Tmp As String, Tmp2 As String
 If Slient Then
-    Tmp = GetDataStr("https://api.github.com/repos/YidaozhanYa/NSEmuHelper/releases/latest")
+    Tmp = GetDataStr(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/YidaozhanYa/NSEmuHelper/releases/latest")
 Else
     Tmp = GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/YidaozhanYa/NSEmuHelper/releases/latest")
 End If
 Tmp = Replace(Tmp, Chr(34), "")
-Tmp2 = Replace(Replace(Replace(Replace(Replace(Filter(Split(Tmp, ","), "body")(0), "}", ""), "\n", ""), "\r", vbCrLf), "#####", ""), "body:", "")
+Tmp2 = Replace(Replace(Replace(Replace(Replace(Filter(Split(Tmp, ","), "body")(0), "}", ""), "\r", ""), "\n", vbCrLf), "#####", ""), "body:", "")
 Tmp = Split(Filter(Split(Replace(Tmp, " ", ""), ","), "tag_name:")(0), "tag_name:")(1)
 If Tmp <> InternalVersion Then
     '有更新！

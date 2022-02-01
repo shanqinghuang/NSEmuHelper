@@ -27,8 +27,8 @@ Public Sub DownloadFile(Url As String, LocalFileName As String, Optional ByVal M
   Me.Url = Url
   On Error Resume Next
     AsyncRead Url, vbAsyncTypeFile, LocalFileName, Mode
-  If ERR Then
-    RaiseEvent DownloadFailed(ERR.Description, ERR.Number)
+  If Err Then
+    RaiseEvent DownloadFailed(Err.Description, Err.Number)
   End If
 End Sub
 
