@@ -361,10 +361,10 @@ DoEvents
 txtVersion.Text = GetYuzuVersion
 
 Dim FirmwareVersionArr() As String
-FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
-Dim i As Integer
-For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
-cbFirmware.AddItem FirmwareVersionArr(i)
+FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+Dim I As Integer
+For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+cbFirmware.AddItem FirmwareVersionArr(I)
 Next
 
 If IsMissing Then

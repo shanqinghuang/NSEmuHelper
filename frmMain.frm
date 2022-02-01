@@ -158,7 +158,12 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Sub Form_Activate()
-If AutoCheckForUpdate Then CheckUpdate (True)
+If FirstActivate = False Then
+    If AutoCheckForUpdate Then
+        CheckUpdate (True)
+        FirstActivate = True
+    End If
+End If
 End Sub
 
 Private Sub Form_Initialize()

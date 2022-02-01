@@ -360,7 +360,7 @@ Debug.Print CurrentStep
 '浏览
 Select Case CurrentStep
     Case 2
-        txtKey.Text = ChooseFile("选择密钥文件 (prod.keys)", "NS 密钥文件", "prod.keys", frmYuzuInstaller.hWnd)
+        txtKey.Text = ChooseFile("选择密钥文件 (prod.keys)", "NS 密钥文件", "*.keys", frmYuzuInstaller.hWnd)
     Case 3
         If opFirmware(0).Value Then
             txtFirmware.Text = ChooseFile("选择固件包 (zip 压缩文件)", "NS 固件包", "*.zip", frmYuzuInstaller.hWnd)
@@ -490,10 +490,10 @@ Else
     ComboVersion.Clear
     ComboVersion.Text = "加载中 ..."
     YuzuVersion = Split(GetYuzuVersionAli, vbCrLf)
-    Dim i As Integer
-    For i = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
-    ComboVersion.AddItem YuzuVersion(i)
-    ComboVersion.Text = YuzuVersion(i)
+    Dim I As Integer
+    For I = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
+    ComboVersion.AddItem YuzuVersion(I)
+    ComboVersion.Text = YuzuVersion(I)
     ComboVersion.SetFocus
     Next
 End If
@@ -581,10 +581,10 @@ Labels(3).Caption = "固件包："
 cbFirmware.Clear
 cbFirmware.Text = "加载中 ..."
 Dim FirmwareVersionArr() As String
-FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
-Dim i As Integer
-For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
-cbFirmware.AddItem FirmwareVersionArr(i)
+FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+Dim I As Integer
+For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+cbFirmware.AddItem FirmwareVersionArr(I)
 Next
 cbFirmware.Text = "选择固件版本"
 End Sub
@@ -679,18 +679,22 @@ If DownloadSource = "Github" Then
     Else
         '主线
         Dim TmpArr() As String
-        TmpArr = Split(Replace(GetDataStr("https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases"), Chr(34), ""), ",")
-        Dim i As Integer, j As Integer
-        For i = LBound(TmpArr) To UBound(TmpArr)
-            If TmpArr(i) = "tag_name:mainline-0-" & iVersion Then Exit For
+        TmpArr = Split(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases"), Chr(34), ""), ",")
+        If Err.Number = 9 Then
+            MsgBox "运行时错误 (9): 下标越界，可能是你的网络对 CloudFlare 的通信有问题。"
+            End
+        End If
+        Dim I As Integer, j As Integer
+        For I = LBound(TmpArr) To UBound(TmpArr)
+            If TmpArr(I) = "tag_name:mainline-0-" & iVersion Then Exit For
         Next
-        j = i
-        For i = j To UBound(TmpArr)
-            If InStr(TmpArr(i), ".7z") <> 0 Then
+        j = I
+        For I = j To UBound(TmpArr)
+            If InStr(TmpArr(I), ".7z") <> 0 Then
                 Exit For
             End If
         Next
-        YuzuUrl = "https://github.com/yuzu-emu/yuzu-mainline/releases/download/mainline-0-" & iVersion & "/" & Replace(TmpArr(i), "name:", "")
+        YuzuUrl = "https://github.com/yuzu-emu/yuzu-mainline/releases/download/mainline-0-" & iVersion & "/" & Replace(TmpArr(I), "name:", "")
     End If
 Else
     '阿里
@@ -1019,7 +1023,7 @@ End Sub
 Private Sub opFirmware_Click(Index As Integer)
 '切换固件下载方式
 Dim FirmwareVersionArr() As String
-Dim i As Integer
+Dim I As Integer
 If Index = 1 Then
     '在线
     txtFirmware.Visible = False
@@ -1028,8 +1032,8 @@ If Index = 1 Then
     cbFirmware.Clear
     cbFirmware.Text = "加载中 ..."
     FirmwareVersionArr = Filter(Split(GetDataStr2("https://" & AliyundriveDomain & "/ns_emu_helper/NSFirmwareMirror/?json"), Chr(34)), "firmware_")
-    For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
-        cbFirmware.AddItem Replace(Replace(FirmwareVersionArr(i), "firmware_", ""), ".zip", "")
+    For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+        cbFirmware.AddItem Replace(Replace(FirmwareVersionArr(I), "firmware_", ""), ".zip", "")
     Next
     cbFirmware.Text = "选择固件版本"
 Else
@@ -1039,9 +1043,9 @@ Else
     cbFirmware.Top = 3120
     cbFirmware.Clear
     cbFirmware.Text = "加载中 ..."
-    FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
-    For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
-        cbFirmware.AddItem FirmwareVersionArr(i)
+    FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+    For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+        cbFirmware.AddItem FirmwareVersionArr(I)
     Next
     cbFirmware.Text = "选择固件版本"
 End If
@@ -1074,7 +1078,7 @@ End Sub
 Private Sub ImageCombo1_Click()
 Image1.Picture = ImageList2.ListImages(ImageCombo1.SelectedItem.Index).Picture
 Dim YuzuVersion() As String
-Dim i As Integer
+Dim I As Integer
 If ImageCombo1.SelectedItem.Index = 1 Then
     If DownloadSource = "Github" Then
         txtVersion.SetFocus
@@ -1084,9 +1088,9 @@ If ImageCombo1.SelectedItem.Index = 1 Then
         ComboVersion.Clear
         ComboVersion.Text = "加载中 ..."
         YuzuVersion = Split(GetYuzuVersionAli, vbCrLf)
-        For i = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
-        ComboVersion.AddItem YuzuVersion(i)
-        ComboVersion.Text = YuzuVersion(i)
+        For I = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
+        ComboVersion.AddItem YuzuVersion(I)
+        ComboVersion.Text = YuzuVersion(I)
         Next
     End If
 Else
@@ -1098,9 +1102,9 @@ Else
         ComboVersion.Clear
         ComboVersion.Text = "加载中 ..."
         YuzuVersion = Split(GetYuzuMLVersionAli, vbCrLf)
-        For i = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
-        ComboVersion.AddItem YuzuVersion(i)
-        ComboVersion.Text = YuzuVersion(i)
+        For I = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
+        ComboVersion.AddItem YuzuVersion(I)
+        ComboVersion.Text = YuzuVersion(I)
         Next
     End If
 End If

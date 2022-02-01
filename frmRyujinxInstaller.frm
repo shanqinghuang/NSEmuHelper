@@ -360,7 +360,7 @@ Debug.Print CurrentStep
 '浏览
 Select Case CurrentStep
     Case 2
-        txtKey.Text = ChooseFile("选择密钥文件 (prod.keys)", "NS 密钥文件", "prod.keys", frmRyujinxInstaller.hWnd)
+        txtKey.Text = ChooseFile("选择密钥文件 (prod.keys)", "NS 密钥文件", "*.keys", frmRyujinxInstaller.hWnd)
     Case 3
         If opFirmware(0).Value Then
             txtFirmware.Text = ChooseFile("选择固件包 (zip 压缩文件)", "NS 固件包", "*.zip", frmRyujinxInstaller.hWnd)
@@ -490,10 +490,10 @@ Else
     ComboVersion.Clear
     ComboVersion.Text = "加载中 ..."
     RyujinxVersion = Split(GetRyujinxVersionAli, vbCrLf)
-    Dim i As Integer
-    For i = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
-    ComboVersion.AddItem RyujinxVersion(i)
-    ComboVersion.Text = RyujinxVersion(i)
+    Dim I As Integer
+    For I = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
+    ComboVersion.AddItem RyujinxVersion(I)
+    ComboVersion.Text = RyujinxVersion(I)
     ComboVersion.SetFocus
     Next
 End If
@@ -573,10 +573,10 @@ Labels(3).Caption = "固件包："
 cbFirmware.Clear
 cbFirmware.Text = "加载中 ..."
 Dim FirmwareVersionArr() As String
-FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
-Dim i As Integer
-For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
-cbFirmware.AddItem FirmwareVersionArr(i)
+FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+Dim I As Integer
+For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+cbFirmware.AddItem FirmwareVersionArr(I)
 Next
 cbFirmware.Text = "选择固件版本"
 End Sub
@@ -935,7 +935,7 @@ End Sub
 Private Sub opFirmware_Click(Index As Integer)
 '切换固件下载方式
 Dim FirmwareVersionArr() As String
-Dim i As Integer
+Dim I As Integer
 If Index = 1 Then
     '在线
     txtFirmware.Visible = False
@@ -944,8 +944,8 @@ If Index = 1 Then
     cbFirmware.Clear
     cbFirmware.Text = "加载中 ..."
     FirmwareVersionArr = Filter(Split(GetDataStr2("https://" & AliyundriveDomain & "/ns_emu_helper/NSFirmwareMirror/?json"), Chr(34)), "firmware_")
-    For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
-        cbFirmware.AddItem Replace(Replace(FirmwareVersionArr(i), "firmware_", ""), ".zip", "")
+    For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+        cbFirmware.AddItem Replace(Replace(FirmwareVersionArr(I), "firmware_", ""), ".zip", "")
     Next
     cbFirmware.Text = "选择固件版本"
 Else
@@ -955,9 +955,9 @@ Else
     cbFirmware.Top = 3120
     cbFirmware.Clear
     cbFirmware.Text = "加载中 ..."
-    FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
-    For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
-        cbFirmware.AddItem FirmwareVersionArr(i)
+    FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+    For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+        cbFirmware.AddItem FirmwareVersionArr(I)
     Next
     cbFirmware.Text = "选择固件版本"
 End If
@@ -990,7 +990,7 @@ End Sub
 Private Sub ImageCombo1_Click()
 Image1.Picture = ImageList2.ListImages(ImageCombo1.SelectedItem.Index).Picture
 Dim RyujinxVersion() As String
-Dim i As Integer
+Dim I As Integer
 If ImageCombo1.SelectedItem.Index = 1 Then
     If DownloadSource = "Github" Then
         txtVersion.Visible = True
@@ -1003,9 +1003,9 @@ If ImageCombo1.SelectedItem.Index = 1 Then
         ComboVersion.Clear
         ComboVersion.Text = "加载中 ..."
         RyujinxVersion = Split(GetRyujinxVersionAli, vbCrLf)
-        For i = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
-        ComboVersion.AddItem RyujinxVersion(i)
-        ComboVersion.Text = RyujinxVersion(i)
+        For I = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
+        ComboVersion.AddItem RyujinxVersion(I)
+        ComboVersion.Text = RyujinxVersion(I)
         ComboVersion.SetFocus
         Next
     End If
@@ -1015,9 +1015,9 @@ Else
     ComboVersion.Clear
     ComboVersion.Text = "加载中 ..."
     RyujinxVersion = Split(GetRyujinxLDNVersionAli, vbCrLf)
-    For i = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
-    ComboVersion.AddItem RyujinxVersion(i)
-    ComboVersion.Text = RyujinxVersion(i)
+    For I = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
+    ComboVersion.AddItem RyujinxVersion(I)
+    ComboVersion.Text = RyujinxVersion(I)
     ComboVersion.SetFocus
     Next
 End If
