@@ -9,8 +9,8 @@ Public Declare Sub CoTaskMemFree Lib "ole32.dll" (ByVal pv As Long)
 Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 '公共变量常量
-Public Const Version As String = "V1.0.1"
-Public Const InternalVersion As String = "v1.0.1"
+Public Const Version As String = "V1.0.2"
+Public Const InternalVersion As String = "v1.0.2"
 Public Const InternalConfigFileVersion As String = "v3"
 
 

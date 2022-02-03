@@ -842,7 +842,9 @@ If InstallMode = 1 Or InstallMode = 2 Then
     PBarUnload 1
     DoEvents
     '复制文件
-    XCopy YuzuInstallFolder & "\" & YuzuVersionName & "\plugins", YuzuInstallFolder & "\plugins"
+    Set folder = fso.GetFolder(YuzuInstallFolder & "\" & YuzuVersionName & "\plugins")
+    folder.Move YuzuInstallFolder & "\plugins"
+    'XCopy YuzuInstallFolder & "\" & YuzuVersionName & "\plugins", YuzuInstallFolder & "\plugins"
     fso.CopyFile YuzuInstallFolder & "\" & YuzuVersionName & "\*.*", YuzuInstallFolder & "\", True
     DoEvents
     Shell "cmd /c rd /s /q " & Chr(34) & YuzuInstallFolder & "\" & YuzuVersionName & "" & Chr(34), vbHide
@@ -1005,6 +1007,7 @@ Unload Me
 End Sub
 
 Private Sub RemoveTemps()
+'删除几个压缩包
 On Error Resume Next
 Kill YuzuInstallFolder & "\Yuzu.7z"
 Kill YuzuInstallFolder & "\Firmware.zip"

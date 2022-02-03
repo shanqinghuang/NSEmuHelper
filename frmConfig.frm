@@ -347,6 +347,14 @@ Unload Me
 End Sub
 
 Private Sub btnSave_Click()
+If InStr(CfgTexts(0).Text, "yuzu-windows-msvc-early-access") Then
+    MsgBox "Yuzu 安装文件夹名为 yuzu-windows-msvc-early-access 会导致更新丢存档，请重命名该文件夹，或者不使用本工具。", vbCritical
+    Exit Sub
+End If
+If InStr(CfgTexts(1).Text, "publish") Then
+    MsgBox "Ryujinx 安装文件夹名为 publish 会导致更新丢存档，请重命名该文件夹，或者不使用本工具。", vbCritical
+    Exit Sub
+End If
 '保存设置
 YuzuInstallFolder = CfgTexts(0).Text
 RyujinxInstallFolder = CfgTexts(1).Text
