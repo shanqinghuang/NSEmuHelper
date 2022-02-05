@@ -23,6 +23,14 @@ Begin VB.Form frmImportRegistry
    ScaleHeight     =   3585
    ScaleWidth      =   6615
    StartUpPosition =   3  '窗口缺省
+   Begin VB.ComboBox Combo2 
+      Height          =   435
+      Left            =   720
+      TabIndex        =   4
+      Text            =   "Combo1"
+      Top             =   1680
+      Width           =   1695
+   End
    Begin VB.CommandButton Command1 
       Caption         =   "下一步"
       Height          =   495
@@ -33,22 +41,11 @@ Begin VB.Form frmImportRegistry
    End
    Begin VB.ComboBox Combo1 
       Height          =   435
-      Left            =   1440
+      Left            =   2640
       TabIndex        =   2
       Text            =   "Combo1"
       Top             =   1680
-      Width           =   3735
-   End
-   Begin VB.Label Labels 
-      BackColor       =   &H80000005&
-      BackStyle       =   0  'Transparent
-      Caption         =   "仅支持 Yuzu Tool 4.6"
-      Height          =   375
-      Index           =   2
-      Left            =   120
-      TabIndex        =   4
-      Top             =   3000
-      Width           =   5295
+      Width           =   3255
    End
    Begin VB.Label Labels 
       BackColor       =   &H80000005&
@@ -64,7 +61,7 @@ Begin VB.Form frmImportRegistry
    Begin VB.Label Labels 
       BackColor       =   &H80000005&
       BackStyle       =   0  'Transparent
-      Caption         =   "从 Yuzu Tool 导入注册表"
+      Caption         =   "从 Yuzu Tool 导入模拟器"
       BeginProperty Font 
          Name            =   "微软雅黑 Light"
          Size            =   14.25
@@ -87,7 +84,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Private Sub LoadRegistry()
+Private Sub LoadRegistryYuzuTool()
 Combo1.Clear
     Dim lhKey As Long
     Dim I As Long
@@ -100,29 +97,86 @@ Combo1.Clear
     RegOpenKey HKEY_CURRENT_USER, "Software\YuzuTool", lhKey
     n = RegEnumKeyEx(lhKey, I, sKeyName, lenKeyName, 0, vbNullString, 0, tFT)
     Do Until n <> 0
-        Combo1.AddItem Left(sKeyName, lenKeyName)
-        Combo1.Text = Left(sKeyName, lenKeyName)
+        Combo1.Text = "Yuzu 预先测试版 " & Left(sKeyName, lenKeyName)
+        Combo1.AddItem Combo1.Text
         lenKeyName = 1024
         I = I + 1
         n = RegEnumKeyEx(lhKey, I, sKeyName, lenKeyName, 0, vbNullString, 0, tFT)
     Loop
     RegCloseKey lhKey
 End Sub
-
-Private Sub LoadInstallFolder()
+Private Sub LoadRegistryRyuzuTool()
+Combo1.Clear
 Dim wsh As Object, YuzuInstallFolder As String
 Set wsh = CreateObject("WScript.Shell")
-YuzuInstallFolder = wsh.RegRead("HKCU\Software\YuzuTool\" & Combo1.Text & "\InstallFolder")
+Combo1.Text = "Yuzu 预先测试版 " & wsh.RegRead("HKCU\Software\RyuzuTool\Yuzu\Version")
+Combo1.AddItem Combo1.Text
+Combo1.AddItem "Ryujinx " & wsh.RegRead("HKCU\Software\RyuzuTool\Ryujinx\Version")
+End Sub
+
+Private Sub ImportFromYuzuTool()
+Dim wsh As Object, YuzuInstallFolder As String
+Set wsh = CreateObject("WScript.Shell")
+YuzuInstallFolder = wsh.RegRead("HKCU\Software\YuzuTool\" & Replace(Combo1.Text, "Yuzu 预先测试版 ", "") & "\InstallFolder")
 WriteIni "Folder", "YuzuInstallFolder", YuzuInstallFolder, App.Path & "\Config.ini"
-WriteIni "Yuzu", "Version", Combo1.Text, YuzuInstallFolder & "\YuzuConfig.ini"
+WriteIni "Yuzu", "Version", Replace(Combo1.Text, "Yuzu 预先测试版 ", ""), YuzuInstallFolder & "\YuzuConfig.ini"
 WriteIni "Yuzu", "Branch", "预先测试版", YuzuInstallFolder & "\YuzuConfig.ini"
 WriteIni "Yuzu", "Firmware", "13.2.1", YuzuInstallFolder & "\YuzuConfig.ini"
 WriteIni "Yuzu", "CustomDataFolder", "False", YuzuInstallFolder & "\YuzuConfig.ini"
-MsgBox "Yuzu Early Access " & Combo1.Text & " 已经导入到本工具！", vbInformation, "NS 模拟器助手"
+MsgBox Combo1.Text & " 已经导入到本工具！", vbInformation, "NS 模拟器助手"
+End Sub
+Private Sub ImportFromRyuzuTool()
+Dim wsh As Object
+Set wsh = CreateObject("WScript.Shell")
+If Left(Combo1.Text, 4) = "Yuzu" Then
+    Dim YuzuInstallFolder As String, YuzuBranch As String, YuzuFirmware As String
+    YuzuInstallFolder = wsh.RegRead("HKCU\Software\RyuzuTool\Yuzu\InstallFolder")
+    WriteIni "Folder", "YuzuInstallFolder", YuzuInstallFolder, App.Path & "\Config.ini"
+    WriteIni "Yuzu", "Version", Replace(Combo1.Text, "Yuzu 预先测试版 ", ""), YuzuInstallFolder & "\YuzuConfig.ini"
+    YuzuBranch = wsh.RegRead("HKCU\Software\RyuzuTool\Yuzu\EA")
+    If YuzuBranch = "True" Then
+        YuzuBranch = "预先测试版"
+    Else
+        YuzuBranch = "主线版"
+    End If
+    WriteIni "Yuzu", "Branch", YuzuBranch, YuzuInstallFolder & "\YuzuConfig.ini"
+    YuzuFirmware = wsh.RegRead("HKCU\Software\RyuzuTool\Yuzu\Firmver")
+    WriteIni "Yuzu", "Firmware", YuzuFirmware, YuzuInstallFolder & "\YuzuConfig.ini"
+    WriteIni "Yuzu", "CustomDataFolder", "False", YuzuInstallFolder & "\YuzuConfig.ini"
+    MsgBox Combo1.Text & " 已经导入到本工具！", vbInformation, "NS 模拟器助手"
+Else
+    Dim RyujinxInstallFolder As String, RyujinxFirmware As String
+    RyujinxInstallFolder = wsh.RegRead("HKCU\Software\RyuzuTool\Ryujinx\InstallFolder")
+    WriteIni "Folder", "RyujinxInstallFolder", RyujinxInstallFolder, App.Path & "\Config.ini"
+    WriteIni "Ryujinx", "Version", Replace(Combo1.Text, "Ryujinx ", ""), RyujinxInstallFolder & "\RyujinxConfig.ini"
+    WriteIni "Ryujinx", "Branch", "主线版", RyujinxInstallFolder & "\RyujinxConfig.ini"
+    RyujinxFirmware = wsh.RegRead("HKCU\Software\RyuzuTool\Ryujinx\Firmver")
+    WriteIni "Ryujinx", "Firmware", RyujinxFirmware, RyujinxInstallFolder & "\RyujinxConfig.ini"
+    WriteIni "Ryujinx", "CustomDataFolder", "False", RyujinxInstallFolder & "\RyujinxConfig.ini"
+    MsgBox Combo1.Text & " 已经导入到本工具！", vbInformation, "NS 模拟器助手"
+End If
+End
+End Sub
+
+Private Sub Combo2_Click()
+If Combo2.Text = "Yuzu Tool" Then
+    Labels(0).Caption = "从 Yuzu Tool 导入模拟器"
+    Labels(1).Caption = "请选择要导入到 NS 模拟器助手的 Yuzu 版本。"
+    LoadRegistryYuzuTool
+Else
+    Labels(0).Caption = "从 Ryuzu Tool 导入模拟器"
+    Labels(1).Caption = "请选择要导入到 NS 模拟器助手的模拟器。"
+    LoadRegistryRyuzuTool
+End If
+Me.Caption = Labels(0).Caption
 End Sub
 
 Private Sub Command1_Click()
-        LoadInstallFolder
+If Combo2.Text = "Yuzu Tool" Then
+    ImportFromYuzuTool
+Else
+    ImportFromRyuzuTool
+End If
 End Sub
 
 Private Sub Form_Initialize()
@@ -138,5 +192,10 @@ If CheckFileExists(App.Path & "\Config.Defaults.ini") = True And CheckFileExists
 '创建默认配置
 Name App.Path & "\Config.Defaults.ini" As App.Path & "\Config.ini"
 End If
-LoadRegistry
+Combo2.Clear
+Combo2.AddItem "Yuzu Tool"
+Combo2.AddItem "Ryuzu Tool"
+Combo2.Text = "Yuzu Tool"
+LoadRegistryYuzuTool
 End Sub
+

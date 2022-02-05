@@ -9,8 +9,8 @@ Public Declare Sub CoTaskMemFree Lib "ole32.dll" (ByVal pv As Long)
 Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 '公共变量常量
-Public Const Version As String = "V1.0.2"
-Public Const InternalVersion As String = "v1.0.2"
+Public Const Version As String = "V1.0.3"
+Public Const InternalVersion As String = "v1.0.3"
 Public Const InternalConfigFileVersion As String = "v3"
 
 
@@ -184,6 +184,24 @@ End If
 GetRyujinxVersion = "错误"
 End Function
 
+Public Function GetRyujinxCNVersion() As String
+'获取 Ryujinx CN 版本号
+On Error GoTo ExitRyu
+Dim TmpML As String
+TmpML = GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/redball1017/Ryujinx-CN/releases/latest")
+TmpML = Replace(Replace(TmpML, Chr(34), ""), " ", "")
+TmpML = Filter(Split(TmpML, ","), "tag_name:")(0)
+GetRyujinxCNVersion = Replace(Replace(Replace(TmpML, "tag_name:", ""), vbCrLf, ""), vbLf, "")
+Exit Function
+ExitRyu:
+If frmRyujinxConfig.Visible = False Then
+    MsgBox "Github API 调用超出限制，请等一会重试，或者使用阿里云盘下载源。", vbCritical + vbOKOnly
+Else
+    MsgBox "从 Github 获取版本号失败，请手动输入版本号。", vbCritical + vbOKOnly
+End If
+GetRyujinxCNVersion = "错误"
+End Function
+
 Public Function GetRyujinxVersionAli() As String
 '获取 Ryujinx 版本号 阿里云盘
 Dim TmpMLAli As String
@@ -202,6 +220,16 @@ Do Until TmpMLAli <> ""
 Loop
 TmpMLAli = Replace(Replace(Join(Filter(Split(Replace(TmpMLAli, Chr(34), ""), ","), "name:ryujinx-"), vbCrLf), "name:ryujinx-", ""), "-win_x64.zip", "")
 GetRyujinxLDNVersionAli = TmpMLAli
+End Function
+
+Public Function GetRyujinxCNVersionAli() As String
+'获取 Ryujinx CN 版本号 阿里云盘
+Dim TmpMLAli As String
+Do Until TmpMLAli <> ""
+    TmpMLAli = GetDataStr2("https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxCNMirror/?json")
+Loop
+TmpMLAli = Replace(Replace(Join(Filter(Split(Replace(TmpMLAli, Chr(34), ""), ","), "name:ryujinx-"), vbCrLf), "name:ryujinx-", ""), "-win_x64.zip", "")
+GetRyujinxCNVersionAli = TmpMLAli
 End Function
 
 Public Function MkDirs(ByVal PathIn As String) As Boolean

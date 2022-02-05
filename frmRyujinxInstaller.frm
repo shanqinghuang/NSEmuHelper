@@ -351,7 +351,7 @@ Attribute DownloadCompleted.VB_VarHelpID = -1
 '1：纯净安装
 '2：更新模拟器
 '3：固件
-Public iIsMainline As Boolean, iVersion As String, iKeyPath As String, iFirmwareOnline As Boolean, iFirmwarePath As String, iFirmwareVersion As String
+Public iBranch As String, iVersion As String, iKeyPath As String, iFirmwareOnline As Boolean, iFirmwarePath As String, iFirmwareVersion As String
 '1：分支 True EA False Mainline
 '2：版本号
 Public CurrentStep As Integer
@@ -477,6 +477,7 @@ Labels(3).Caption = "模拟器版本："
 ImageCombo1.ComboItems.Clear
 ImageCombo1.ComboItems.Add 1, "Mainline", "主线版", 1
 ImageCombo1.ComboItems.Add 2, "LDN", "LDN联机版", 2
+ImageCombo1.ComboItems.Add 3, "CN", "中文版", 1
 ImageCombo1.ComboItems(1).Selected = True
 If DownloadSource = "Github" Then
     txtVersion.Visible = True
@@ -503,8 +504,7 @@ End Sub
 
 Private Sub Step2()
 On Error GoTo Step2Error
-iIsMainline = False
-If ImageCombo1.SelectedItem.Key = "Mainline" Then iIsMainline = True
+iBranch = ImageCombo1.SelectedItem.Text
 If DownloadSource = "Github" Then
     If txtVersion.Text = "加载中 ..." Then Exit Sub
     iVersion = txtVersion.Text
@@ -559,10 +559,10 @@ If InstallMode = 1 Then
     Labels(1).Caption = "Step 3 - 选择固件"
     Labels(2).Caption = "Ryujinx 需要固件才能玩游戏。" & vbCrLf & "你可以在相关的群中找到固件包，或使用“在线下载”。" & vbCrLf & "固件版本需要小于等于密钥版本。"
 ElseIf InstallMode = 3 Then
-    If Left(RyujinxBranch, 3) = "主线版" Then
-        Image1.Picture = ImageList2.ListImages(1).Picture
-    Else
+    If Left(RyujinxBranch, 3) = "LDN" Then
         Image1.Picture = ImageList2.ListImages(2).Picture
+    Else
+        Image1.Picture = ImageList2.ListImages(1).Picture
     End If
     Me.Caption = TitlePrefix & " - 选择固件"
     Labels(1).Caption = "更新固件版本"
@@ -608,8 +608,7 @@ If InstallMode = 1 Or InstallMode = 3 Then
         'iFirmwarePath = "https://download.sydzy.workers.dev/api/download?url=https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
     End If
 ElseIf InstallMode = 2 Then
-    iIsMainline = False
-    If ImageCombo1.SelectedItem.Key = "Mainline" Then iIsMainline = True
+    iBranch = ImageCombo1.SelectedItem.Text
     If DownloadSource = "Github" Then
         If txtVersion.Text = "加载中 ..." Then Exit Sub
         iVersion = txtVersion.Text
@@ -638,14 +637,10 @@ Labels(5).Visible = True
 Labels(2).Caption = "这可能需要十几分钟，你可以坐下来喝杯茶。" & vbCrLf & "根据网络状况和电脑性能，安装速度会有所不同。"
 If InstallMode = 1 Then
     Me.Caption = "安装 Ryujinx - 正在安装"
-    Labels(1).Caption = "正在安装模拟器 ..."
+    Labels(1).Caption = "正在安装 Ryujinx " & iBranch & " " & iVersion & " ..."
 ElseIf InstallMode = 2 Then
     Me.Caption = "更新 Ryujinx - 正在安装"
-    If iIsMainline Then
-        Labels(1).Caption = "正在更新模拟器到主线版 " & iVersion & " ..."
-    Else
-        Labels(1).Caption = "正在更新模拟器到 LDN 联机版 " & iVersion & " ..."
-    End If
+    Labels(1).Caption = "正在更新 Ryujinx 到 " & iBranch & " " & iVersion & " ..."
 ElseIf InstallMode = 3 Then
     Me.Caption = "更新固件 - 正在安装"
     Labels(1).Caption = "正在安装固件 ..."
@@ -658,20 +653,28 @@ Labels(4).Caption = "准备安装 ..."
 Labels(5).Caption = ""
 iVersion = CStr(CInt(iVersion))
 Dim RyujinxUrl As String
-If iIsMainline Then
+Select Case iBranch
+Case "主线版"
     '主线
     If DownloadSource = "Github" Then
         RyujinxUrl = "https://github.com/Ryujinx/release-channel-master/releases/download/" & iVersion & "/ryujinx-" & iVersion & "-win_x64.zip"
     Else
         RyujinxUrl = "https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxMainlineMirror/ryujinx-" & iVersion & "-win_x64.zip"
     End If
-Else
+Case "LDN联机版"
     'LDN
     RyujinxUrl = "https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxLDNMirror/ryujinx-" & iVersion & "-win_x64.zip"
-End If
+Case "中文版"
+    '主线
+    If DownloadSource = "Github" Then
+        RyujinxUrl = "https://github.com/redball1017/Ryujinx-CN/releases/download/" & iVersion & "/ryujinx-" & iVersion & "-win_x64.zip"
+    Else
+        RyujinxUrl = "https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxCNMirror/ryujinx-" & iVersion & "-win_x64.zip"
+    End If
+End Select
 
 If CheckFileExists(RyujinxInstallFolder & "\Ryujinx.zip") = False Then
-If iIsMainline Then
+If iBranch <> "LDN联机版" Then
     If DownloadSource = "Github" Then
         If AlwaysUseCloudFlare = False Then
             DoEvents
@@ -858,11 +861,7 @@ End If
 '生成 ini 和配置
 If InstallMode = 1 Then
     RyujinxVersion = iVersion
-    If iIsMainline Then
-        RyujinxBranch = "主线版"
-    Else
-        RyujinxBranch = "LDN联机版"
-    End If
+    RyujinxBranch = iBranch
     RyujinxFirmware = iFirmwareVersion
     WriteIni "Ryujinx", "Version", RyujinxVersion, RyujinxInstallFolder & "\RyujinxConfig.ini"
     WriteIni "Ryujinx", "Branch", RyujinxBranch, RyujinxInstallFolder & "\RyujinxConfig.ini"
@@ -872,11 +871,7 @@ If InstallMode = 1 Then
     WriteIni "Ryujinx", "CustomDataFolder", RyujinxCustomDataFolder, RyujinxInstallFolder & "\RyujinxConfig.ini"
 ElseIf InstallMode = 2 Then
     RyujinxVersion = iVersion
-    If iIsMainline Then
-        RyujinxBranch = "主线版"
-    Else
-        RyujinxBranch = "LDN联机版"
-    End If
+    RyujinxBranch = iBranch
     WriteIni "Ryujinx", "Version", RyujinxVersion, RyujinxInstallFolder & "\RyujinxConfig.ini"
     WriteIni "Ryujinx", "Branch", RyujinxBranch, RyujinxInstallFolder & "\RyujinxConfig.ini"
 ElseIf InstallMode = 3 Then
@@ -886,11 +881,7 @@ End If
 
 '完成
 If InstallMode = 1 Or InstallMode = 2 Then
-    If iIsMainline Then
-        Labels(1).Caption = "Ryujinx 主线版 " & iVersion & " 安装完成！"
-    Else
-        Labels(1).Caption = "Ryujinx LDN 联机版 " & iVersion & " 安装完成！"
-    End If
+    Labels(1).Caption = "Ryujinx " & iBranch & " " & iVersion & " 安装完成！"
 ElseIf InstallMode = 3 Then
     Labels(1).Caption = "Ryujinx 固件 " & iFirmwareVersion & " 安装完成！"
 End If
@@ -988,10 +979,15 @@ End Sub
 
 
 Private Sub ImageCombo1_Click()
-Image1.Picture = ImageList2.ListImages(ImageCombo1.SelectedItem.Index).Picture
+If ImageCombo1.SelectedItem.Index = 2 Then
+    Image1.Picture = ImageList2.ListImages(2).Picture
+Else
+    Image1.Picture = ImageList2.ListImages(1).Picture
+End If
 Dim RyujinxVersion() As String
 Dim I As Integer
-If ImageCombo1.SelectedItem.Index = 1 Then
+Select Case ImageCombo1.SelectedItem.Index
+Case 1
     If DownloadSource = "Github" Then
         txtVersion.Visible = True
         ComboVersion.Visible = False
@@ -1009,7 +1005,7 @@ If ImageCombo1.SelectedItem.Index = 1 Then
         ComboVersion.SetFocus
         Next
     End If
-Else
+Case 2
     txtVersion.Visible = False
     ComboVersion.Visible = True
     ComboVersion.Clear
@@ -1020,7 +1016,25 @@ Else
     ComboVersion.Text = RyujinxVersion(I)
     ComboVersion.SetFocus
     Next
-End If
+Case 3
+    If DownloadSource = "Github" Then
+        txtVersion.Visible = True
+        ComboVersion.Visible = False
+        txtVersion.Text = GetRyujinxCNVersion
+        txtVersion.SetFocus
+    Else
+        txtVersion.Visible = False
+        ComboVersion.Visible = True
+        ComboVersion.Clear
+        ComboVersion.Text = "加载中 ..."
+        RyujinxVersion = Split(GetRyujinxCNVersionAli, vbCrLf)
+        For I = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
+        ComboVersion.AddItem RyujinxVersion(I)
+        ComboVersion.Text = RyujinxVersion(I)
+        ComboVersion.SetFocus
+        Next
+    End If
+End Select
 End Sub
 
 Private Sub Form_Initialize()

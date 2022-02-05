@@ -170,9 +170,12 @@ Private Sub Form_Initialize()
 InitCommonControls
 '加载配置
 ConfigFileVersion = ""
+If CheckFileExists(App.Path & "\Config.Defaults.ini") = False And CheckFileExists(App.Path & "\Config.ini") = False Then
+    MsgBox "配置文件不存在，程序无法启动！", vbCritical
+End If
 If CheckFileExists(App.Path & "\Config.Defaults.ini") = True And CheckFileExists(App.Path & "\Config.ini") = False Then
 '创建默认配置
-Name App.Path & "\Config.Defaults.ini" As App.Path & "\Config.ini"
+    Name App.Path & "\Config.Defaults.ini" As App.Path & "\Config.ini"
 End If
 YuzuInstallFolder = GetIni("Folder", "YuzuInstallFolder", App.Path & "\Config.ini")
 RyujinxInstallFolder = GetIni("Folder", "RyujinxInstallFolder", App.Path & "\Config.ini")

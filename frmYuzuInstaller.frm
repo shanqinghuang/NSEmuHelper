@@ -653,13 +653,17 @@ Labels(5).Visible = True
 Labels(2).Caption = "这可能需要十几分钟，你可以坐下来喝杯茶。" & vbCrLf & "根据网络状况和电脑性能，安装速度会有所不同。"
 If InstallMode = 1 Then
     Me.Caption = "安装 Yuzu - 正在安装"
-    Labels(1).Caption = "正在安装模拟器 ..."
+    If iIsEarlyAccess Then
+        Labels(1).Caption = "正在安装 Yuzu 预先测试版 " & iVersion & " ..."
+    Else
+        Labels(1).Caption = "正在安装 Yuzu 主线版 " & iVersion & " ..."
+    End If
 ElseIf InstallMode = 2 Then
     Me.Caption = "更新 Yuzu - 正在安装"
     If iIsEarlyAccess Then
-        Labels(1).Caption = "正在更新模拟器到预先测试版 " & iVersion & " ..."
+        Labels(1).Caption = "正在更新 Yuzu 到预先测试版 " & iVersion & " ..."
     Else
-        Labels(1).Caption = "正在更新模拟器到主线版 " & iVersion & " ..."
+        Labels(1).Caption = "正在更新 Yuzu 到主线版 " & iVersion & " ..."
     End If
 ElseIf InstallMode = 3 Then
     Me.Caption = "更新固件 - 正在安装"
@@ -873,32 +877,19 @@ If InstallMode = 1 Or InstallMode = 3 Then
     Labels(4).Caption = "正在解压缩并安装固件包 ..."
     DoEvents
     MkDirs YuzuInstallFolder & "\user\nand\system\Contents\registered"
-    MkDirs YuzuInstallFolder & "\FWTMP"
     DoEvents
         '解压
     PBarLoad 1, Me.hWnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
     PBarSetRange 1, 0, 100
     PBarSetPos 1, 0
     DoEvents
-        If iFirmwareOnline Then
-            Unzip YuzuInstallFolder & "\Firmware.zip", YuzuInstallFolder & "\FWTMP"
-        Else
-            Unzip iFirmwarePath, YuzuInstallFolder & "\FWTMP"
-        End If
+    If iFirmwareOnline Then
+        Unzip YuzuInstallFolder & "\Firmware.zip", YuzuInstallFolder & "\user\nand\system\Contents\registered"
+    Else
+        Unzip iFirmwarePath, YuzuInstallFolder & "\user\nand\system\Contents\registered"
+    End If
     PBarUnload 1
     DoEvents
-        'Ryujinx固件到Yuzu固件
-    Dim FileName() As String
-    Dim file As Object
-    Set folder = fso.GetFolder(YuzuInstallFolder & "\FWTMP")
-    For Each file In folder.Files '遍历根文件夹下的文件
-    DoEvents
-    MkDir YuzuInstallFolder & "\user\nand\system\Contents\registered\" & Replace(Replace(file, YuzuInstallFolder & "\FWTMP", ""), ".cnmt", "")
-    FileCopy file, YuzuInstallFolder & "\user\nand\system\Contents\registered\" & Replace(Replace(file, YuzuInstallFolder & "\FWTMP", ""), ".cnmt", "") & "\00"
-    Next
-    Sleep 200
-        '删除临时文件
-    Shell "cmd /c rd /s /q " & Chr(34) & YuzuInstallFolder & "\FWTMP" & Chr(34), vbMinimizedNoFocus
 End If
 
 If InstallMode = 1 Then
