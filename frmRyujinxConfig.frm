@@ -317,10 +317,10 @@ Else
     txtDataFolder.Visible = True
     txtDataFolder.Text = RyujinxCustomDataFolder
 End If
-If Left(RyujinxBranch, 3) = "主线版" Then
-    Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(1).Picture
-Else
+If Left(RyujinxBranch, 3) = "LDN" Then
     Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(2).Picture
+Else
+    Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(1).Picture
 End If
 'Unload frmRyujinxInstaller
 RyujinxPreDataFolder = RyujinxCustomDataFolder
@@ -347,7 +347,8 @@ Else
 End If
 ImageCombo1.ComboItems.Clear
 ImageCombo1.ComboItems.Add 1, "Mainline", "主线版", 1
-ImageCombo1.ComboItems.Add 2, "LDN", "LDN联机版", 2
+ImageCombo1.ComboItems.Add 2, "CN", "中文版", 1
+ImageCombo1.ComboItems.Add 3, "LDN", "LDN联机版", 2
 ImageCombo1.ComboItems(1).Selected = True
 txtVersion.SetFocus
 cbFirmware.Text = "加载中 ..."
@@ -373,7 +374,11 @@ InitCommonControls
 End Sub
 
 Private Sub ImageCombo1_Click()
-Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(ImageCombo1.SelectedItem.Index).Picture
+If ImageCombo1.SelectedItem.Index = 3 Then
+    Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(2).Picture
+Else
+    Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(1).Picture
+End If
 txtVersion.SetFocus
     txtVersion.Text = "加载中 ..."
 If ImageCombo1.SelectedItem.Index = 1 Then

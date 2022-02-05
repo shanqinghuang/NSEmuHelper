@@ -9,8 +9,8 @@ Public Declare Sub CoTaskMemFree Lib "ole32.dll" (ByVal pv As Long)
 Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 '公共变量常量
-Public Const Version As String = "V1.0.3"
-Public Const InternalVersion As String = "v1.0.3"
+Public Const Version As String = "V1.0.4"
+Public Const InternalVersion As String = "v1.0.4"
 Public Const InternalConfigFileVersion As String = "v3"
 
 
@@ -188,7 +188,7 @@ Public Function GetRyujinxCNVersion() As String
 '获取 Ryujinx CN 版本号
 On Error GoTo ExitRyu
 Dim TmpML As String
-TmpML = GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/redball1017/Ryujinx-CN/releases/latest")
+TmpML = GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/YidaozhanYa/RyujinxCN/releases/latest")
 TmpML = Replace(Replace(TmpML, Chr(34), ""), " ", "")
 TmpML = Filter(Split(TmpML, ","), "tag_name:")(0)
 GetRyujinxCNVersion = Replace(Replace(Replace(TmpML, "tag_name:", ""), vbCrLf, ""), vbLf, "")
@@ -226,9 +226,9 @@ Public Function GetRyujinxCNVersionAli() As String
 '获取 Ryujinx CN 版本号 阿里云盘
 Dim TmpMLAli As String
 Do Until TmpMLAli <> ""
-    TmpMLAli = GetDataStr2("https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxCNMirror/?json")
+    TmpMLAli = GetDataStr2("https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxCNBuilds/?json")
 Loop
-TmpMLAli = Replace(Replace(Join(Filter(Split(Replace(TmpMLAli, Chr(34), ""), ","), "name:ryujinx-"), vbCrLf), "name:ryujinx-", ""), "-win_x64.zip", "")
+TmpMLAli = Replace(Replace(Join(Filter(Filter(Split(Replace(TmpMLAli, Chr(34), ""), ","), "name:ryujinx-cn-"), "win_x64"), vbCrLf), "name:ryujinx-cn-", ""), "-win_x64.zip", "")
 GetRyujinxCNVersionAli = TmpMLAli
 End Function
 

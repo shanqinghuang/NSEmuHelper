@@ -476,8 +476,8 @@ End If
 Labels(3).Caption = "模拟器版本："
 ImageCombo1.ComboItems.Clear
 ImageCombo1.ComboItems.Add 1, "Mainline", "主线版", 1
-ImageCombo1.ComboItems.Add 2, "LDN", "LDN联机版", 2
-ImageCombo1.ComboItems.Add 3, "CN", "中文版", 1
+ImageCombo1.ComboItems.Add 2, "CN", "中文版", 1
+ImageCombo1.ComboItems.Add 3, "LDN", "LDN联机版", 2
 ImageCombo1.ComboItems(1).Selected = True
 If DownloadSource = "Github" Then
     txtVersion.Visible = True
@@ -667,9 +667,9 @@ Case "LDN联机版"
 Case "中文版"
     '主线
     If DownloadSource = "Github" Then
-        RyujinxUrl = "https://github.com/redball1017/Ryujinx-CN/releases/download/" & iVersion & "/ryujinx-" & iVersion & "-win_x64.zip"
+        RyujinxUrl = "https://github.com/YidaozhanYa/RyujinxCN/releases/download/" & iVersion & "/ryujinx-cn-" & iVersion & "-win_x64.zip"
     Else
-        RyujinxUrl = "https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxCNMirror/ryujinx-" & iVersion & "-win_x64.zip"
+        RyujinxUrl = "https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxCNBuilds/ryujinx-cn-" & iVersion & "-win_x64.zip"
     End If
 End Select
 
@@ -979,7 +979,7 @@ End Sub
 
 
 Private Sub ImageCombo1_Click()
-If ImageCombo1.SelectedItem.Index = 2 Then
+If ImageCombo1.SelectedItem.Index = 3 Then
     Image1.Picture = ImageList2.ListImages(2).Picture
 Else
     Image1.Picture = ImageList2.ListImages(1).Picture
@@ -1006,17 +1006,6 @@ Case 1
         Next
     End If
 Case 2
-    txtVersion.Visible = False
-    ComboVersion.Visible = True
-    ComboVersion.Clear
-    ComboVersion.Text = "加载中 ..."
-    RyujinxVersion = Split(GetRyujinxLDNVersionAli, vbCrLf)
-    For I = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
-    ComboVersion.AddItem RyujinxVersion(I)
-    ComboVersion.Text = RyujinxVersion(I)
-    ComboVersion.SetFocus
-    Next
-Case 3
     If DownloadSource = "Github" Then
         txtVersion.Visible = True
         ComboVersion.Visible = False
@@ -1034,6 +1023,17 @@ Case 3
         ComboVersion.SetFocus
         Next
     End If
+Case 3
+    txtVersion.Visible = False
+    ComboVersion.Visible = True
+    ComboVersion.Clear
+    ComboVersion.Text = "加载中 ..."
+    RyujinxVersion = Split(GetRyujinxLDNVersionAli, vbCrLf)
+    For I = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
+    ComboVersion.AddItem RyujinxVersion(I)
+    ComboVersion.Text = RyujinxVersion(I)
+    ComboVersion.SetFocus
+    Next
 End Select
 End Sub
 

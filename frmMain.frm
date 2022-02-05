@@ -256,7 +256,7 @@ Else
             If RyujinxInstallFolder = "D:\Ryujinx" Then
                 PopMsgBox = MsgBox("在默认的安装位置 D:\Ryujinx 中没有找到 Ryujinx 模拟器。" & vbCrLf & "点“是”以在默认位置安装模拟器，" & vbCrLf & "你也可以在主界面的设置中选择现有的模拟器位置。", vbYesNo, "Ryujinx 未找到")
             Else
-                PopMsgBox = MsgBox("在你选择的安装位置 " & RyujinxInstallFolder & " 中没有找到 Yuzu 模拟器。" & vbCrLf & "点 “是” 以在该位置安装模拟器，" & vbCrLf & "也可以在主界面的设置中选择现有的模拟器位置。", vbYesNo, "Ryujinx 未找到")
+                PopMsgBox = MsgBox("在你选择的安装位置 " & RyujinxInstallFolder & " 中没有找到 Ryujinx 模拟器。" & vbCrLf & "点 “是” 以在该位置安装模拟器，" & vbCrLf & "也可以在主界面的设置中选择现有的模拟器位置。", vbYesNo, "Ryujinx 未找到")
             End If
             If PopMsgBox = vbYes Then
                 InstallMode = 1

@@ -263,11 +263,11 @@ Else
     Else
         RyujinxVersion = GetIni("Ryujinx", "Version", RyujinxInstallFolder & "\RyujinxConfig.ini")
         RyujinxBranch = GetIni("Ryujinx", "Branch", RyujinxInstallFolder & "\RyujinxConfig.ini")
-        If Left(RyujinxBranch, 3) = "Ö÷Ïß°æ" Then
-            Images(0).Picture = frmRyujinxInstaller.ImageList2.ListImages(1).Picture
+        If Left(RyujinxBranch, 3) = "LDN" Then
+            Images(0).Picture = frmRyujinxInstaller.ImageList2.ListImages(2).Picture
             Unload frmRyujinxInstaller
         Else
-            Images(0).Picture = frmRyujinxInstaller.ImageList2.ListImages(2).Picture
+            Images(0).Picture = frmRyujinxInstaller.ImageList2.ListImages(1).Picture
             Unload frmRyujinxInstaller
         End If
         RyujinxFirmware = GetIni("Ryujinx", "Firmware", RyujinxInstallFolder & "\RyujinxConfig.ini")
