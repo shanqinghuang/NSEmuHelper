@@ -820,6 +820,7 @@ If InstallMode = 1 Then
     End If
 End If
 
+ReInstall:
 If InstallMode = 1 Or InstallMode = 2 Then
 
     '删除旧版本
@@ -857,6 +858,10 @@ If InstallMode = 1 Or InstallMode = 2 Then
     DoEvents
 End If
     
+If CheckFileExists(YuzuInstallFolder & "\yuzu.exe") Then
+    GoTo ReInstall
+    Labels(5).Caption = "解压失败，正在重新解压 ..."
+End If
 If InstallMode = 1 Then
     '安装密钥
     Labels(4).Caption = "正在安装密钥 ..."
@@ -931,7 +936,6 @@ If InstallMode = 1 Then
     DoEvents
     End If
 End If
-
 '生成 ini 和配置
 If InstallMode = 1 Then
     YuzuVersion = iVersion
