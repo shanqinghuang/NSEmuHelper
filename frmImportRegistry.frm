@@ -145,11 +145,19 @@ If Left(Combo1.Text, 4) = "Yuzu" Then
     WriteIni "Yuzu", "CustomDataFolder", "False", YuzuInstallFolder & "\YuzuConfig.ini"
     MsgBox Combo1.Text & " 已经导入到本工具！", vbInformation, "NS 模拟器助手"
 Else
-    Dim RyujinxInstallFolder As String, RyujinxFirmware As String
+    Dim RyujinxInstallFolder As String, RyujinxFirmware As String, RyujinxBranch As String
     RyujinxInstallFolder = wsh.RegRead("HKCU\Software\RyuzuTool\Ryujinx\InstallFolder")
     WriteIni "Folder", "RyujinxInstallFolder", RyujinxInstallFolder, App.Path & "\Config.ini"
     WriteIni "Ryujinx", "Version", Replace(Combo1.Text, "Ryujinx ", ""), RyujinxInstallFolder & "\RyujinxConfig.ini"
-    WriteIni "Ryujinx", "Branch", "主线版", RyujinxInstallFolder & "\RyujinxConfig.ini"
+    Select Case wsh.RegRead("HKCU\Software\RyuzuTool\Ryujinx\MCL")
+        Case "EN"
+        RyujinxBranch = "主线版"
+        Case "CN"
+        RyujinxBranch = "中文版"
+        Case Else
+        RyujinxBranch = "主线版"
+    End Select
+    WriteIni "Ryujinx", "Branch", RyujinxBranch, RyujinxInstallFolder & "\RyujinxConfig.ini"
     RyujinxFirmware = wsh.RegRead("HKCU\Software\RyuzuTool\Ryujinx\Firmver")
     WriteIni "Ryujinx", "Firmware", RyujinxFirmware, RyujinxInstallFolder & "\RyujinxConfig.ini"
     WriteIni "Ryujinx", "CustomDataFolder", "False", RyujinxInstallFolder & "\RyujinxConfig.ini"

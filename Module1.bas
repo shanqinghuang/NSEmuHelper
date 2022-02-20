@@ -8,9 +8,10 @@ Public Declare Function SysReAllocString Lib "oleaut32.dll" (ByVal pBSTR As Long
 Public Declare Sub CoTaskMemFree Lib "ole32.dll" (ByVal pv As Long)
 Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
+
 '公共变量常量
-Public Const Version As String = "V1.0.5"
-Public Const InternalVersion As String = "v1.0.5"
+Public Const Version As String = "V1.1.0"
+Public Const InternalVersion As String = "v1.1.0"
 Public Const InternalConfigFileVersion As String = "v3"
 
 
@@ -113,11 +114,10 @@ End Function
 Public Function GetYuzuVersion() As String
 '获取 Yuzu Early Access 版本号
 On Error GoTo ExitEA
-Dim TmpEA As String
-TmpEA = GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/pineappleea/pineapple-src/releases")
-TmpEA = Replace(Replace(TmpEA, Chr(34), ""), " ", "")
-TmpEA = Filter(Split(TmpEA, ","), "tag_name:EA")(0)
-GetYuzuVersion = Split(TmpEA, "EA-")(1)
+Dim objJson As Object
+Set objJson = JSON.parse(GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/pineappleea/pineapple-src/releases"))
+GetYuzuVersion = Replace(objJson(2)("tag_name"), "EA-", "")
+If InStr(GetYuzuVersion, "continuous") Then MsgBox "发生错误，请联系开发者。": End
 Exit Function
 ExitEA:
 If frmYuzuConfig.Visible = False Then
@@ -131,11 +131,9 @@ End Function
 Public Function GetYuzuMLVersion() As String
 '获取 Yuzu 主线版版本号
 On Error GoTo ExitML
-Dim TmpML As String
-TmpML = GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases")
-TmpML = Replace(Replace(TmpML, Chr(34), ""), " ", "")
-TmpML = Filter(Split(TmpML, ","), "tag_name:mainline")(0)
-GetYuzuMLVersion = Split(TmpML, "mainline-0-")(1)
+Dim objJson As Object
+Set objJson = JSON.parse(GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases/latest"))
+GetYuzuMLVersion = Replace(objJson("tag_name"), "mainline-0-", "")
 Exit Function
 ExitML:
 If frmYuzuConfig.Visible = False Then
@@ -152,8 +150,13 @@ Dim TmpEAAli As String
 Do Until TmpEAAli <> ""
     TmpEAAli = GetDataStr2("https://" & AliyundriveDomain & "/ns_emu_helper/YuzuEAMirror/?json")
 Loop
-TmpEAAli = Replace(Replace(Join(Filter(Split(TmpEAAli, Chr(34)), "windows-yuzu-ea-"), vbCrLf), "windows-yuzu-ea-", ""), ".7z", "")
-GetYuzuVersionAli = TmpEAAli
+GetYuzuVersionAli = ""
+Dim objJson As Object, VersionName As Variant
+Set objJson = JSON.parse(TmpEAAli)
+For Each VersionName In objJson("list")
+GetYuzuVersionAli = GetYuzuVersionAli & Replace(Replace(VersionName, "windows-yuzu-ea-", ""), ".7z", "") & vbCrLf
+Next VersionName
+GetYuzuVersionAli = Left(GetYuzuVersionAli, Len(GetYuzuVersionAli) - 1)
 End Function
 
 Public Function GetYuzuMLVersionAli() As String
@@ -162,18 +165,21 @@ Dim TmpMLAli As String
 Do Until TmpMLAli <> ""
     TmpMLAli = GetDataStr2("https://" & AliyundriveDomain & "/ns_emu_helper/YuzuMainlineMirror/?json")
 Loop
-TmpMLAli = Replace(Replace(Join(Filter(Split(Replace(TmpMLAli, Chr(34), ""), ","), "name:yuzu-windows-msvc-"), vbCrLf), "name:yuzu-windows-msvc-", ""), ".7z", "")
-GetYuzuMLVersionAli = TmpMLAli
+GetYuzuMLVersionAli = ""
+Dim objJson As Object, VersionName As Variant
+Set objJson = JSON.parse(TmpMLAli)
+For Each VersionName In objJson("list")
+GetYuzuMLVersionAli = GetYuzuMLVersionAli & Replace(Replace(VersionName, "yuzu-windows-msvc-", ""), ".7z", "") & vbCrLf
+Next VersionName
+GetYuzuMLVersionAli = Left(GetYuzuMLVersionAli, Len(GetYuzuMLVersionAli) - 1)
 End Function
 
 Public Function GetRyujinxVersion() As String
 '获取 Ryujinx 版本号
 On Error GoTo ExitRyu
-Dim TmpML As String
-TmpML = GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/Ryujinx/release-channel-master/releases/latest")
-TmpML = Replace(Replace(TmpML, Chr(34), ""), " ", "")
-TmpML = Filter(Split(TmpML, ","), "tag_name:")(0)
-GetRyujinxVersion = Replace(Replace(Replace(TmpML, "tag_name:", ""), vbCrLf, ""), vbLf, "")
+Dim objJson  As Object
+Set objJson = JSON.parse(GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/Ryujinx/release-channel-master/releases/latest"))
+GetRyujinxVersion = objJson("tag_name")
 Exit Function
 ExitRyu:
 If frmRyujinxConfig.Visible = False Then
@@ -208,8 +214,13 @@ Dim TmpMLAli As String
 Do Until TmpMLAli <> ""
     TmpMLAli = GetDataStr2("https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxMainlineMirror/?json")
 Loop
-TmpMLAli = Replace(Replace(Join(Filter(Split(Replace(TmpMLAli, Chr(34), ""), ","), "name:ryujinx-"), vbCrLf), "name:ryujinx-", ""), "-win_x64.zip", "")
-GetRyujinxVersionAli = TmpMLAli
+GetRyujinxVersionAli = ""
+Dim objJson As Object, VersionName As Variant
+Set objJson = JSON.parse(TmpMLAli)
+For Each VersionName In objJson("list")
+GetRyujinxVersionAli = GetRyujinxVersionAli & Replace(Replace(VersionName, "ryujinx-", ""), "-win_x64.zip", "") & vbCrLf
+Next VersionName
+GetRyujinxVersionAli = Left(GetRyujinxVersionAli, Len(GetRyujinxVersionAli) - 1)
 End Function
 
 Public Function GetRyujinxLDNVersionAli() As String
@@ -218,8 +229,13 @@ Dim TmpMLAli As String
 Do Until TmpMLAli <> ""
     TmpMLAli = GetDataStr2("https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxLDNMirror/?json")
 Loop
-TmpMLAli = Replace(Replace(Join(Filter(Split(Replace(TmpMLAli, Chr(34), ""), ","), "name:ryujinx-"), vbCrLf), "name:ryujinx-", ""), "-win_x64.zip", "")
-GetRyujinxLDNVersionAli = TmpMLAli
+GetRyujinxLDNVersionAli = ""
+Dim objJson As Object, VersionName As Variant
+Set objJson = JSON.parse(TmpMLAli)
+For Each VersionName In objJson("list")
+GetRyujinxLDNVersionAli = GetRyujinxLDNVersionAli & Replace(Replace(VersionName, "ryujinx-", ""), "-win_x64.zip", "") & vbCrLf
+Next VersionName
+GetRyujinxLDNVersionAli = Left(GetRyujinxLDNVersionAli, Len(GetRyujinxLDNVersionAli) - 1)
 End Function
 
 Public Function GetRyujinxCNVersionAli() As String
@@ -228,8 +244,28 @@ Dim TmpMLAli As String
 Do Until TmpMLAli <> ""
     TmpMLAli = GetDataStr2("https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxCNBuilds/?json")
 Loop
-TmpMLAli = Replace(Replace(Join(Filter(Filter(Split(Replace(TmpMLAli, Chr(34), ""), ","), "name:ryujinx-cn-"), "win_x64"), vbCrLf), "name:ryujinx-cn-", ""), "-win_x64.zip", "")
-GetRyujinxCNVersionAli = TmpMLAli
+GetRyujinxCNVersionAli = ""
+Dim objJson As Object, VersionName As Variant
+Set objJson = JSON.parse(TmpMLAli)
+For Each VersionName In objJson("list")
+    If InStr(VersionName, "win") Then GetRyujinxCNVersionAli = GetRyujinxCNVersionAli & Replace(Replace(VersionName, "ryujinx-cn-", ""), "-win_x64.zip", "") & vbCrLf
+Next VersionName
+GetRyujinxCNVersionAli = Left(GetRyujinxCNVersionAli, Len(GetRyujinxCNVersionAli) - 1)
+End Function
+
+Public Function GetRyujinxVulkanVersionAli() As String
+'获取 Ryujinx Vulkan 版本号 阿里云盘
+Dim TmpMLAli As String
+Do Until TmpMLAli <> ""
+    TmpMLAli = GetDataStr2("https://" & AliyundriveDomain & "/ns_emu_helper/RyujinxCNVulkanBuilds/?json")
+Loop
+GetRyujinxVulkanVersionAli = ""
+Dim objJson As Object, VersionName As Variant
+Set objJson = JSON.parse(TmpMLAli)
+For Each VersionName In objJson("list")
+    If InStr(VersionName, "win") Then GetRyujinxVulkanVersionAli = GetRyujinxVulkanVersionAli & Replace(Replace(VersionName, "ryujinx-cn-vulkan-", ""), "-win_x64.zip", "") & vbCrLf
+Next VersionName
+GetRyujinxVulkanVersionAli = Left(GetRyujinxVulkanVersionAli, Len(GetRyujinxVulkanVersionAli) - 1)
 End Function
 
 Public Function MkDirs(ByVal PathIn As String) As Boolean
@@ -268,17 +304,14 @@ End Function
 Public Sub CheckUpdate(Slient As Boolean)
 '检查更新
 On Error GoTo ExitUpd
-Dim Tmp As String, Tmp2 As String
-Tmp = GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/YidaozhanYa/NSEmuHelper/releases/latest")
-Tmp = Replace(Tmp, Chr(34), "")
-Tmp2 = Replace(Replace(Replace(Replace(Replace(Filter(Split(Tmp, ","), "body")(0), "}", ""), "\r", ""), "\n", vbCrLf), "#####", ""), "body:", "")
-Tmp = Split(Filter(Split(Replace(Tmp, " ", ""), ","), "tag_name:")(0), "tag_name:")(1)
-If Tmp <> InternalVersion Then
+Dim objJson As Object
+Set objJson = JSON.parse(GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/YidaozhanYa/NSEmuHelper/releases/latest"))
+If objJson("tag_name") <> InternalVersion Then
     '有更新！
     frmMain.Hide
     frmConfig.Hide
     frmAbout.Hide
-    MsgBox "检测到更新！" & vbCrLf & vbCrLf & "当前版本：" & Version & vbCrLf & "最新版本：" & LTrim(Tmp2), vbInformation
+    MsgBox "检测到更新！" & vbCrLf & vbCrLf & "当前版本：" & Version & vbCrLf & "最新版本：" & Replace(CStr(objJson("body")), "##### ", ""), vbInformation
     OpenLink "https://pan.baidu.com/s/10ZS58nejQ5k43mfaJdv5ZQ?pwd=67d3"
     End
 Else

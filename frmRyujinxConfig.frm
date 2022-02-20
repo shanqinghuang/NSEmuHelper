@@ -223,6 +223,7 @@ End Sub
 
 Private Sub btnCancel_Click()
 If IsMissing Then
+    Unload frmManage
     frmMain.Show
 Else
     frmManage.Show
@@ -233,11 +234,16 @@ End Sub
 Private Sub btnSave_Click()
 '保存设置
 If cbFirmware.Text <> "加载中 ..." Then
-If ImageCombo1.SelectedItem.Key = "Mainline" Then
+Select Case ImageCombo1.SelectedItem.key
+    Case "Mainline"
     RyujinxBranch = "主线版"
-Else
+    Case "LDN"
     RyujinxBranch = "LDN联机版"
-End If
+    Case "CN"
+    RyujinxBranch = "中文版"
+    Case "Vulkan"
+    RyujinxBranch = "Vulkan"
+End Select
 RyujinxVersion = txtVersion.Text
 RyujinxFirmware = cbFirmware.Text
 WriteIni "Ryujinx", "Version", RyujinxVersion, RyujinxInstallFolder & "\RyujinxConfig.ini"
@@ -262,6 +268,7 @@ Else
     WriteIni "Ryujinx", "CustomDataFolder", RyujinxCustomDataFolder, RyujinxInstallFolder & "\RyujinxConfig.ini"
 End If
 If IsMissing Then
+    Unload frmManage
     frmMain.Show
 Else
     frmManage.Show
@@ -349,11 +356,34 @@ ImageCombo1.ComboItems.Clear
 ImageCombo1.ComboItems.Add 1, "Mainline", "主线版", 1
 ImageCombo1.ComboItems.Add 2, "CN", "中文版", 1
 ImageCombo1.ComboItems.Add 3, "LDN", "LDN联机版", 2
+ImageCombo1.ComboItems.Add 4, "Vulkan", "Vulkan", 1
 ImageCombo1.ComboItems(1).Selected = True
-txtVersion.SetFocus
 cbFirmware.Text = "加载中 ..."
 
-txtVersion.Text = GetRyujinxVersion
+DoEvents
+WindowList = ""
+Shell RyujinxInstallFolder & "\Ryujinx.exe"
+Dim tmpRyujinxName As String
+Do Until InStr(tmpRyujinxName, "Ryujinx Console") <> False
+    '遍历所有窗口句柄
+    Call EnumWindows(AddressOf EnumAllWindows, ByVal 0&)
+    tmpRyujinxName = Join(Filter(Split(WindowList, vbCrLf), "Ryujinx Console"), vbCrLf)
+    DoEvents
+    Sleep 100
+Loop
+Shell "cmd /c taskkill /f /im Ryujinx.exe"
+tmpRyujinxName = Replace(tmpRyujinxName, "Ryujinx Console ", "")
+If InStr(tmpRyujinxName, "vulkan") Then
+    ImageCombo1.ComboItems(4).Selected = True
+    txtVersion.Text = Replace(tmpRyujinxName, "-vulkan", "")
+ElseIf InStr(tmpRyujinxName, "ldn") Then
+    ImageCombo1.ComboItems(3).Selected = True
+    txtVersion.Text = tmpRyujinxName
+Else
+    ImageCombo1.ComboItems(1).Selected = True
+    txtVersion.Text = tmpRyujinxName
+End If
+txtVersion.SetFocus
 
 Dim FirmwareVersionArr() As String
 FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
@@ -374,20 +404,17 @@ InitCommonControls
 End Sub
 
 Private Sub ImageCombo1_Click()
+txtVersion.Text = "加载中 ..."
 If ImageCombo1.SelectedItem.Index = 3 Then
     Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(2).Picture
-Else
-    Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(1).Picture
-End If
-txtVersion.SetFocus
-    txtVersion.Text = "加载中 ..."
-If ImageCombo1.SelectedItem.Index = 1 Then
-    txtVersion.Text = GetRyujinxVersion
-Else
     Dim Tmp() As String
     Tmp = Split(GetRyujinxLDNVersionAli, vbCrLf)
     txtVersion.Text = Tmp(UBound(Tmp))
+Else
+    Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(1).Picture
+    txtVersion.Text = GetRyujinxVersion
 End If
+txtVersion.SetFocus
 End Sub
 
 Private Sub txtVersion_KeyPress(KeyAscii As Integer)

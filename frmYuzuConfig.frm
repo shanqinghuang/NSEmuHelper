@@ -223,6 +223,7 @@ End Sub
 
 Private Sub btnCancel_Click()
 If IsMissing Then
+    Unload frmManage
     frmMain.Show
 Else
     frmManage.Show
@@ -233,7 +234,7 @@ End Sub
 Private Sub btnSave_Click()
 '保存设置
 If cbFirmware.Text <> "加载中 ..." Then
-If ImageCombo1.SelectedItem.Key = "EA" Then
+If ImageCombo1.SelectedItem.key = "EA" Then
     YuzuBranch = "预先测试版"
 Else
     YuzuBranch = "主线版"
@@ -262,6 +263,7 @@ Else
     WriteIni "Yuzu", "CustomDataFolder", YuzuCustomDataFolder, YuzuInstallFolder & "\YuzuConfig.ini"
 End If
 If IsMissing Then
+    Unload frmManage
     frmMain.Show
 Else
     frmManage.Show
@@ -358,7 +360,20 @@ txtVersion.SetFocus
 cbFirmware.Text = "加载中 ..."
 
 DoEvents
-txtVersion.Text = GetYuzuVersion
+'没有config
+WindowList = ""
+Shell YuzuInstallFolder & "\yuzu.exe", vbHide
+Dim tmpYuzuName As String
+Do Until InStr(tmpYuzuName, "yuzu") <> False
+    '遍历所有窗口句柄
+    Call EnumWindows(AddressOf EnumAllWindows, ByVal 0&)
+    tmpYuzuName = Join(Filter(Split(WindowList, vbCrLf), "yuzu"), vbCrLf)
+    DoEvents
+    Sleep 50
+Loop
+Shell "cmd /c taskkill /f /im yuzu.exe"
+tmpYuzuName = Replace(tmpYuzuName, "yuzu Early Access ", "")
+txtVersion.Text = tmpYuzuName
 
 Dim FirmwareVersionArr() As String
 FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)

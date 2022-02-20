@@ -39,9 +39,9 @@ Begin VB.Form frmMain
       ForeColor       =   &H80000015&
       Height          =   735
       Index           =   5
-      Left            =   3000
+      Left            =   1080
       TabIndex        =   5
-      Top             =   5160
+      Top             =   4800
       Width           =   4095
    End
    Begin VB.Label Labels 
@@ -158,6 +158,8 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Sub Form_Activate()
+Labels(5).Alignment = 1
+Labels(5).Caption = "2021-2022 是一刀斩哒" & vbCrLf & "本工具非Yuzu Tool, 反馈问题不要找错人"
 If FirstActivate = False Then
     If AutoCheckForUpdate Then
         CheckUpdate (True)

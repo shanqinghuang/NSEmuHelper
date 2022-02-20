@@ -448,6 +448,7 @@ If InstallMode <> 1 Then RemoveTemps
 End Sub
 
 Private Sub Step1()
+On Error Resume Next
 '第一步
 '界面
 btnShortcut.Visible = False
@@ -746,6 +747,7 @@ End If
 DoEvents
 '下载模拟器
 If CheckFileExists(YuzuInstallFolder & "\Yuzu.7z") = False Then
+ReDownload:
     PBarLoad 1, Me.hWnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
     PBarSetRange 1, 0, 100
     PBarSetPos 1, 0
@@ -761,7 +763,18 @@ If CheckFileExists(YuzuInstallFolder & "\Yuzu.7z") = False Then
     Sleep 2000
     DoEvents
     PBarUnload 1
+    If CheckFileExists(YuzuInstallFolder & "\Yuzu.7z") = False Then
+        Sleep 1000
+        Sleep 1000
+        Sleep 1000
+        Sleep 1000
+        Sleep 1000
+        GoTo ReDownload
+    End If
 End If
+
+
+
 
 FirmwareInstallation:
 If InstallMode = 1 Or InstallMode = 3 Then
@@ -769,6 +782,7 @@ If InstallMode = 1 Or InstallMode = 3 Then
     DoEvents
     If CheckFileExists(YuzuInstallFolder & "\Firmware.zip") = False Then
         If iFirmwareOnline Then
+ReDownload2:
             Labels(4).Caption = "正在下载固件，请耐心等待 ..."
             Labels(5).Caption = "准备下载 ..."
             PBarLoad 1, Me.hWnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
@@ -788,6 +802,14 @@ If InstallMode = 1 Or InstallMode = 3 Then
             DoEvents
             PBarUnload 1
             DoEvents
+            If CheckFileExists(YuzuInstallFolder & "\Firmware.zip") = False Then
+                Sleep 1000
+                Sleep 1000
+                Sleep 1000
+                Sleep 1000
+                Sleep 1000
+                GoTo ReDownload2
+            End If
         Else
             Labels(4).Caption = "正在加载 ..."
             Labels(5).Caption = ""
@@ -858,9 +880,10 @@ If InstallMode = 1 Or InstallMode = 2 Then
     DoEvents
 End If
     
-If CheckFileExists(YuzuInstallFolder & "\yuzu.exe") Then
-    GoTo ReInstall
+    Sleep 1000
+If CheckFileExists(YuzuInstallFolder & "\yuzu.exe") = False Then
     Labels(5).Caption = "解压失败，正在重新解压 ..."
+    GoTo ReInstall
 End If
 If InstallMode = 1 Then
     '安装密钥
