@@ -10,8 +10,8 @@ Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 
 '公共变量常量
-Public Const Version As String = "V1.2.0"
-Public Const InternalVersion As String = "v1.2.0"
+Public Const Version As String = "V1.2.1"
+Public Const InternalVersion As String = "v1.2.1"
 Public Const InternalConfigFileVersion As String = "v3"
 
 

@@ -1,6 +1,6 @@
 VERSION 5.00
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
-Object = "{A5E8A7E4-5CB9-46EB-8987-15503F7E5563}#34.0#0"; "yfui.ocx"
+Object = "{A5E8A7E4-5CB9-46EB-8987-15503F7E5563}#34.0#0"; "YFUI.ocx"
 Begin VB.Form frmConfig 
    BackColor       =   &H80000005&
    BorderStyle     =   1  'Fixed Single
@@ -626,7 +626,7 @@ Private Sub Form_Activate()
     DoEvents
     Images(3).Picture = ImageList1.ListImages((cbMirror.ListIndex + 1)).Picture
 
-    If AutoCheckForUpdate Then Checks(1).Value = 1
+    If AutoCheckForUpdate Then Checks.Value = 1
 
     btnSave.SetFocus
 End Sub
