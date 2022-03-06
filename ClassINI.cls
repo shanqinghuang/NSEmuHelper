@@ -33,42 +33,42 @@ Option Explicit
 
 'the path of our ini file
 
-Private strINI As String '初始化文件
+Private strINI As String    '初始化文件
 
 'Windows API Declares
 
 Private Declare Function WritePrivateProfileString Lib "kernel32" Alias "WritePrivateProfileStringA" _
-(ByVal lpApplicationName As String, _
-ByVal lpKeyName As Any, _
-ByVal lpString As Any, _
-ByVal lpFileName As String) As Long
+                                                   (ByVal lpApplicationName As String, _
+                                                    ByVal lpKeyName As Any, _
+                                                    ByVal lpString As Any, _
+                                                    ByVal lpFileName As String) As Long
 
 
 Private Declare Function GetPrivateProfileString _
-Lib "kernel32" Alias "GetPrivateProfileStringA" _
-(ByVal lpApplicationName As String, _
-ByVal lpKeyName As Any, _
-ByVal lpDefault As String, _
-ByVal lpReturnedString As String, _
-ByVal nSize As Long, _
-ByVal lpFileName As String) As Long
+                          Lib "kernel32" Alias "GetPrivateProfileStringA" _
+                              (ByVal lpApplicationName As String, _
+                               ByVal lpKeyName As Any, _
+                               ByVal lpDefault As String, _
+                               ByVal lpReturnedString As String, _
+                               ByVal nSize As Long, _
+                               ByVal lpFileName As String) As Long
 
 
 Private Function MakePath(ByVal strDrv As String, ByVal strDir As String) As String
 
 ' Makes an INI file: Guarantees a sub dir
 
-Do While Right$(strDrv, 1) = "\"
-strDrv = Left$(strDrv, Len(strDrv) - 1)
-Loop
+    Do While Right$(strDrv, 1) = "\"
+        strDrv = Left$(strDrv, Len(strDrv) - 1)
+    Loop
 
-Do While Left$(strDir, 1) = "\"
-strDir = Mid$(strDir, 2)
-Loop
+    Do While Left$(strDir, 1) = "\"
+        strDir = Mid$(strDir, 2)
+    Loop
 
-' Return the path
+    ' Return the path
 
-MakePath = strDrv & "\" & strDir
+    MakePath = strDrv & "\" & strDir
 
 End Function
 
@@ -77,7 +77,7 @@ Private Sub CreateIni(strDrv As String, strDir As String)
 
 ' Make a new ini file
 
-strINI = MakePath(strDrv, strDir)
+    strINI = MakePath(strDrv, strDir)
 
 End Sub
 
@@ -89,7 +89,7 @@ Public Sub WriteIniKey(strSection As String, strKey As String, strValue As Strin
 
 ' Write to strINI
 
-WritePrivateProfileString strSection, strKey, strValue, strINI
+    WritePrivateProfileString strSection, strKey, strValue, strINI
 
 End Sub
 
@@ -99,40 +99,40 @@ End Sub
 '---------------------------
 Public Function GetIniKey(strSection As String, strKey As String) As String
 
-On Error GoTo errhandle
-Dim strTmp As String
-Dim lngRet As String
-Dim I As Integer
-Dim strTmp2 As String
+    On Error GoTo errhandle
+    Dim strTmp As String
+    Dim lngRet As String
+    Dim I As Integer
+    Dim strTmp2 As String
 
-'先将strtmp定义成1024个字符的长度，保证一定能装下返回的字串
-strTmp = String$(1024, Chr(32))
+    '先将strtmp定义成1024个字符的长度，保证一定能装下返回的字串
+    strTmp = String$(1024, Chr(32))
 
-'lpApplicationName String，欲在其中查找条目的小节名称。这个字串不区分大小写。如设为vbNullString，就在lpReturnedString缓冲区内装载这个ini文件所有小节的列表
-'lpKeyName String，欲获取的项名或条目名。这个字串不区分大小写。如设为vbNullString，就在lpReturnedString缓冲区内装载指定小节所有项的列表
-'lpDefault String，指定的条目没有找到时返回的默认值。可设为空（""）
-'lpReturnedString String，指定一个字串缓冲区，长度至少为nSize,返回的字符串
-'nSize Long，指定装载到lpReturnedString缓冲区的最大字符数量,返回字符串的长度
-'lpFileName String，初始化文件的名字。如没有指定一个完整路径名，windows就在Windows目录中查找文件
+    'lpApplicationName String，欲在其中查找条目的小节名称。这个字串不区分大小写。如设为vbNullString，就在lpReturnedString缓冲区内装载这个ini文件所有小节的列表
+    'lpKeyName String，欲获取的项名或条目名。这个字串不区分大小写。如设为vbNullString，就在lpReturnedString缓冲区内装载指定小节所有项的列表
+    'lpDefault String，指定的条目没有找到时返回的默认值。可设为空（""）
+    'lpReturnedString String，指定一个字串缓冲区，长度至少为nSize,返回的字符串
+    'nSize Long，指定装载到lpReturnedString缓冲区的最大字符数量,返回字符串的长度
+    'lpFileName String，初始化文件的名字。如没有指定一个完整路径名，windows就在Windows目录中查找文件
 
 
-lngRet = GetPrivateProfileString(strSection, strKey, "", strTmp, Len(strTmp), strINI)
+    lngRet = GetPrivateProfileString(strSection, strKey, "", strTmp, Len(strTmp), strINI)
 
-'strtmp现在已经是返回的字串了，所以要进行截尾处理
-strTmp = Trim(strTmp)
-strTmp2 = ""
+    'strtmp现在已经是返回的字串了，所以要进行截尾处理
+    strTmp = Trim(strTmp)
+    strTmp2 = ""
 
-'ascii码为0对应的为空字符
-For I = 1 To Len(strTmp)
-If Asc(Mid(strTmp, I, 1)) <> 0 Then
-strTmp2 = strTmp2 + Mid(strTmp, I, 1)
-End If
-Next I
+    'ascii码为0对应的为空字符
+    For I = 1 To Len(strTmp)
+        If Asc(Mid(strTmp, I, 1)) <> 0 Then
+            strTmp2 = strTmp2 + Mid(strTmp, I, 1)
+        End If
+    Next I
 
-GetIniKey = strTmp2
-Exit Function
+    GetIniKey = strTmp2
+    Exit Function
 errhandle:
-GetIniKey = ""
+    GetIniKey = ""
 
 End Function
 
@@ -141,7 +141,7 @@ Public Property Let INIFileName(ByVal New_IniPath As String)
 
 ' Sets the new ini path
 
-strINI = New_IniPath
+    strINI = New_IniPath
 
 End Property
 
@@ -149,7 +149,7 @@ Public Property Get INIFileName() As String
 
 ' Returns the current ini path
 
-INIFileName = strINI
+    INIFileName = strINI
 
 End Property
 
@@ -157,9 +157,9 @@ End Property
 
 Public Function DelIniKey(ByVal SectionName As String, ByVal KeyWord As String)
 
-Dim RetVal As Integer
+    Dim RetVal As Integer
 
-RetVal = WritePrivateProfileString(SectionName, KeyWord, 0&, strINI)
+    RetVal = WritePrivateProfileString(SectionName, KeyWord, 0&, strINI)
 
 End Function
 
@@ -167,11 +167,11 @@ End Function
 
 '**************************************清除 Section"段"(Sub)***********************************************
 
-Public Function DelIniSec(ByVal SectionName As String) '清除section
+Public Function DelIniSec(ByVal SectionName As String)    '清除section
 
-Dim RetVal As Integer
+    Dim RetVal As Integer
 
-RetVal = WritePrivateProfileString(SectionName, 0&, "", strINI)
+    RetVal = WritePrivateProfileString(SectionName, 0&, "", strINI)
 
 End Function
 
