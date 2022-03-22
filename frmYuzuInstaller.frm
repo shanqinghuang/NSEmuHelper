@@ -1,7 +1,6 @@
 VERSION 5.00
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
-Object = "{A5E8A7E4-5CB9-46EB-8987-15503F7E5563}#34.0#0"; "YFUI.ocx"
 Begin VB.Form frmYuzuInstaller 
    BackColor       =   &H80000005&
    BorderStyle     =   1  'Fixed Single
@@ -25,49 +24,46 @@ Begin VB.Form frmYuzuInstaller
    MinButton       =   0   'False
    ScaleHeight     =   5085
    ScaleWidth      =   8760
-   Begin YFUI.YFProgressBar PBar 
-      Height          =   300
-      Left            =   120
-      Top             =   3480
-      Visible         =   0   'False
-      Width           =   8415
-      _ExtentX        =   14843
-      _ExtentY        =   529
-      BarFullColor    =   16761716
-      Radius          =   3
-   End
-   Begin YFUI.YFOptionButton opFirmware 
-      Height          =   375
-      Index           =   0
-      Left            =   1440
-      TabIndex        =   11
-      Top             =   2520
-      Width           =   1455
-      _ExtentX        =   2566
-      _ExtentY        =   661
-      Caption         =   "本地选择"
-      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+   Begin VB.ComboBox ComboVersion 
+      BeginProperty Font 
          Name            =   "微软雅黑 Light"
-         Size            =   12
+         Size            =   10.5
          Charset         =   134
          Weight          =   290
          Underline       =   0   'False
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      DownColor       =   16185594
-      DownBorderColor =   14014426
-      DownSelBorderColor=   14014426
-      FocusColor      =   16755285
-      FocusBorderColor=   14014426
-      FocusSelBorderColor=   16761716
-      EnabledColor    =   16755285
-      EnabledBorderColor=   14014426
-      EnabledSelBorderColor=   16761716
-      HighColor       =   16761716
-      HighBorderColor =   15132905
-      HighSelBorderColor=   16761716
-      Value           =   -1  'True
+      Height          =   420
+      Left            =   4080
+      TabIndex        =   20
+      Text            =   "Combo1"
+      Top             =   2520
+      Width           =   1695
+   End
+   Begin VB.CommandButton btnShortcut 
+      Caption         =   "创建桌面快捷方式"
+      Height          =   555
+      Left            =   240
+      TabIndex        =   18
+      Top             =   4320
+      Width           =   2775
+   End
+   Begin VB.CommandButton btnDelNo 
+      Caption         =   "否"
+      Height          =   555
+      Left            =   7080
+      TabIndex        =   17
+      Top             =   4320
+      Width           =   1455
+   End
+   Begin VB.CommandButton btnDelYes 
+      Caption         =   "是"
+      Height          =   555
+      Left            =   5280
+      TabIndex        =   16
+      Top             =   4320
+      Width           =   1455
    End
    Begin InetCtlsObjects.Inet Inet1 
       Left            =   840
@@ -79,11 +75,119 @@ Begin VB.Form frmYuzuInstaller
    Begin NSEmuHelper.ucDownload ucDownload1 
       Height          =   255
       Left            =   0
-      TabIndex        =   6
+      TabIndex        =   15
       Top             =   4800
       Width           =   615
       _ExtentX        =   1085
       _ExtentY        =   450
+   End
+   Begin VB.ComboBox cbFirmware 
+      BeginProperty Font 
+         Name            =   "微软雅黑 Light"
+         Size            =   10.5
+         Charset         =   134
+         Weight          =   290
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   420
+      Left            =   3120
+      TabIndex        =   12
+      Text            =   "Combo1"
+      Top             =   3120
+      Width           =   4095
+   End
+   Begin VB.OptionButton opFirmware 
+      BackColor       =   &H80000005&
+      Caption         =   "在线下载"
+      Height          =   375
+      Index           =   1
+      Left            =   1320
+      TabIndex        =   11
+      Top             =   3120
+      Width           =   1455
+   End
+   Begin VB.OptionButton opFirmware 
+      BackColor       =   &H80000005&
+      Caption         =   "本地选择"
+      Height          =   375
+      Index           =   0
+      Left            =   1320
+      TabIndex        =   10
+      Top             =   2520
+      Value           =   -1  'True
+      Width           =   1455
+   End
+   Begin VB.TextBox txtFirmware 
+      BeginProperty Font 
+         Name            =   "微软雅黑 Light"
+         Size            =   10.5
+         Charset         =   134
+         Weight          =   290
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   435
+      IMEMode         =   3  'DISABLE
+      Left            =   3120
+      TabIndex        =   9
+      Text            =   "<请点击“浏览”，之后在下方选择版本号>"
+      Top             =   2520
+      Width           =   4095
+   End
+   Begin VB.TextBox txtKey 
+      BeginProperty Font 
+         Name            =   "微软雅黑 Light"
+         Size            =   10.5
+         Charset         =   134
+         Weight          =   290
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   435
+      IMEMode         =   3  'DISABLE
+      Left            =   1560
+      TabIndex        =   8
+      Text            =   "<请点击“浏览”>"
+      Top             =   2520
+      Width           =   5655
+   End
+   Begin VB.CommandButton btnBrowse 
+      Caption         =   "浏览"
+      Height          =   420
+      Left            =   7560
+      TabIndex        =   7
+      Top             =   2520
+      Width           =   975
+   End
+   Begin VB.CommandButton btnNextStep 
+      Caption         =   "下一步"
+      Height          =   555
+      Left            =   7080
+      TabIndex        =   6
+      Top             =   4320
+      Width           =   1455
+   End
+   Begin VB.TextBox txtVersion 
+      BeginProperty Font 
+         Name            =   "微软雅黑 Light"
+         Size            =   10.5
+         Charset         =   134
+         Weight          =   290
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   435
+      IMEMode         =   3  'DISABLE
+      Left            =   4080
+      TabIndex        =   5
+      Text            =   "加载中 ..."
+      Top             =   2520
+      Width           =   1695
    End
    Begin MSComctlLib.ImageList ImageList2 
       Left            =   6120
@@ -129,384 +233,74 @@ Begin VB.Form frmYuzuInstaller
          EndProperty
       EndProperty
    End
-   Begin YFUI.YFButton btnShortcut 
-      Height          =   495
-      Left            =   240
-      TabIndex        =   7
-      Tag             =   "T"
-      Top             =   4320
-      Width           =   2775
-      _ExtentX        =   4895
-      _ExtentY        =   873
-      Caption         =   "创建桌面快捷方式"
-      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "微软雅黑 Light"
-         Size            =   12
-         Charset         =   134
-         Weight          =   290
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   2039583
-      DownColor       =   16185594
-      DownBorderColor =   14014426
-      FocusColor      =   16185594
-      FocusBorderColor=   13882840
-      EnabledColor    =   16185594
-      EnabledBorderColor=   14014426
-      DisabledBorderColor=   14014426
-      HighColor       =   15988473
-      HighBorderColor =   15132905
-      Radius          =   3
-      Data            =   "frmYuzuInstaller.frx":1572E
-   End
-   Begin YFUI.YFButton btnDelYes 
-      Height          =   495
-      Left            =   5160
-      TabIndex        =   8
-      Tag             =   "T"
-      Top             =   4320
-      Width           =   1455
-      _ExtentX        =   2566
-      _ExtentY        =   873
-      Caption         =   "是"
-      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "微软雅黑 Light"
-         Size            =   12
-         Charset         =   134
-         Weight          =   290
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   2039583
-      DownColor       =   16185594
-      DownBorderColor =   14014426
-      FocusColor      =   16185594
-      FocusBorderColor=   13882840
-      EnabledColor    =   16185594
-      EnabledBorderColor=   14014426
-      DisabledBorderColor=   14014426
-      HighColor       =   15988473
-      HighBorderColor =   15132905
-      Radius          =   3
-      Data            =   "frmYuzuInstaller.frx":15746
-   End
-   Begin YFUI.YFButton btnDelNo 
-      Height          =   495
-      Left            =   7080
-      TabIndex        =   9
-      Tag             =   "T"
-      Top             =   4320
-      Width           =   1455
-      _ExtentX        =   2566
-      _ExtentY        =   873
-      Caption         =   "否"
-      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "微软雅黑 Light"
-         Size            =   12
-         Charset         =   134
-         Weight          =   290
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   2039583
-      DownColor       =   16185594
-      DownBorderColor =   14014426
-      FocusColor      =   16185594
-      FocusBorderColor=   13882840
-      EnabledColor    =   16185594
-      EnabledBorderColor=   14014426
-      DisabledBorderColor=   14014426
-      HighColor       =   15988473
-      HighBorderColor =   15132905
-      Radius          =   3
-      Data            =   "frmYuzuInstaller.frx":1575E
-   End
-   Begin YFUI.YFButton btnNextStep 
-      Height          =   495
-      Left            =   7080
-      TabIndex        =   10
-      Tag             =   "T"
-      Top             =   4320
-      Width           =   1455
-      _ExtentX        =   2566
-      _ExtentY        =   873
-      Caption         =   "下一步"
-      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "微软雅黑 Light"
-         Size            =   12
-         Charset         =   134
-         Weight          =   290
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   2039583
-      DownColor       =   16185594
-      DownBorderColor =   14014426
-      FocusColor      =   16185594
-      FocusBorderColor=   13882840
-      EnabledColor    =   16185594
-      EnabledBorderColor=   14014426
-      DisabledBorderColor=   14014426
-      HighColor       =   15988473
-      HighBorderColor =   15132905
-      Radius          =   3
-      Data            =   "frmYuzuInstaller.frx":15776
-   End
-   Begin YFUI.YFOptionButton opFirmware 
-      Height          =   375
-      Index           =   1
-      Left            =   1440
-      TabIndex        =   12
-      Top             =   3120
-      Width           =   1455
-      _ExtentX        =   2566
-      _ExtentY        =   661
-      Caption         =   "在线下载"
-      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "微软雅黑 Light"
-         Size            =   12
-         Charset         =   134
-         Weight          =   290
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      DownColor       =   16185594
-      DownBorderColor =   14014426
-      DownSelBorderColor=   14014426
-      FocusColor      =   16755285
-      FocusBorderColor=   14014426
-      FocusSelBorderColor=   16761716
-      EnabledColor    =   16755285
-      EnabledBorderColor=   14014426
-      EnabledSelBorderColor=   16761716
-      HighColor       =   16755285
-      HighBorderColor =   15132905
-      HighSelBorderColor=   16761716
-   End
-   Begin YFUI.YFButton btnBrowse 
-      Height          =   375
-      Left            =   7440
-      TabIndex        =   13
-      Tag             =   "T"
-      Top             =   2520
-      Width           =   1095
-      _ExtentX        =   1931
-      _ExtentY        =   661
-      Caption         =   "浏览"
-      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "微软雅黑 Light"
-         Size            =   12
-         Charset         =   134
-         Weight          =   290
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   2039583
-      DownColor       =   16185594
-      DownBorderColor =   14014426
-      FocusColor      =   16185594
-      FocusBorderColor=   13882840
-      EnabledColor    =   16185594
-      EnabledBorderColor=   14014426
-      DisabledBorderColor=   14014426
-      HighColor       =   15988473
-      HighBorderColor =   15132905
-      Radius          =   3
-      Data            =   "frmYuzuInstaller.frx":1578E
-   End
-   Begin YFUI.YFComboBox cbFirmware 
-      Height          =   375
-      Left            =   3240
-      TabIndex        =   14
-      Tag             =   "W"
-      Top             =   3120
-      Width           =   3975
-      _ExtentX        =   7011
-      _ExtentY        =   661
-      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "微软雅黑 Light"
-         Size            =   9
-         Charset         =   134
-         Weight          =   290
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   2039583
-      EnabledColor    =   14014426
-      ItemFocusColor  =   14014426
-      Radius          =   3
-   End
-   Begin YFUI.YFComboBox ComboVersion 
-      Height          =   375
-      Left            =   4080
-      TabIndex        =   15
-      Tag             =   "W"
-      Top             =   2520
-      Width           =   1695
-      _ExtentX        =   2990
-      _ExtentY        =   661
-      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "微软雅黑 Light"
-         Size            =   9
-         Charset         =   134
-         Weight          =   290
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   2039583
-      EnabledColor    =   14014426
-      ItemFocusColor  =   14014426
-      Radius          =   3
-   End
-   Begin YFUI.YFTextBox txtFirmware 
-      Height          =   375
-      Left            =   3240
-      TabIndex        =   16
-      Tag             =   "W"
-      Top             =   2520
-      Width           =   3975
-      _ExtentX        =   7011
-      _ExtentY        =   661
-      Tip             =   "<请点击“浏览”，之后在下方选择版本号>"
-      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "微软雅黑 Light"
-         Size            =   9
-         Charset         =   134
-         Weight          =   290
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   2039583
-      EnabledColor    =   14014426
-      Radius          =   3
-   End
-   Begin YFUI.YFTextBox txtKey 
-      Height          =   375
+   Begin MSComctlLib.ImageCombo ImageCombo1 
+      Height          =   435
       Left            =   1560
-      TabIndex        =   17
-      Tag             =   "W"
+      TabIndex        =   0
       Top             =   2520
-      Width           =   5655
-      _ExtentX        =   9975
-      _ExtentY        =   661
-      Tip             =   "<请点击“浏览”>"
+      Width           =   2295
+      _ExtentX        =   4048
+      _ExtentY        =   767
+      _Version        =   393216
+      ForeColor       =   -2147483640
+      BackColor       =   -2147483643
       BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
          Name            =   "微软雅黑 Light"
-         Size            =   9
+         Size            =   10.5
          Charset         =   134
          Weight          =   290
          Underline       =   0   'False
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      ForeColor       =   2039583
-      EnabledColor    =   14014426
-      Radius          =   3
+      Text            =   "ImageCombo1"
+      ImageList       =   "ImageList1"
    End
-   Begin YFUI.YFTextBox txtVersion 
+   Begin VB.Label lblProgBar 
+      BackStyle       =   0  'Transparent
       Height          =   375
-      Left            =   4080
-      TabIndex        =   18
-      Tag             =   "W"
-      Top             =   2520
-      Width           =   1695
-      _ExtentX        =   2990
-      _ExtentY        =   661
-      Tip             =   "加载中 ..."
-      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "微软雅黑 Light"
-         Size            =   9
-         Charset         =   134
-         Weight          =   290
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   2039583
-      EnabledColor    =   14014426
-      Radius          =   3
-   End
-   Begin YFUI.YFComboBox ImageCombo1 
-      Height          =   375
-      Left            =   2160
+      Left            =   120
       TabIndex        =   19
-      Tag             =   "W"
-      Top             =   2520
-      Width           =   1695
-      _ExtentX        =   2990
-      _ExtentY        =   661
-      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "微软雅黑 Light"
-         Size            =   9
-         Charset         =   134
-         Weight          =   290
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   2039583
-      EnabledColor    =   14014426
-      ItemFocusColor  =   14014426
-      Radius          =   3
-   End
-   Begin VB.Image Image2 
-      Height          =   375
-      Left            =   1560
-      Stretch         =   -1  'True
-      Top             =   2520
-      Width           =   375
+      Top             =   3120
+      Width           =   8535
    End
    Begin VB.Label Labels 
       BackStyle       =   0  'Transparent
       Caption         =   "indicator2"
-      ForeColor       =   &H001F1F1F&
       Height          =   495
       Index           =   5
       Left            =   120
-      TabIndex        =   5
+      TabIndex        =   14
       Top             =   2520
       Width           =   8415
    End
    Begin VB.Label Labels 
       BackStyle       =   0  'Transparent
       Caption         =   "indicator1"
-      ForeColor       =   &H001F1F1F&
       Height          =   495
       Index           =   4
       Left            =   120
-      TabIndex        =   4
-      Top             =   1920
+      TabIndex        =   13
+      Top             =   2040
       Width           =   8415
    End
    Begin VB.Label Labels 
       BackStyle       =   0  'Transparent
       Caption         =   "模拟器版本："
-      ForeColor       =   &H001F1F1F&
       Height          =   495
       Index           =   3
       Left            =   120
-      TabIndex        =   3
+      TabIndex        =   4
       Top             =   2520
       Width           =   2175
    End
    Begin VB.Label Labels 
       BackStyle       =   0  'Transparent
       Caption         =   "Steps"
-      ForeColor       =   &H001F1F1F&
       Height          =   975
       Index           =   2
       Left            =   120
-      TabIndex        =   2
+      TabIndex        =   3
       Top             =   1200
       Width           =   6615
    End
@@ -514,7 +308,6 @@ Begin VB.Form frmYuzuInstaller
       Height          =   1215
       Left            =   7320
       Stretch         =   -1  'True
-      Tag             =   "L"
       Top             =   240
       Width           =   1215
    End
@@ -530,22 +323,20 @@ Begin VB.Form frmYuzuInstaller
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      ForeColor       =   &H001F1F1F&
       Height          =   495
       Index           =   1
       Left            =   120
-      TabIndex        =   1
+      TabIndex        =   2
       Top             =   600
       Width           =   6975
    End
    Begin VB.Label Labels 
       BackStyle       =   0  'Transparent
       Caption         =   "安装 Yuzu"
-      ForeColor       =   &H001F1F1F&
       Height          =   495
       Index           =   0
       Left            =   120
-      TabIndex        =   0
+      TabIndex        =   1
       Top             =   120
       Width           =   3735
    End
@@ -557,27 +348,17 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Public DownloadCompleted As Boolean, TitlePrefix As String
 Attribute DownloadCompleted.VB_VarHelpID = -1
-Attribute TitlePrefix.VB_VarUserMemId = 1073938432
-Attribute TitlePrefix.VB_VarHelpID = -1
 '1：纯净安装
 '2：更新模拟器
 '3：固件
 Public iIsEarlyAccess As Boolean, iVersion As String, iKeyPath As String, iFirmwareOnline As Boolean, iFirmwarePath As String, iFirmwareVersion As String
-Attribute iIsEarlyAccess.VB_VarUserMemId = 1073938434
-Attribute iVersion.VB_VarUserMemId = 1073938434
-Attribute iKeyPath.VB_VarUserMemId = 1073938434
-Attribute iFirmwareOnline.VB_VarUserMemId = 1073938434
-Attribute iFirmwarePath.VB_VarUserMemId = 1073938434
-Attribute iFirmwareVersion.VB_VarUserMemId = 1073938434
 '1：分支 True EA False Mainline
 '2：版本号
 Public CurrentStep As Integer, YuzuVersionName As String
-Attribute CurrentStep.VB_VarUserMemId = 1073938440
-Attribute YuzuVersionName.VB_VarUserMemId = 1073938440
 Private Sub btnBrowse_Click()
-    Debug.Print CurrentStep
-    '浏览
-    Select Case CurrentStep
+Debug.Print CurrentStep
+'浏览
+Select Case CurrentStep
     Case 2
         txtKey.Text = ChooseFile("选择密钥文件 (prod.keys)", "NS 密钥文件", "*.keys", frmYuzuInstaller.hwnd)
     Case 3
@@ -597,14 +378,14 @@ Private Sub btnBrowse_Click()
         End If
     Case Else
         Exit Sub
-    End Select
+End Select
 End Sub
 
 
 Private Sub btnNextStep_Click()
 '下一步
-    If InstallMode = 1 Then
-        Select Case CurrentStep
+If InstallMode = 1 Then
+    Select Case CurrentStep
         Case 1
             Step2
         Case 2
@@ -613,475 +394,403 @@ Private Sub btnNextStep_Click()
             Step4
         Case Else
             Exit Sub
-        End Select
-    ElseIf InstallMode = 2 Then
-        Step4
-    ElseIf InstallMode = 3 Then
-        Step4
-    End If
+    End Select
+ElseIf InstallMode = 2 Then
+    Step4
+ElseIf InstallMode = 3 Then
+    Step4
+End If
 End Sub
 
 Private Sub btnShortcut_Click()
-    Dim nPath As String, sh, ShortCut
-    On Error Resume Next
-    Set sh = CreateObject("wscript.shell")    '
-    nPath = sh.RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders\Desktop")    '获取当前用户的桌面目录
-    If Right(nPath, 1) <> "" Then nPath = nPath & "\"
-    ShortF = nPath & "Yuzu.lnk"
-    Set ShortCut = sh.CreateShortcut(ShortF)    '开始创建快捷方式对象
-    ShortCut.TargetPath = YuzuInstallFolder & "\yuzu.exe"    '快捷方式指向的目标文件，写完整路径
-    ShortCut.Save
-    MsgBox "快捷方式创建成功！", vbOKOnly, "提示"
-End Sub
-
-
-
-Private Sub cbFirmware_KeyPress(KeyAscii As Integer)
-KeyAscii = 0
-End Sub
-
-
-Private Sub ComboVersion_KeyPress(KeyAscii As Integer)
-KeyAscii = 0
+Dim nPath As String, sh, ShortCut
+On Error Resume Next
+Set sh = CreateObject("wscript.shell") '
+nPath = sh.RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders\Desktop") '获取当前用户的桌面目录
+If Right(nPath, 1) <> "" Then nPath = nPath & "\"
+ShortF = nPath & "Yuzu.lnk"
+Set ShortCut = sh.CreateShortcut(ShortF) '开始创建快捷方式对象
+ShortCut.TargetPath = YuzuInstallFolder & "\yuzu.exe" '快捷方式指向的目标文件，写完整路径
+ShortCut.Save
+MsgBox "快捷方式创建成功！", vbOKOnly, "提示"
 End Sub
 
 Private Sub Form_Activate()
 '加载
-    If InstallMode = 1 Then
-        If YuzuInstallFolder = "D:\Yuzu" Then
-            If MsgBox("当前模拟器安装目录为默认的 D:\Yuzu，请确认是否安装到此文件夹？" & vbCrLf & "点“否”以回到主界面，点击左下角的设置更改模拟器文件夹。" & vbCrLf & "你也可以把模拟器文件夹设为你已经装好的模拟器位置，程序会自动识别。", vbQuestion + vbYesNo, "确认吗？") = 7 Then
-                frmMain.Show
-                Unload Me
-                Exit Sub
-            End If
+If InstallMode = 1 Then
+    If YuzuInstallFolder = "D:\Yuzu" Then
+        If MsgBox("当前模拟器安装目录为默认的 D:\Yuzu，请确认是否安装到此文件夹？" & vbCrLf & "点“否”以回到主界面，点击左下角的设置更改模拟器文件夹。" & vbCrLf & "你也可以把模拟器文件夹设为你已经装好的模拟器位置，程序会自动识别。", vbQuestion + vbYesNo, "确认吗？") = 7 Then
+            frmMain.Show
+            Unload Me
+            Exit Sub
         End If
-        TitlePrefix = "安装 Yuzu"
-        Labels(0).Caption = TitlePrefix
-        DoEvents
-        CurrentStep = 1
-        Step1
-    ElseIf InstallMode = 2 Then
-        TitlePrefix = "更新 Yuzu"
-        Labels(0).Caption = TitlePrefix
-        DoEvents
-        CurrentStep = 1
-        Step1
-    ElseIf InstallMode = 3 Then
-        TitlePrefix = "更新固件"
-        Labels(0).Caption = TitlePrefix
-        DoEvents
-        CurrentStep = 3
-        Step3
     End If
-    If InstallMode <> 1 Then RemoveTemps
+    TitlePrefix = "安装 Yuzu"
+    Labels(0).Caption = TitlePrefix
+    DoEvents
+    CurrentStep = 1
+    Step1
+ElseIf InstallMode = 2 Then
+    TitlePrefix = "更新 Yuzu"
+    Labels(0).Caption = TitlePrefix
+    DoEvents
+    CurrentStep = 1
+    Step1
+ElseIf InstallMode = 3 Then
+    TitlePrefix = "更新固件"
+    Labels(0).Caption = TitlePrefix
+    DoEvents
+    CurrentStep = 3
+    Step3
+End If
+If InstallMode <> 1 Then RemoveTemps
 
 End Sub
 
 Private Sub Step1()
-    On Error Resume Next
-    '第一步
-    '界面
-    btnShortcut.Visible = False
-    btnDelYes.Visible = False
-    btnDelNo.Visible = False
-    Labels(4).Visible = False
-    Labels(5).Visible = False
-    cbFirmware.Visible = False
-    opFirmware(0).Visible = False
-    opFirmware(1).Visible = False
-    btnBrowse.Visible = False
-    txtFirmware.Visible = False
-    txtKey.Visible = False
+On Error Resume Next
+'第一步
+'界面
+btnShortcut.Visible = False
+btnDelYes.Visible = False
+btnDelNo.Visible = False
+Labels(4).Visible = False
+Labels(5).Visible = False
+cbFirmware.Visible = False
+opFirmware(0).Visible = False
+opFirmware(1).Visible = False
+btnBrowse.Visible = False
+txtFirmware.Visible = False
+txtKey.Visible = False
+txtVersion.Visible = True
+ComboVersion.Visible = True
+Image1.Picture = ImageList2.ListImages(1).Picture
+If InstallMode = 1 Then
+Me.Caption = TitlePrefix & " - Step 1"
+    Labels(1).Caption = "Step 1 - 选择模拟器版本"
+    Labels(2).Caption = "在安装模拟器之前，你需要先进行几步选择。" & vbCrLf & "如果追求最新功能，就使用预先测试版，如果追求稳定，就使用主线版。"
+Else
+    Me.Caption = TitlePrefix
+    Labels(1).Caption = "选择模拟器版本"
+    Labels(2).Caption = "请选择要更换到的模拟器版本。" & vbCrLf & "如果追求最新功能，就使用预先测试版，如果追求稳定，就使用主线版。"
+End If
+Labels(3).Caption = "模拟器版本："
+ImageCombo1.ComboItems.Clear
+ImageCombo1.ComboItems.Add 1, "EA", "预先测试版", 1
+ImageCombo1.ComboItems.Add 2, "Mainline", "主线版", 2
+ImageCombo1.ComboItems(1).Selected = True
+If DownloadSource = "Github" Then
     txtVersion.Visible = True
+    ComboVersion.Visible = False
+    txtVersion.Text = GetYuzuVersion
+    txtVersion.SetFocus
+Else
+    txtVersion.Visible = False
     ComboVersion.Visible = True
-    Image1.Picture = ImageList2.ListImages(1).Picture
-    Image2.Picture = ImageList2.ListImages(1).Picture
-    If InstallMode = 1 Then
-        Me.Caption = TitlePrefix & " - Step 1"
-        Labels(1).Caption = "Step 1 - 选择模拟器版本"
-        Labels(2).Caption = "在安装模拟器之前，你需要先进行几步选择。" & vbCrLf & "如果追求最新功能，就使用预先测试版，如果追求稳定，就使用主线版。"
-    Else
-        Me.Caption = TitlePrefix
-        Labels(1).Caption = "选择模拟器版本"
-        Labels(2).Caption = "请选择要更换到的模拟器版本。" & vbCrLf & "如果追求最新功能，就使用预先测试版，如果追求稳定，就使用主线版。"
-    End If
-    Labels(3).Caption = "模拟器版本："
-    ImageCombo1.Clear
-    ImageCombo1.AddItem "预先测试版"
-    ImageCombo1.AddItem "主线版"
-    ImageCombo1.Text = "预先测试版"
-    If DownloadSource = "GitHub" Then
-        txtVersion.Visible = True
-        ComboVersion.Visible = False
-        txtVersion.Text = GetYuzuVersion
-        txtVersion.SetFocus
-    Else
-        txtVersion.Visible = False
-        ComboVersion.Visible = True
-        Dim YuzuVersion() As String
-        ComboVersion.Clear
-        ComboVersion.Text = "加载中 ..."
-        YuzuVersion = Split(GetYuzuVersionAli, vbCrLf)
-        Dim I As Integer
-        For I = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
-            ComboVersion.AddItem YuzuVersion(I)
-            ComboVersion.Text = YuzuVersion(I)
-            ComboVersion.SetFocus
-        Next
-    End If
-    '确保文件夹存在
-    MkDirs YuzuInstallFolder
+    Dim YuzuVersion() As String
+    ComboVersion.Clear
+    ComboVersion.Text = "加载中 ..."
+    YuzuVersion = Split(GetYuzuVersionAli, vbCrLf)
+    Dim I As Integer
+    For I = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
+    ComboVersion.AddItem YuzuVersion(I)
+    ComboVersion.Text = YuzuVersion(I)
+    ComboVersion.SetFocus
+    Next
+End If
+'确保文件夹存在
+MkDirs YuzuInstallFolder
 End Sub
 
 Private Sub Step2()
-    On Error GoTo Step2Error
-    If DownloadSource = "GitHub" Then
+On Error GoTo Step2Error
+If DownloadSource = "Github" Then
+    If txtVersion.Text = "加载中 ..." Then Exit Sub
+    iVersion = txtVersion.Text
+Else
+    If ComboVersion.Text = "加载中 ..." Then Exit Sub
+    iVersion = ComboVersion.Text
+End If
+CurrentStep = 2
+'第二步
+'设置第一步结果
+If ImageCombo1.SelectedItem.Index = 1 Then
+    iIsEarlyAccess = True
+    YuzuVersionName = "yuzu-windows-msvc-early-access"
+ElseIf ImageCombo1.SelectedItem.Index = 2 Then
+    iIsEarlyAccess = False
+    YuzuVersionName = "yuzu-windows-msvc"
+Else
+    Exit Sub
+End If
+'界面
+ImageCombo1.Visible = False
+txtVersion.Visible = False
+ComboVersion.Visible = False
+btnBrowse.Visible = True
+txtKey.Visible = True
+Me.Caption = TitlePrefix & " - Step 2"
+Labels(1).Caption = "Step 2 - 选择密钥文件"
+Labels(2).Caption = "NS 模拟器需要密钥 (Keys) 文件才能玩游戏。" & vbCrLf & "你可以在相关的群中找到它 (prod.keys)，并在这里打开。"
+Labels(3).Caption = "密钥文件："
+
+Exit Sub
+Step2Error:
+ImageCombo1.ComboItems(1).Selected = True
+Exit Sub
+End Sub
+
+Private Sub Step3()
+If InstallMode = 1 Then
+If txtKey.Text = "<请点击“浏览”>" Or txtKey.Text = "" Then Exit Sub
+CurrentStep = 3
+'第三步
+'设置第二步结果
+iKeyPath = txtKey.Text
+'界面
+End If
+ComboVersion.Visible = False
+ImageCombo1.Visible = False
+btnShortcut.Visible = False
+btnDelYes.Visible = False
+btnDelNo.Visible = False
+Labels(4).Visible = False
+Labels(5).Visible = False
+cbFirmware.Visible = True
+btnBrowse.Visible = True
+cbFirmware.Visible = True
+txtKey.Visible = False
+txtFirmware.Visible = True
+opFirmware(0).Visible = True
+opFirmware(1).Visible = True
+If InstallMode = 1 Then
+    Me.Caption = TitlePrefix & " - Step 3"
+    Labels(1).Caption = "Step 3 - 选择固件"
+    Labels(2).Caption = "Yuzu 需要固件才能使大部分游戏正常运行。" & vbCrLf & "你可以在相关的群中找到固件包，或使用“在线下载”。" & vbCrLf & "固件版本需要小于等于密钥版本。"
+ElseIf InstallMode = 3 Then
+    If Left(YuzuBranch, 5) = "预先测试版" Then
+        Image1.Picture = ImageList2.ListImages(1).Picture
+    Else
+        Image1.Picture = ImageList2.ListImages(2).Picture
+    End If
+    Me.Caption = TitlePrefix & " - 选择固件"
+    Labels(1).Caption = "更新固件版本"
+    Labels(2).Caption = "你可以在此更新或更换固件的版本。" & vbCrLf & "你可以在相关的群中找到固件包，或使用“在线下载”。" & vbCrLf & "固件版本需要小于等于密钥版本。"
+End If
+Labels(3).Caption = "固件包："
+'----
+cbFirmware.Clear
+cbFirmware.Text = "加载中 ..."
+Dim FirmwareVersionArr() As String
+FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+Dim I As Integer
+For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+cbFirmware.AddItem FirmwareVersionArr(I)
+Next
+cbFirmware.Text = "选择固件版本"
+End Sub
+
+Private Sub Step4()
+Dim fso As Object, folder As Object
+Set fso = CreateObject("scripting.filesystemobject") '创建FSO对象
+'dependencies
+    
+On Error Resume Next
+'第四步（开始安装）
+If InstallMode = 1 Or InstallMode = 3 Then
+    '上一步结果
+    If cbFirmware.Text = "选择固件版本" Then Exit Sub
+    If opFirmware(0).Value Then
+        If txtFirmware.Text = "<请点击“浏览”，之后在下方选择版本号>" Or txtFirmware.Text = "" Then Exit Sub
+        iFirmwareOnline = False
+        iFirmwareVersion = cbFirmware.Text
+        iFirmwarePath = txtFirmware.Text
+    Else
+        iFirmwareOnline = True
+        iFirmwareVersion = cbFirmware.Text
+        If DownloadSource = "Github" Then
+            iFirmwarePath = CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
+        Else
+            iFirmwarePath = "https://" & AliyundriveDomain & "/NSFirmwareMirror/Firmware_" & cbFirmware.Text & ".zip"
+        End If
+        'Legacy reverse proxy for testing purpose, uncomment it when new reverse proxy is not work
+        'iFirmwarePath = "https://download.sydzy.workers.dev/api/download?url=https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
+    End If
+ElseIf InstallMode = 2 Then
+    If DownloadSource = "Github" Then
         If txtVersion.Text = "加载中 ..." Then Exit Sub
         iVersion = txtVersion.Text
     Else
         If ComboVersion.Text = "加载中 ..." Then Exit Sub
         iVersion = ComboVersion.Text
     End If
-    CurrentStep = 2
-    '第二步
     '设置第一步结果
-    If ImageCombo1.Text = "预先测试版" Then
+    If ImageCombo1.SelectedItem.Index = 1 Then
         iIsEarlyAccess = True
         YuzuVersionName = "yuzu-windows-msvc-early-access"
-    ElseIf ImageCombo1.Text = "主线版" Then
+    ElseIf ImageCombo1.SelectedItem.Index = 2 Then
         iIsEarlyAccess = False
         YuzuVersionName = "yuzu-windows-msvc"
     Else
         Exit Sub
     End If
-    '界面
-    ImageCombo1.Visible = False
-    txtVersion.Visible = False
-    Image2.Visible = False
-    ComboVersion.Visible = False
-    btnBrowse.Visible = True
-    txtKey.Visible = True
-    Me.Caption = TitlePrefix & " - Step 2"
-    Labels(1).Caption = "Step 2 - 选择密钥文件"
-    Labels(2).Caption = "NS 模拟器需要密钥 (Keys) 文件才能玩游戏。" & vbCrLf & "你可以在相关的群中找到它 (prod.keys)，并在这里打开。"
-    Labels(3).Caption = "密钥文件："
+End If
 
-    Exit Sub
-Step2Error:
-    ImageCombo1.Text = "预先测试版"
-    Image1.Picture = ImageList1.ListImages(1).Picture
-    Image2.Picture = ImageList1.ListImages(1).Picture
-    Exit Sub
-End Sub
+CurrentStep = 4
+'界面
+ImageCombo1.Visible = False
+txtVersion.Visible = False
+ComboVersion.Visible = False
+cbFirmware.Visible = False
+txtFirmware.Visible = False
+opFirmware(0).Visible = False
+opFirmware(1).Visible = False
+Labels(3).Visible = False
+btnNextStep.Visible = False
+btnBrowse.Visible = False
+Labels(4).Visible = True
+Labels(5).Visible = True
 
-Private Sub Step3()
-    If InstallMode = 1 Then
-        If txtKey.Text = "<请点击“浏览”>" Or txtKey.Text = "" Then Exit Sub
-        CurrentStep = 3
-        '第三步
-        '设置第二步结果
-        iKeyPath = txtKey.Text
-        '界面
-    End If
-    Image2.Visible = False
-    ComboVersion.Visible = False
-    ImageCombo1.Visible = False
-    btnShortcut.Visible = False
-    btnDelYes.Visible = False
-    btnDelNo.Visible = False
-    Labels(4).Visible = False
-    Labels(5).Visible = False
-    cbFirmware.Visible = True
-    btnBrowse.Visible = True
-    cbFirmware.Visible = True
-    txtKey.Visible = False
-    txtFirmware.Visible = True
-    opFirmware(0).Visible = True
-    opFirmware(1).Visible = True
-    If InstallMode = 1 Then
-        Me.Caption = TitlePrefix & " - Step 3"
-        Labels(1).Caption = "Step 3 - 选择固件"
-        Labels(2).Caption = "Yuzu 需要固件才能使大部分游戏正常运行。" & vbCrLf & "你可以在相关的群中找到固件包，或使用“在线下载”。" & vbCrLf & "固件版本需要小于等于密钥版本。"
-    ElseIf InstallMode = 3 Then
-        If Left(YuzuBranch, 5) = "预先测试版" Then
-            Image1.Picture = ImageList2.ListImages(1).Picture
-        Else
-            Image1.Picture = ImageList2.ListImages(2).Picture
-        End If
-        Me.Caption = TitlePrefix & " - 选择固件"
-        Labels(1).Caption = "更新固件版本"
-        Labels(2).Caption = "你可以在此更新或更换固件的版本。" & vbCrLf & "你可以在相关的群中找到固件包，或使用“在线下载”。" & vbCrLf & "固件版本需要小于等于密钥版本。"
-    End If
-    Labels(3).Caption = "固件包："
-    '----
-    cbFirmware.Clear
-    cbFirmware.Text = "加载中 ..."
-    Dim FirmwareVersionArr() As String
-    If AlwaysUseCloudFlare = "Never" Then
-        FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2("https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+Labels(2).Caption = "这可能需要十几分钟，你可以坐下来喝杯茶。" & vbCrLf & "根据网络状况和电脑性能，安装速度会有所不同。"
+If InstallMode = 1 Then
+    Me.Caption = "安装 Yuzu - 正在安装"
+    If iIsEarlyAccess Then
+        Labels(1).Caption = "正在安装 Yuzu 预先测试版 " & iVersion & " ..."
     Else
-        FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+        Labels(1).Caption = "正在安装 Yuzu 主线版 " & iVersion & " ..."
     End If
-    Dim I As Integer
-    For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
-        cbFirmware.AddItem FirmwareVersionArr(I)
-    Next
-    cbFirmware.Text = "选择固件版本"
-End Sub
-
-Private Sub Step4()
-    Dim fso As Object, folder As Object
-    Set fso = CreateObject("scripting.filesystemobject")    '创建FSO对象
-    'dependencies
-
-    On Error Resume Next
-    '第四步（开始安装）
-    If InstallMode = 1 Or InstallMode = 3 Then
-        '上一步结果
-        If cbFirmware.Text = "选择固件版本" Then Exit Sub
-        If opFirmware(0).Value Then
-            If txtFirmware.Text = "<请点击“浏览”，之后在下方选择版本号>" Or txtFirmware.Text = "" Then Exit Sub
-            iFirmwareOnline = False
-            iFirmwareVersion = cbFirmware.Text
-            iFirmwarePath = txtFirmware.Text
-        Else
-            iFirmwareOnline = True
-            iFirmwareVersion = cbFirmware.Text
-            If DownloadSource = "GitHub" Then
-                If AlwaysUseCloudFlare = "Never" Then
-                    iFirmwarePath = "https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
-                Else
-                    iFirmwarePath = CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
-                End If
-            Else
-                iFirmwarePath = "https://" & AliyundriveDomain & "/NSFirmwareMirror/Firmware_" & cbFirmware.Text & ".zip"
-            End If
-            'Legacy reverse proxy for testing purpose, uncomment it when new reverse proxy is not work
-            'iFirmwarePath = "https://download.sydzy.workers.dev/api/download?url=https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
-        End If
-    ElseIf InstallMode = 2 Then
-        If DownloadSource = "GitHub" Then
-            If txtVersion.Text = "加载中 ..." Then Exit Sub
-            iVersion = txtVersion.Text
-        Else
-            If ComboVersion.Text = "加载中 ..." Then Exit Sub
-            iVersion = ComboVersion.Text
-        End If
-        '设置第一步结果
-        If ImageCombo1.Text = "预先测试版" Then
-            iIsEarlyAccess = True
-            YuzuVersionName = "yuzu-windows-msvc-early-access"
-        ElseIf ImageCombo1.Text = "主线版" Then
-            iIsEarlyAccess = False
-            YuzuVersionName = "yuzu-windows-msvc"
-        Else
-            Exit Sub
-        End If
-    End If
-
-    CurrentStep = 4
-    '界面
-    Image2.Visible = False
-    ImageCombo1.Visible = False
-    txtVersion.Visible = False
-    ComboVersion.Visible = False
-    cbFirmware.Visible = False
-    txtFirmware.Visible = False
-    opFirmware(0).Visible = False
-    opFirmware(1).Visible = False
-    Labels(3).Visible = False
-    btnNextStep.Visible = False
-    btnBrowse.Visible = False
-    Labels(4).Visible = True
-    Labels(5).Visible = True
-
-    Labels(2).Caption = "这可能需要十几分钟，你可以坐下来喝杯茶。" & vbCrLf & "根据网络状况和电脑性能，安装速度会有所不同。"
-    If InstallMode = 1 Then
-        Me.Caption = "安装 Yuzu - 正在安装"
-        If iIsEarlyAccess Then
-            Labels(1).Caption = "正在安装 Yuzu 预先测试版 " & iVersion & " ..."
-        Else
-            Labels(1).Caption = "正在安装 Yuzu 主线版 " & iVersion & " ..."
-        End If
-    ElseIf InstallMode = 2 Then
-        Me.Caption = "更新 Yuzu - 正在安装"
-        If iIsEarlyAccess Then
-            Labels(1).Caption = "正在更新 Yuzu 到预先测试版 " & iVersion & " ..."
-        Else
-            Labels(1).Caption = "正在更新 Yuzu 到主线版 " & iVersion & " ..."
-        End If
-    ElseIf InstallMode = 3 Then
-        Me.Caption = "更新固件 - 正在安装"
-        Labels(1).Caption = "正在安装固件 ..."
-        GoTo FirmwareInstallation
-    End If
-
-    '生成模拟器下载链接
-    DoEvents
-    Labels(4).Caption = "准备安装 ..."
-    Labels(5).Caption = ""
-    iVersion = CStr(CInt(iVersion))
-    Dim YuzuUrl As String
-    If DownloadSource = "GitHub" Then
-        If iIsEarlyAccess Then
-            YuzuUrl = "https://github.com/PineappleEA/pineapple-src/releases/download/EA-" & iVersion & "/Windows-Yuzu-EA-" & iVersion & ".7z"
-        Else
-            '主线
-            Dim TmpArr() As String
-            Select Case AlwaysUseCloudFlare
-                Case "True"
-                    TmpArr = Split(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases"), Chr(34), ""), ",")
-                Case "False"
-                    TmpArr = Split(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases"), Chr(34), ""), ",")
-                Case "GitHub"
-                    TmpArr = Split(Replace(GetDataStr2("https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases"), Chr(34), ""), ",")
-                Case "Never"
-                    TmpArr = Split(Replace(GetDataStr2("https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases"), Chr(34), ""), ",")
-            End Select
-            If Err.Number = 9 Then
-                MsgBox "运行时错误 (9): 下标越界，可能是你的网络对 CloudFlare 的通信有问题。"
-                End
-            End If
-            Dim I As Integer, j As Integer
-            For I = LBound(TmpArr) To UBound(TmpArr)
-                If TmpArr(I) = "tag_name:mainline-0-" & iVersion Then Exit For
-            Next
-            j = I
-            For I = j To UBound(TmpArr)
-                If InStr(TmpArr(I), ".7z") <> 0 Then
-                    Exit For
-                End If
-            Next
-            YuzuUrl = "https://github.com/yuzu-emu/yuzu-mainline/releases/download/mainline-0-" & iVersion & "/" & Replace(TmpArr(I), "name:", "")
-        End If
+ElseIf InstallMode = 2 Then
+    Me.Caption = "更新 Yuzu - 正在安装"
+    If iIsEarlyAccess Then
+        Labels(1).Caption = "正在更新 Yuzu 到预先测试版 " & iVersion & " ..."
     Else
-        '阿里
-        If iIsEarlyAccess Then
-            YuzuUrl = "https://" & AliyundriveDomain & "/YuzuEAMirror/Windows-Yuzu-EA-" & iVersion & ".7z"
-        Else
-            YuzuUrl = "https://" & AliyundriveDomain & "/YuzuMainlineMirror/yuzu-windows-msvc-" & iVersion & ".7z"
-        End If
+        Labels(1).Caption = "正在更新 Yuzu 到主线版 " & iVersion & " ..."
     End If
+ElseIf InstallMode = 3 Then
+    Me.Caption = "更新固件 - 正在安装"
+    Labels(1).Caption = "正在安装固件 ..."
+    GoTo FirmwareInstallation
+End If
 
-    If CheckFileExists(YuzuInstallFolder & "\Yuzu.7z") = False Then
-        If DownloadSource = "GitHub" Then
-            If AlwaysUseCloudFlare = "False" Then
-                DoEvents
-                'github连通性测试
-                Labels(4).Caption = "正在测试 GitHub 连通性 ..."
-                Labels(5).Caption = "如果 GitHub 不能连通，就使用 CloudFlare Workers。"
-                Dim Tmp As String
-                Tmp = "timeout"
-                Inet1.Cancel
-                Inet1.Protocol = icHTTPS
-                Inet1.Url = "https://github.com/opensearch.xml"
-                Inet1.RequestTimeout = 10
-                Tmp = Inet1.OpenURL
-                If Err.Number = 35761 Then
-                    Labels(4).Caption = "正在下载模拟器，使用 CloudFlare Workers ..."
-                    YuzuUrl = CloudFlareReverseProxyUrl & "\" & YuzuUrl
-                Else
-                    If InStr(Tmp, "OpenSearchDescription") = 2 Then
-                        Labels(4).Caption = "正在下载模拟器，使用 GitHub ..."
-                    Else
-                        Labels(4).Caption = "正在下载模拟器，使用 CloudFlare Workers ..."
-                        YuzuUrl = CloudFlareReverseProxyUrl & "\" & YuzuUrl
-                    End If
-                End If
-                Labels(5).Caption = "准备下载 ..."
-            ElseIf AlwaysUseCloudFlare = "False" Then
-                YuzuUrl = YuzuUrl
+'生成模拟器下载链接
+DoEvents
+Labels(4).Caption = "准备安装 ..."
+Labels(5).Caption = ""
+iVersion = CStr(CInt(iVersion))
+Dim YuzuUrl As String
+If DownloadSource = "Github" Then
+    If iIsEarlyAccess Then
+        YuzuUrl = "https://github.com/PineappleEA/pineapple-src/releases/download/EA-" & iVersion & "/Windows-Yuzu-EA-" & iVersion & ".7z"
+    Else
+        '主线
+        Dim TmpArr() As String
+        TmpArr = Split(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases"), Chr(34), ""), ",")
+        If Err.Number = 9 Then
+            MsgBox "运行时错误 (9): 下标越界，可能是你的网络对 CloudFlare 的通信有问题。"
+            End
+        End If
+        Dim I As Integer, j As Integer
+        For I = LBound(TmpArr) To UBound(TmpArr)
+            If TmpArr(I) = "tag_name:mainline-0-" & iVersion Then Exit For
+        Next
+        j = I
+        For I = j To UBound(TmpArr)
+            If InStr(TmpArr(I), ".7z") <> 0 Then
+                Exit For
+            End If
+        Next
+        YuzuUrl = "https://github.com/yuzu-emu/yuzu-mainline/releases/download/mainline-0-" & iVersion & "/" & Replace(TmpArr(I), "name:", "")
+    End If
+Else
+    '阿里
+    If iIsEarlyAccess Then
+        YuzuUrl = "https://" & AliyundriveDomain & "/YuzuEAMirror/Windows-Yuzu-EA-" & iVersion & ".7z"
+    Else
+        YuzuUrl = "https://" & AliyundriveDomain & "/YuzuMainlineMirror/yuzu-windows-msvc-" & iVersion & ".7z"
+    End If
+End If
 
+If CheckFileExists(YuzuInstallFolder & "\Yuzu.7z") = False Then
+If DownloadSource = "Github" Then
+    If AlwaysUseCloudFlare = False Then
+        DoEvents
+        'github连通性测试
+        Labels(4).Caption = "正在测试 Github 连通性 ..."
+        Labels(5).Caption = "如果 Github 不能连通，就使用 CloudFlare Workers。"
+        Dim Tmp As String
+        Tmp = "timeout"
+        Inet1.Cancel
+        Inet1.Protocol = icHTTPS
+        Inet1.Url = "https://github.com/opensearch.xml"
+        Inet1.RequestTimeout = 10
+        Tmp = Inet1.OpenURL
+        If Err.Number = 35761 Then
+            Labels(4).Caption = "正在下载模拟器，使用 CloudFlare Workers ..."
+            YuzuUrl = CloudFlareReverseProxyUrl & "\" & YuzuUrl
+        Else
+            If InStr(Tmp, "OpenSearchDescription") = 2 Then
+                Labels(4).Caption = "正在下载模拟器，使用 Github ..."
             Else
+                Labels(4).Caption = "正在下载模拟器，使用 CloudFlare Workers ..."
                 YuzuUrl = CloudFlareReverseProxyUrl & "\" & YuzuUrl
             End If
-        Else
-            Labels(4).Caption = "正在下载模拟器 ..."
         End If
+        Labels(5).Caption = "准备下载 ..."
+    Else
+        YuzuUrl = CloudFlareReverseProxyUrl & "\" & YuzuUrl
     End If
+Else
+    Labels(4).Caption = "正在下载模拟器 ..."
+End If
+End If
 
-    DoEvents
-    '下载模拟器
-    If CheckFileExists(YuzuInstallFolder & "\Yuzu.7z") = False Then
+DoEvents
+'下载模拟器
+If CheckFileExists(YuzuInstallFolder & "\Yuzu.7z") = False Then
 ReDownload:
-        'PBar.Visible = True
-        'PBar.Value = 0
-        AsyncReads(0) = YuzuUrl
-        AsyncReads(1) = YuzuInstallFolder & "\Yuzu.7z"
-        ucDownload1.DownloadFile AsyncReads(0), AsyncReads(1)
+    PBarLoad 1, Me.hwnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
+    PBarSetRange 1, 0, 100
+    PBarSetPos 1, 0
+    AsyncReads(0) = YuzuUrl
+    AsyncReads(1) = YuzuInstallFolder & "\Yuzu.7z"
+    ucDownload1.DownloadFile AsyncReads(0), AsyncReads(1)
+    DoEvents
+    DownloadCompleted = False
+    Do Until DownloadCompleted
+        Sleep 100
         DoEvents
-        DownloadCompleted = False
-        Do Until DownloadCompleted
-            Sleep 100
-            DoEvents
-        Loop
-        Sleep 2000
-        DoEvents
-        'PBar.Visible = False
-        If CheckFileExists(YuzuInstallFolder & "\Yuzu.7z") = False Then
-            Sleep 1000
-            Sleep 1000
-            Sleep 1000
-            Sleep 1000
-            Sleep 1000
-            GoTo ReDownload
-        End If
+    Loop
+    Sleep 2000
+    DoEvents
+    PBarUnload 1
+    If CheckFileExists(YuzuInstallFolder & "\Yuzu.7z") = False Then
+        Sleep 1000
+        Sleep 1000
+        Sleep 1000
+        Sleep 1000
+        Sleep 1000
+        GoTo ReDownload
     End If
+End If
 
 
 
 
 FirmwareInstallation:
-    If InstallMode = 1 Or InstallMode = 3 Then
-        '下载固件
-        DoEvents
-        If CheckFileExists(YuzuInstallFolder & "\Firmware.zip") = False Then
-            If iFirmwareOnline Then
+If InstallMode = 1 Or InstallMode = 3 Then
+    '下载固件
+    DoEvents
+    If CheckFileExists(YuzuInstallFolder & "\Firmware.zip") = False Then
+        If iFirmwareOnline Then
 ReDownload2:
-                Labels(4).Caption = "正在下载固件，请耐心等待 ..."
-                Labels(5).Caption = "准备下载 ..."
-                'PBar.Visible = True
-                'PBar.Value = 0
-                DoEvents
-                AsyncReads(0) = iFirmwarePath
-                AsyncReads(1) = YuzuInstallFolder & "\Firmware.zip"
-                ucDownload1.DownloadFile AsyncReads(0), AsyncReads(1)
-                DoEvents
-                DownloadCompleted = False
-                Do Until DownloadCompleted
-                    Sleep 100
-                    DoEvents
-                Loop
-                Sleep 2000
-                DoEvents
-                'PBar.Visible = False
-                DoEvents
-                If CheckFileExists(YuzuInstallFolder & "\Firmware.zip") = False Then
-                    Sleep 1000
-                    Sleep 1000
-                    Sleep 1000
-                    Sleep 1000
-                    Sleep 1000
-                    GoTo ReDownload2
-                End If
-            Else
-                Labels(4).Caption = "正在加载 ..."
-                Labels(5).Caption = ""
-                'PBar.Visible = False
-                DoEvents
-            End If
-        End If
-    End If
-
-    If InstallMode = 1 Then
-        DoEvents
-        '下载 Sysdata (shared fonts)
-        If CheckFileExists(YuzuInstallFolder & "\Sysdata.zip") = False Then
-            Labels(4).Caption = "正在下载 Shared fonts ..."
-            'PBar.Visible = True
-            'PBar.Value = 0
-            AsyncReads(0) = "https://yidaozhan-pan-yidaozhanya.vercel.app/ali/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/sysdata.zip"
-            AsyncReads(1) = YuzuInstallFolder & "\Sysdata.zip"
+            Labels(4).Caption = "正在下载固件，请耐心等待 ..."
+            Labels(5).Caption = "准备下载 ..."
+            PBarLoad 1, Me.hwnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
+            PBarSetRange 1, 0, 100
+            PBarSetPos 1, 0
+            DoEvents
+            AsyncReads(0) = iFirmwarePath
+            AsyncReads(1) = YuzuInstallFolder & "\Firmware.zip"
             ucDownload1.DownloadFile AsyncReads(0), AsyncReads(1)
             DoEvents
             DownloadCompleted = False
@@ -1090,318 +799,345 @@ ReDownload2:
                 DoEvents
             Loop
             Sleep 2000
-            'PBar.Visible = False
+            DoEvents
+            PBarUnload 1
+            DoEvents
+            If CheckFileExists(YuzuInstallFolder & "\Firmware.zip") = False Then
+                Sleep 1000
+                Sleep 1000
+                Sleep 1000
+                Sleep 1000
+                Sleep 1000
+                GoTo ReDownload2
+            End If
+        Else
+            Labels(4).Caption = "正在加载 ..."
+            Labels(5).Caption = ""
+            PBarUnload 1
             DoEvents
         End If
     End If
+End If
+
+If InstallMode = 1 Then
+    DoEvents
+    '下载 Sysdata (shared fonts)
+    If CheckFileExists(YuzuInstallFolder & "\Sysdata.zip") = False Then
+        Labels(4).Caption = "正在下载 Shared fonts ..."
+        PBarLoad 1, Me.hwnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
+        PBarSetRange 1, 0, 100
+        PBarSetPos 1, 0
+        AsyncReads(0) = "https://" & AliyundriveDomain & "/ali/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/sysdata.zip"
+        AsyncReads(1) = YuzuInstallFolder & "\Sysdata.zip"
+        ucDownload1.DownloadFile AsyncReads(0), AsyncReads(1)
+        DoEvents
+        DownloadCompleted = False
+        Do Until DownloadCompleted
+            Sleep 100
+            DoEvents
+        Loop
+        Sleep 2000
+        PBarUnload 1
+        DoEvents
+    End If
+End If
 
 ReInstall:
-    If InstallMode = 1 Or InstallMode = 2 Then
+If InstallMode = 1 Or InstallMode = 2 Then
 
-        '删除旧版本
-        If InstallMode = 2 Then
-            Labels(4).Caption = "正在删除之前的模拟器 ..."
-            Labels(5).Caption = ""
-            DoEvents
-            Shell "cmd /c rd /s /q " & Chr(34) & YuzuInstallFolder & "\plugins" & Chr(34), vbMinimizedNoFocus
-            Shell "cmd /c cd " & Chr(34) & YuzuInstallFolder & Chr(34) & " && del /s /q *.tar.xz", vbMinimizedNoFocus
-            DoEvents
-            Shell "cmd /c del /s /q " & Chr(34) & YuzuInstallFolder & "\*.dll" & Chr(34)
-            Shell "cmd /c del /s /q " & Chr(34) & YuzuInstallFolder & "\*.conf" & Chr(34)
-            Shell "cmd /c del /s /q " & Chr(34) & YuzuInstallFolder & "\*.exe" & Chr(34)
-            DoEvents
-        End If
-        '安装模拟器 解压
-        Labels(4).Caption = "正在解压缩并安装模拟器 ..."
+    '删除旧版本
+    If InstallMode = 2 Then
+        Labels(4).Caption = "正在删除之前的模拟器 ..."
         Labels(5).Caption = ""
-        'PBar.Visible = True
-        'PBar.Value = 50
         DoEvents
-        Unzip YuzuInstallFolder & "\Yuzu.7z", YuzuInstallFolder
-        'PBar.Visible = False
+        Shell "cmd /c rd /s /q " & Chr(34) & YuzuInstallFolder & "\plugins" & Chr(34), vbMinimizedNoFocus
+        Shell "cmd /c cd " & Chr(34) & YuzuInstallFolder & Chr(34) & " && del /s /q *.tar.xz", vbMinimizedNoFocus
         DoEvents
-        '复制文件
-        Set folder = fso.GetFolder(YuzuInstallFolder & "\" & YuzuVersionName & "\plugins")
-        folder.Move YuzuInstallFolder & "\plugins"
-        'XCopy YuzuInstallFolder & "\" & YuzuVersionName & "\plugins", YuzuInstallFolder & "\plugins"
-        fso.CopyFile YuzuInstallFolder & "\" & YuzuVersionName & "\*.*", YuzuInstallFolder & "\", True
-        DoEvents
-        Shell "cmd /c rd /s /q " & Chr(34) & YuzuInstallFolder & "\" & YuzuVersionName & "" & Chr(34), vbHide
-        DoEvents
-        Shell "cmd /c cd " & Chr(34) & YuzuInstallFolder & Chr(34) & " && del /s /q *.tar.xz", vbHide
+        Shell "cmd /c del /s /q " & Chr(34) & YuzuInstallFolder & "\*.dll" & Chr(34)
+        Shell "cmd /c del /s /q " & Chr(34) & YuzuInstallFolder & "\*.conf" & Chr(34)
+        Shell "cmd /c del /s /q " & Chr(34) & YuzuInstallFolder & "\*.exe" & Chr(34)
         DoEvents
     End If
-
+    '安装模拟器 解压
+    Labels(4).Caption = "正在解压缩并安装模拟器 ..."
+    Labels(5).Caption = ""
+    PBarLoad 1, Me.hwnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
+    PBarSetRange 1, 0, 100
+    PBarSetPos 1, 100
+    DoEvents
+    Unzip YuzuInstallFolder & "\Yuzu.7z", YuzuInstallFolder
+    PBarUnload 1
+    DoEvents
+    '复制文件
+    Set folder = fso.GetFolder(YuzuInstallFolder & "\" & YuzuVersionName & "\plugins")
+    folder.Move YuzuInstallFolder & "\plugins"
+    'XCopy YuzuInstallFolder & "\" & YuzuVersionName & "\plugins", YuzuInstallFolder & "\plugins"
+    fso.CopyFile YuzuInstallFolder & "\" & YuzuVersionName & "\*.*", YuzuInstallFolder & "\", True
+    DoEvents
+    Shell "cmd /c rd /s /q " & Chr(34) & YuzuInstallFolder & "\" & YuzuVersionName & "" & Chr(34), vbHide
+    DoEvents
+    Shell "cmd /c cd " & Chr(34) & YuzuInstallFolder & Chr(34) & " && del /s /q *.tar.xz", vbHide
+    DoEvents
+End If
+    
     Sleep 1000
-    If CheckFileExists(YuzuInstallFolder & "\yuzu.exe") = False Then
-        Labels(5).Caption = "解压失败，正在重新解压 ..."
-        GoTo ReInstall
-    End If
-    If InstallMode = 1 Then
-        '安装密钥
-        Labels(4).Caption = "正在安装密钥 ..."
-        DoEvents
-        MkDirs YuzuInstallFolder & "\user\keys"
-        FileCopy iKeyPath, YuzuInstallFolder & "\user\keys\prod.keys"
-    End If
+If CheckFileExists(YuzuInstallFolder & "\yuzu.exe") = False Then
+    Labels(5).Caption = "解压失败，正在重新解压 ..."
+    GoTo ReInstall
+End If
+If InstallMode = 1 Then
+    '安装密钥
+    Labels(4).Caption = "正在安装密钥 ..."
+    DoEvents
+    MkDirs YuzuInstallFolder & "\user\keys"
+    FileCopy iKeyPath, YuzuInstallFolder & "\user\keys\prod.keys"
+End If
 
-    If InstallMode = 1 Or InstallMode = 3 Then
-        If InstallMode = 3 Then
-            Labels(4).Caption = "正在删除旧固件 ..."
-            DoEvents
-            Shell "cmd /c rd /s /q " & Chr(34) & YuzuInstallFolder & "\user\nand\system\Contents" & Chr(34), vbMinimizedNoFocus
-            Sleep 10000
-        End If
-        '安装固件
+If InstallMode = 1 Or InstallMode = 3 Then
+    If InstallMode = 3 Then
+        Labels(4).Caption = "正在删除旧固件 ..."
+        DoEvents
+        Shell "cmd /c rd /s /q " & Chr(34) & YuzuInstallFolder & "\user\nand\system\Contents" & Chr(34), vbMinimizedNoFocus
+        Sleep 10000
+    End If
+    '安装固件
         '文件夹
-        Labels(4).Caption = "正在解压缩并安装固件包 ..."
-        DoEvents
-        MkDirs YuzuInstallFolder & "\user\nand\system\Contents\registered"
-        DoEvents
+    Labels(4).Caption = "正在解压缩并安装固件包 ..."
+    DoEvents
+    MkDirs YuzuInstallFolder & "\user\nand\system\Contents\registered"
+    DoEvents
         '解压
-        'PBar.Visible = True
-        'PBar.Value = 75
-        DoEvents
-        If iFirmwareOnline Then
-            Unzip YuzuInstallFolder & "\Firmware.zip", YuzuInstallFolder & "\user\nand\system\Contents\registered"
-        Else
-            Unzip iFirmwarePath, YuzuInstallFolder & "\user\nand\system\Contents\registered"
-        End If
-        'PBar.Visible = False
-        DoEvents
+    PBarLoad 1, Me.hwnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
+    PBarSetRange 1, 0, 100
+    PBarSetPos 1, 0
+    DoEvents
+    If iFirmwareOnline Then
+        Unzip YuzuInstallFolder & "\Firmware.zip", YuzuInstallFolder & "\user\nand\system\Contents\registered"
+    Else
+        Unzip iFirmwarePath, YuzuInstallFolder & "\user\nand\system\Contents\registered"
     End If
+    PBarUnload 1
+    DoEvents
+End If
 
-    If InstallMode = 1 Then
-        'sysdata
-        Labels(4).Caption = "正在解压缩并安装 Shared fonts ..."
-        MkDirs YuzuInstallFolder & "\user\sysdata"
-        'PBar.Visible = True
-        'PBar.Value = 100
-        DoEvents
-        Unzip YuzuInstallFolder & "\Sysdata.zip", YuzuInstallFolder & "\user\sysdata"
-        'PBar.Visible = False
-        DoEvents
-        DoEvents
-
-        'MSVC
-        If CheckFileExists("C:\Windows\System32\MSVCP140_ATOMIC_WAIT.DLL") = False And CheckFileExists("C:\Windows\System32\msvcp140_atomic_wait.dll") = False Then
-            Labels(4).Caption = "系统中缺少MSVC2019运行库，正在安装 ..."
-            If CheckFileExists(YuzuInstallFolder & "\VC2019.exe") = False Then
-                Labels(5).Caption = "正在下载 MSVC 运行库 ..."
+If InstallMode = 1 Then
+    'sysdata
+    Labels(4).Caption = "正在解压缩并安装 Shared fonts ..."
+    MkDirs YuzuInstallFolder & "\user\sysdata"
+    PBarLoad 1, Me.hwnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
+    PBarSetRange 1, 0, 100
+    PBarSetPos 1, 0
+    DoEvents
+    Unzip YuzuInstallFolder & "\Sysdata.zip", YuzuInstallFolder & "\user\sysdata"
+    PBarUnload 1
+    DoEvents
+    DoEvents
+    
+    'MSVC
+    If CheckFileExists("C:\Windows\System32\MSVCP140_ATOMIC_WAIT.DLL") = False And CheckFileExists("C:\Windows\System32\msvcp140_atomic_wait.dll") = False Then
+        Labels(4).Caption = "系统中缺少MSVC2019运行库，正在安装 ..."
+        If CheckFileExists(YuzuInstallFolder & "\VC2019.exe") = False Then
+            Labels(5).Caption = "正在下载 MSVC 运行库 ..."
+            PBarLoad 1, Me.hwnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
+            PBarSetRange 1, 0, 100
+            PBarSetPos 1, 0
+            DoEvents
+            ucDownload1.DownloadFile "https://aka.ms/vs/17/release/vc_redist.x64.exe", YuzuInstallFolder & "\VC2019.exe"
+            DoEvents
+            DownloadCompleted = False
+            Do Until DownloadCompleted
+                Sleep 100
                 DoEvents
-                ucDownload1.DownloadFile "https://aka.ms/vs/17/release/vc_redist.x64.exe", YuzuInstallFolder & "\VC2019.exe"
-                DoEvents
-                DownloadCompleted = False
-                Do Until DownloadCompleted
-                    Sleep 100
-                    DoEvents
-                Loop
-                Sleep 1000
-                DoEvents
-            End If
-            Labels(5).Caption = "正在安装 MSVC 运行库 ..."
-            Shell YuzuInstallFolder & "\VC2019.exe /quiet"
-            Labels(5).Caption = ""
+            Loop
+            Sleep 1000
+            PBarUnload 1
             DoEvents
         End If
+        Labels(5).Caption = "正在安装 MSVC 运行库 ..."
+        Shell YuzuInstallFolder & "\VC2019.exe /quiet"
+        Labels(5).Caption = ""
+    DoEvents
     End If
-    '生成 ini 和配置
-    If InstallMode = 1 Then
-        YuzuVersion = iVersion
-        If iIsEarlyAccess Then
-            YuzuBranch = "预先测试版"
-        Else
-            YuzuBranch = "主线版"
-        End If
-        YuzuFirmware = iFirmwareVersion
-        WriteIni "Yuzu", "Version", YuzuVersion, YuzuInstallFolder & "\YuzuConfig.ini"
-        WriteIni "Yuzu", "Branch", YuzuBranch, YuzuInstallFolder & "\YuzuConfig.ini"
-        WriteIni "Yuzu", "Firmware", YuzuFirmware, YuzuInstallFolder & "\YuzuConfig.ini"
-        MkDirs YuzuInstallFolder & "\user\nand\user\save\0000000000000000"
-        YuzuCustomDataFolder = "False"
-        WriteIni "Yuzu", "CustomDataFolder", "False", YuzuInstallFolder & "\YuzuConfig.ini"
-    ElseIf InstallMode = 2 Then
-        YuzuVersion = iVersion
-        If iIsEarlyAccess Then
-            YuzuBranch = "预先测试版"
-        Else
-            YuzuBranch = "主线版"
-        End If
-        WriteIni "Yuzu", "Version", YuzuVersion, YuzuInstallFolder & "\YuzuConfig.ini"
-        WriteIni "Yuzu", "Branch", YuzuBranch, YuzuInstallFolder & "\YuzuConfig.ini"
-    ElseIf InstallMode = 3 Then
-        YuzuFirmware = iFirmwareVersion
-        WriteIni "Yuzu", "Firmware", YuzuFirmware, YuzuInstallFolder & "\YuzuConfig.ini"
+End If
+'生成 ini 和配置
+If InstallMode = 1 Then
+    YuzuVersion = iVersion
+    If iIsEarlyAccess Then
+        YuzuBranch = "预先测试版"
+    Else
+        YuzuBranch = "主线版"
     End If
+    YuzuFirmware = iFirmwareVersion
+    WriteIni "Yuzu", "Version", YuzuVersion, YuzuInstallFolder & "\YuzuConfig.ini"
+    WriteIni "Yuzu", "Branch", YuzuBranch, YuzuInstallFolder & "\YuzuConfig.ini"
+    WriteIni "Yuzu", "Firmware", YuzuFirmware, YuzuInstallFolder & "\YuzuConfig.ini"
+    MkDirs YuzuInstallFolder & "\user\nand\user\save\0000000000000000"
+    YuzuCustomDataFolder = "False"
+    WriteIni "Yuzu", "CustomDataFolder", "False", YuzuInstallFolder & "\YuzuConfig.ini"
+ElseIf InstallMode = 2 Then
+    YuzuVersion = iVersion
+    If iIsEarlyAccess Then
+        YuzuBranch = "预先测试版"
+    Else
+        YuzuBranch = "主线版"
+    End If
+    WriteIni "Yuzu", "Version", YuzuVersion, YuzuInstallFolder & "\YuzuConfig.ini"
+    WriteIni "Yuzu", "Branch", YuzuBranch, YuzuInstallFolder & "\YuzuConfig.ini"
+ElseIf InstallMode = 3 Then
+    YuzuFirmware = iFirmwareVersion
+    WriteIni "Yuzu", "Firmware", YuzuFirmware, YuzuInstallFolder & "\YuzuConfig.ini"
+End If
 
-    '完成
-    If InstallMode = 1 Or InstallMode = 2 Then
-        If iIsEarlyAccess Then
-            Labels(1).Caption = "Yuzu 预先测试版 " & iVersion & " 安装完成！"
-        Else
-            Labels(1).Caption = "Yuzu 主线版 " & iVersion & " 安装完成！"
-        End If
-    ElseIf InstallMode = 3 Then
-        Labels(1).Caption = "Yuzu 固件 " & iFirmwareVersion & " 安装完成！"
+'完成
+If InstallMode = 1 Or InstallMode = 2 Then
+    If iIsEarlyAccess Then
+        Labels(1).Caption = "Yuzu 预先测试版 " & iVersion & " 安装完成！"
+    Else
+        Labels(1).Caption = "Yuzu 主线版 " & iVersion & " 安装完成！"
     End If
-    Labels(2).Caption = "是否要删除安装过程中产生的临时文件？"
-    Labels(4).Visible = False
-    Labels(5).Visible = False
-    btnDelYes.Visible = True
-    btnDelNo.Visible = True
+ElseIf InstallMode = 3 Then
+    Labels(1).Caption = "Yuzu 固件 " & iFirmwareVersion & " 安装完成！"
+End If
+Labels(2).Caption = "是否要删除安装过程中产生的临时文件？"
+Labels(4).Visible = False
+Labels(5).Visible = False
+btnDelYes.Visible = True
+btnDelNo.Visible = True
 
-    '释放内存
+        '释放内存
     Set fso = Nothing
     Set folder = Nothing
     Set file = Nothing
-
-    If InstallMode = 1 Then
-        btnShortcut.Visible = True
-    End If
+    
+If InstallMode = 1 Then
+    btnShortcut.Visible = True
+End If
 
 End Sub
 
 Private Sub btnDelNo_Click()
-    Unload Me
+Unload Me
 End Sub
 
 Private Sub btnDelYes_Click()
-    RemoveTemps
-    Unload Me
+RemoveTemps
+Unload Me
 End Sub
 
 Private Sub RemoveTemps()
 '删除几个压缩包
-    On Error Resume Next
-    Kill YuzuInstallFolder & "\Yuzu.7z"
-    Kill YuzuInstallFolder & "\Firmware.zip"
-    Kill YuzuInstallFolder & "\Sysdata.zip"
-    Kill YuzuInstallFolder & "\VC2019.exe"
+On Error Resume Next
+Kill YuzuInstallFolder & "\Yuzu.7z"
+Kill YuzuInstallFolder & "\Firmware.zip"
+Kill YuzuInstallFolder & "\Sysdata.zip"
+Kill YuzuInstallFolder & "\VC2019.exe"
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-    If InstallMode = 1 Then
-        frmMain.Show
-    Else
-        frmManage.Show
-    End If
-End Sub
-
-Private Sub ImageCombo1_KeyPress(KeyAscii As Integer)
-KeyAscii = 0
+If InstallMode = 1 Then
+    frmMain.Show
+Else
+    frmManage.Show
+End If
 End Sub
 
 Private Sub opFirmware_Click(Index As Integer)
 '切换固件下载方式
-    Dim FirmwareVersionArr() As String
-    Dim I As Integer
-    If Index = 1 Then
-        '在线
-        txtFirmware.Visible = False
-        btnBrowse.Visible = False
-        cbFirmware.Top = 2520
-        txtVersion.Visible = False
-        DoEvents
-        cbFirmware.Clear
-        cbFirmware.Text = "加载中 ..."
-        FirmwareVersionArr = Filter(Split(GetDataStr2("https://" & AliyundriveDomain & "/NSFirmwareMirror/?json"), Chr(34)), "firmware_")
-        For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
-            cbFirmware.AddItem Replace(Replace(FirmwareVersionArr(I), "firmware_", ""), ".zip", "")
-        Next
-        cbFirmware.Text = "选择固件版本"
-    Else
-        '本地
-        txtFirmware.Visible = True
-        btnBrowse.Visible = True
-        cbFirmware.Top = 3120
-        cbFirmware.Clear
-        cbFirmware.Text = "加载中 ..."
-        If AlwaysUseCloudFlare = "Never" Then
-            FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2("https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
-        Else
-            FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
-        End If
-        For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
-            cbFirmware.AddItem FirmwareVersionArr(I)
-        Next
-        cbFirmware.Text = "选择固件版本"
-    End If
+Dim FirmwareVersionArr() As String
+Dim I As Integer
+If Index = 1 Then
+    '在线
+    txtFirmware.Visible = False
+    btnBrowse.Visible = False
+    cbFirmware.Top = 2520
+    cbFirmware.Clear
+    cbFirmware.Text = "加载中 ..."
+    FirmwareVersionArr = Filter(Split(GetDataStr2("https://" & AliyundriveDomain & "/NSFirmwareMirror/?json"), Chr(34)), "firmware_")
+    For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+        cbFirmware.AddItem Replace(Replace(FirmwareVersionArr(I), "firmware_", ""), ".zip", "")
+    Next
+    cbFirmware.Text = "选择固件版本"
+Else
+    '本地
+    txtFirmware.Visible = True
+    btnBrowse.Visible = True
+    cbFirmware.Top = 3120
+    cbFirmware.Clear
+    cbFirmware.Text = "加载中 ..."
+    FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+    For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+        cbFirmware.AddItem FirmwareVersionArr(I)
+    Next
+    cbFirmware.Text = "选择固件版本"
+End If
 
 End Sub
 
 
-
-
 Private Sub ucDownload1_DownloadProgress(ByVal BytesRead As Long, ByVal BytesTotal As Long)
 '刷新进度条
-    Labels(5).Caption = Format(BytesRead / BytesTotal, "Percent") & " " & CStr(FormatNumber(BytesRead / 1048576, 2, vbTrue)) & "MB / " & CStr(FormatNumber(BytesTotal / 1048576, 2, vbTrue)) & "MB"
-    'PBar.Value = CInt(BytesRead / BytesTotal * 100)
+  Labels(5).Caption = Format(BytesRead / BytesTotal, "Percent") & " " & CStr(FormatNumber(BytesRead / 1048576, 2, vbTrue)) & "MB / " & CStr(FormatNumber(BytesTotal / 1048576, 2, vbTrue)) & "MB"
+  PBarSetPos 1, CInt(BytesRead / BytesTotal * 100)
 End Sub
 
 Private Sub ucDownload1_DownloadFailed(ByVal Status As String, ByVal StatusCode As AsyncStatusCodeConstants)
 ' Visual Basic, F**K YOU!!!
 ' 干饭王, F**K YOU!!!
-    Labels(5).Caption = "下载失败，正在尝试使用备用下载 ..."
-    DoEvents
-    ShellAndWait Chr(34) & App.Path & "\Dependencies\curl.exe" & Chr(34) & " -fkL " & Chr(34) & AsyncReads(0) & Chr(34) & " -o " & Chr(34) & AsyncReads(1) & Chr(34)
-    DoEvents
-    Labels(5).Caption = "备用下载成功！"
-    DoEvents
-    DownloadCompleted = True
+Labels(5).Caption = "下载失败，正在尝试使用备用下载 ..."
+DoEvents
+ShellAndWait Chr(34) & App.Path & "\Dependencies\curl.exe" & Chr(34) & " -fkL " & Chr(34) & AsyncReads(0) & Chr(34) & " -o " & Chr(34) & AsyncReads(1) & Chr(34)
+DoEvents
+Labels(5).Caption = "备用下载成功！"
+DoEvents
+DownloadCompleted = True
 End Sub
 Private Sub ucDownload1_DownloadComplete()
-    DownloadCompleted = True
+DownloadCompleted = True
 End Sub
 
 
 Private Sub ImageCombo1_Click()
-    If ImageCombo1.Text = "预先测试版" Then
-        Image1.Picture = ImageList2.ListImages(1).Picture
-        Image2.Picture = ImageList2.ListImages(1).Picture
+Image1.Picture = ImageList2.ListImages(ImageCombo1.SelectedItem.Index).Picture
+Dim YuzuVersion() As String
+Dim I As Integer
+If ImageCombo1.SelectedItem.Index = 1 Then
+    If DownloadSource = "Github" Then
+        txtVersion.SetFocus
+        txtVersion.Text = "加载中 ..."
+        txtVersion.Text = GetYuzuVersion
     Else
-        Image1.Picture = ImageList2.ListImages(2).Picture
-        Image2.Picture = ImageList2.ListImages(2).Picture
+        ComboVersion.Clear
+        ComboVersion.Text = "加载中 ..."
+        YuzuVersion = Split(GetYuzuVersionAli, vbCrLf)
+        For I = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
+        ComboVersion.AddItem YuzuVersion(I)
+        ComboVersion.Text = YuzuVersion(I)
+        Next
     End If
-    Dim YuzuVersion() As String
-    Dim I As Integer
-    If ImageCombo1.Text = "预先测试版" Then
-        If DownloadSource = "GitHub" Then
-            txtVersion.SetFocus
-            txtVersion.Text = "加载中 ..."
-            txtVersion.Text = GetYuzuVersion
-        Else
-            ComboVersion.Clear
-            ComboVersion.Text = "加载中 ..."
-            YuzuVersion = Split(GetYuzuVersionAli, vbCrLf)
-            For I = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
-                ComboVersion.AddItem YuzuVersion(I)
-                ComboVersion.Text = YuzuVersion(I)
-            Next
-        End If
+Else
+    If DownloadSource = "Github" Then
+        txtVersion.SetFocus
+        txtVersion.Text = "加载中 ..."
+        txtVersion.Text = GetYuzuMLVersion
     Else
-        If DownloadSource = "GitHub" Then
-            txtVersion.SetFocus
-            txtVersion.Text = "加载中 ..."
-            txtVersion.Text = GetYuzuMLVersion
-        Else
-            ComboVersion.Clear
-            ComboVersion.Text = "加载中 ..."
-            YuzuVersion = Split(GetYuzuMLVersionAli, vbCrLf)
-            For I = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
-                ComboVersion.AddItem YuzuVersion(I)
-                ComboVersion.Text = YuzuVersion(I)
-            Next
-        End If
+        ComboVersion.Clear
+        ComboVersion.Text = "加载中 ..."
+        YuzuVersion = Split(GetYuzuMLVersionAli, vbCrLf)
+        For I = 0 To (UBound(YuzuVersion) - LBound(YuzuVersion))
+        ComboVersion.AddItem YuzuVersion(I)
+        ComboVersion.Text = YuzuVersion(I)
+        Next
     End If
+End If
 End Sub
 
 Private Sub Form_Initialize()
-    InitCommonControls
+InitCommonControls
 End Sub
 
 Private Sub txtVersion_KeyPress(KeyAscii As Integer)
 '只能输入数字
-    If KeyAscii = 8 Then Exit Sub
-    If KeyAscii < 48 Or KeyAscii > 57 Then KeyAscii = 0
-    If Len(txtVersion.Text) >= 4 Then KeyAscii = 0
+If KeyAscii = 8 Then Exit Sub
+If KeyAscii < 48 Or KeyAscii > 57 Then KeyAscii = 0
+If Len(txtVersion.Text) >= 4 Then KeyAscii = 0
 End Sub

@@ -20,37 +20,36 @@ Event DownloadFailed(ByVal Status As String, ByVal StatusCode As AsyncStatusCode
 Event DownloadComplete()
 
 Public Url As String, LocalFileName As String
-Attribute LocalFileName.VB_VarUserMemId = 1073938432
 
 Public Sub DownloadFile(Url As String, LocalFileName As String, Optional ByVal Mode As AsyncReadConstants = vbAsyncReadForceUpdate)
-    CancelDownload
-    Me.LocalFileName = LocalFileName
-    Me.Url = Url
-    On Error Resume Next
+  CancelDownload
+  Me.LocalFileName = LocalFileName
+  Me.Url = Url
+  On Error Resume Next
     AsyncRead Url, vbAsyncTypeFile, LocalFileName, Mode
-    If Err Then
-        RaiseEvent DownloadFailed(Err.Description, Err.Number)
-    End If
+  If Err Then
+    RaiseEvent DownloadFailed(Err.Description, Err.Number)
+  End If
 End Sub
 
 Public Sub CancelDownload()
-    On Error Resume Next
-    CancelAsyncRead LocalFileName    'cancel a possibly still running Download with the same Destination-Filename
-    On Error GoTo 0
+  On Error Resume Next
+    CancelAsyncRead LocalFileName 'cancel a possibly still running Download with the same Destination-Filename
+  On Error GoTo 0
 End Sub
-
+ 
 Private Sub UserControl_AsyncReadProgress(AsyncProp As AsyncProperty)
-    With AsyncProp
-        If .BytesRead Then RaiseEvent DownloadProgress(.BytesRead, IIf(.BytesMax <= .BytesRead, .BytesRead, .BytesMax))
-    End With
+  With AsyncProp
+    If .BytesRead Then RaiseEvent DownloadProgress(.BytesRead, IIf(.BytesMax <= .BytesRead, .BytesRead, .BytesMax))
+  End With
 End Sub
 
 Private Sub UserControl_AsyncReadComplete(AsyncProp As AsyncProperty)
-    If AsyncProp.StatusCode <> vbAsyncStatusCodeEndDownloadData Or AsyncProp.BytesRead = 0 Then
-        RaiseEvent DownloadFailed(AsyncProp.Status, AsyncProp.StatusCode)
-        CancelDownload
-    Else
-        Name AsyncProp.Value As LocalFileName
-        RaiseEvent DownloadComplete
-    End If
+  If AsyncProp.StatusCode <> vbAsyncStatusCodeEndDownloadData Or AsyncProp.BytesRead = 0 Then
+    RaiseEvent DownloadFailed(AsyncProp.Status, AsyncProp.StatusCode)
+    CancelDownload
+  Else
+    Name AsyncProp.Value As LocalFileName
+    RaiseEvent DownloadComplete
+  End If
 End Sub
