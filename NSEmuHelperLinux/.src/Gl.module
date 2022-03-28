@@ -31,3 +31,9 @@ Public Sub WriteConfig()
     Settings.Write(DownloadSource, ["Network/DownloadSource"])
     Settings.Write(AutoCheckForUpdate, ["Tool/AutoCheckForUpdate"])
 End
+
+Public Function HttpGet(strUrl As String) As String
+Dim TmpVal As String
+Exec ["curl", strurl] To TmpVal
+Return tmpval
+End

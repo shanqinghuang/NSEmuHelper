@@ -1,0 +1,32 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,79,46)
+  Icon = Picture["Resources/yuzu.png"]
+  { lblStep Label
+    MoveScaled(2,2,63,3)
+    Font = Font["+2"]
+    Text = ("安装 Yuzu - Step ")
+  }
+  { pic1 PictureBox
+    MoveScaled(67,2,10,11)
+    Picture = Picture.Load("Resources/yuzu.png")
+    Stretch = True
+  }
+  { Lbl1 Label
+    MoveScaled(2,6,63,8)
+  }
+  { pStep1 Panel
+    MoveScaled(1,16,77,29)
+    { Label1 Label
+      MoveScaled(1,8,15,6)
+      Text = ("模拟器版本：")
+    }
+    { txtVersion ValueBox
+      MoveScaled(36,9,23,4)
+    }
+    { cbBranch ComboBox
+      MoveScaled(13,9,21,4)
+    }
+  }
+}

@@ -95,7 +95,5 @@ Public Sub btnSave_Click()
 End
 
 Public Sub btnCancel_Click()
-
     Me.close
-
 End
