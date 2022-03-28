@@ -10,8 +10,8 @@ Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 
 '公共变量常量
-Public Const Version As String = "V1.3.5"
-Public Const InternalVersion As String = "v1.3.5"
+Public Const Version As String = "V1.3.6"
+Public Const InternalVersion As String = "v1.3.6"
 Public Const InternalConfigFileVersion As String = "v3"
 
 
@@ -125,6 +125,7 @@ Public Function GetDataStr2(ByVal Url As String) As String
     ElseIf XMLHTTP.Status = 503 Then
         Debug.Print "使用备用下载服务器"
         XMLHTTP.Open "GET", Replace(Url, AliyundriveDomain, "pan.yidaozhan.ga/ns_emu_helper"), True
+        AliyundriveDomain = "pan.yidaozhan.ga/ns_emu_helper"
         XMLHTTP.setRequestHeader "User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36"
         XMLHTTP.send
         XMLHTTP.waitForResponse 10
