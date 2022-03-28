@@ -7,6 +7,29 @@ Public Sub Form_Open()
     '加载配置
     txtYuzu.Text = gl.yuzuinstallfolder
     txtRyujinx.Text = gl.ryujinxinstallfolder
+    cbMirror.add("阿里云盘 (速度更快，但保留版本少)")
+    cbMirror.add("GitHub / CloudFlare (速度慢，但保留全部版本)")
+    If gl.DownloadSource = "Aliyundrive" Then 
+        PictureBox3.Picture = Picture.load(Application.path & "/Resources/aliyunpan.jpg")
+        cbMirror.Text = "阿里云盘 (速度更快，但保留版本少)"
+    Else 
+        PictureBox3.Picture = Picture.load(Application.path & "/Resources/github.jpg")
+        cbMirror.Text = "GitHub / CloudFlare (速度慢，但保留全部版本)"
+    Endif
+    If gl.AlwaysUseCloudFlare = 1 Then 
+        chkCloudFlare.Value = True
+        chkCloudFlare.Text = "是"
+    Else 
+        chkCloudFlare.Value = False
+        chkCloudFlare.Text = "否"
+    Endif
+    If gl.AutoCheckForUpdate = 1 Then 
+        chkupdate.Value = True
+        chkupdate.Text = "是"
+    Else 
+        chkupdate.Value = False
+        chkupdate.Text = "否"
+    Endif
 End
 
 Public Sub Form_Close()
@@ -23,4 +46,56 @@ Public Sub btnBrowseRyujinx_Click()
     Dim tempVal As String
     tempval = (gl.OpenFileChooseDialog())
     If tempval <> "" Then txtRyujinx.Text = tempval
+End
+
+Public Sub cbMirror_Change()
+    If cbMirror.Text = "阿里云盘 (速度更快，但保留版本少)" Then 
+        PictureBox3.Picture = Picture.load(Application.path & "/Resources/aliyunpan.jpg")
+    Else 
+        PictureBox3.Picture = Picture.load(Application.path & "/Resources/github.jpg")
+    Endif
+End
+
+Public Sub chkCloudFlare_Click()
+    If chkCloudFlare.Value Then 
+        chkCloudFlare.Text = "是"
+    Else 
+        chkCloudFlare.Text = "否"
+    Endif
+End
+
+Public Sub chkUpdate_Click()
+    If chkUpdate.Value Then 
+        chkUpdate.Text = "是"
+    Else 
+        chkUpdate.Text = "否"
+    Endif
+End
+
+Public Sub btnSave_Click()
+    gl.YuzuInstallFolder = txtYuzu.Text
+    gl.RyujinxInstallFolder = txtRyujinx.Text
+    If cbMirror.Text = "阿里云盘 (速度更快，但保留版本少)" Then 
+        gl.DownloadSource = "Aliyundrive"
+    Else 
+        gl.DownloadSource = "GitHub"
+    Endif
+    If chkUpdate.value Then 
+        gl.AutoCheckForUpdate = 1
+    Else 
+        gl.AutoCheckForUpdate = 0
+    Endif
+    If chkCloudFlare.value Then 
+        gl.AlwaysUseCloudFlare = 1
+    Else 
+        gl.AlwaysUseCloudFlare = 0
+    Endif
+    gl.WriteConfig
+    Me.close
+End
+
+Public Sub btnCancel_Click()
+
+    Me.close
+
 End

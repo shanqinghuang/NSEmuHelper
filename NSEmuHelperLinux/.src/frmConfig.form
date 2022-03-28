@@ -1,7 +1,7 @@
 # Gambas Form File 3.0
 
 { Form Form
-  MoveScaled(0,0,53,57)
+  MoveScaled(0,0,53,56)
   Icon = Picture["icon:/64/tools"]
   { Label1 Label
     MoveScaled(1,1,37,4)
@@ -39,5 +39,49 @@
   { btnBrowseRyujinx Button
     MoveScaled(46,18,6,3)
     Text = ("浏览")
+  }
+  { Label4 Label
+    MoveScaled(8,24,44,3)
+    Text = ("模拟器与固件的下载服务器")
+  }
+  { PictureBox3 PictureBox
+    MoveScaled(1,24,6,6)
+    Picture = Picture.Load("Resources/aliyunpan.jpg")
+    Stretch = True
+  }
+  { cbMirror ComboBox
+    MoveScaled(8,27,44,3)
+  }
+  { PictureBox4 PictureBox
+    MoveScaled(1,32,6,6)
+    Picture = Picture.Load("Resources/cloudflare.gif")
+    Stretch = True
+  }
+  { Label5 Label
+    MoveScaled(8,32,44,3)
+    Text = ("始终使用 CloudFlare 下载 GitHub 资源")
+  }
+  { chkCloudFlare CheckBox
+    MoveScaled(8,35,18,3)
+  }
+  { PictureBox5 PictureBox
+    MoveScaled(1,40,6,6)
+    Picture = Picture.Load("icon:/64/update")
+    Stretch = True
+  }
+  { Label6 Label
+    MoveScaled(8,40,44,3)
+    Text = ("自动检查本工具更新")
+  }
+  { chkUpdate CheckBox
+    MoveScaled(8,43,18,3)
+  }
+  { btnSave Button
+    MoveScaled(28,51,11,4)
+    Text = ("保存")
+  }
+  { btnCancel Button
+    MoveScaled(41,51,11,4)
+    Text = ("取消")
   }
 }

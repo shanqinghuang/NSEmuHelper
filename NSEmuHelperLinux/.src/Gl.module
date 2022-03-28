@@ -23,3 +23,11 @@ Public Function OpenFileChooseDialog() As String
         Return TempBrowse
     Endif
 End
+
+Public Sub WriteConfig()  
+    Settings.Write(YuzuInstallFolder, ["Folder/YuzuInstallFolder"])
+    Settings.Write(RyujinxInstallFolder, ["Folder/RyujinxInstallFolder"])
+    Settings.Write(AlwaysUseCloudFlare, ["Network/AlwaysUseCloudFlare"])
+    Settings.Write(DownloadSource, ["Network/DownloadSource"])
+    Settings.Write(AutoCheckForUpdate, ["Tool/AutoCheckForUpdate"])
+End
