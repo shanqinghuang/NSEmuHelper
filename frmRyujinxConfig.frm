@@ -209,263 +209,264 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Public IsMissing As Boolean, RyujinxPreDataFolder As String
+Attribute RyujinxPreDataFolder.VB_VarUserMemId = 1073938432
 
 Private Sub btnBrowse_Click()
-txtDataFolder.Text = ChooseDir("自定义数据文件夹", Me)
-If txtDataFolder.Text = RyujinxInstallFolder & "\portable" Then
-    txtDataFolder.Text = "<请点击“浏览”>"
-    btnBrowse.Visible = False
-    txtDataFolder.Visible = False
-    Checks(0).Value = 0
-    MsgBox "自定义数据文件夹不能和默认数据文件夹一样！", vbOKOnly + vbExclamation, "错误"
-End If
+    txtDataFolder.Text = ChooseDir("自定义数据文件夹", Me)
+    If txtDataFolder.Text = RyujinxInstallFolder & "\portable" Then
+        txtDataFolder.Text = "<请点击“浏览”>"
+        btnBrowse.Visible = False
+        txtDataFolder.Visible = False
+        Checks(0).Value = 0
+        MsgBox "自定义数据文件夹不能和默认数据文件夹一样！", vbOKOnly + vbExclamation, "错误"
+    End If
 End Sub
 
 Private Sub btnCancel_Click()
-If IsMissing Then
-    Unload frmManage
-    frmMain.Show
-Else
-    frmManage.Show
-End If
-Unload Me
+    If IsMissing Then
+        Unload frmManage
+        frmMain.Show
+    Else
+        frmManage.Show
+    End If
+    Unload Me
 End Sub
 
 Private Sub btnSave_Click()
 '保存设置
-If cbFirmware.Text <> "加载中 ..." Then
-Select Case ImageCombo1.SelectedItem.key
-    Case "Mainline"
-    RyujinxBranch = "主线版"
-    Case "LDN"
-    RyujinxBranch = "LDN联机版"
-    Case "CN"
-    RyujinxBranch = "中文版"
-    Case "Vulkan"
-    RyujinxBranch = "Vulkan"
-End Select
-RyujinxVersion = txtVersion.Text
-RyujinxFirmware = cbFirmware.Text
-WriteIni "Ryujinx", "Version", RyujinxVersion, RyujinxInstallFolder & "\RyujinxConfig.ini"
-WriteIni "Ryujinx", "Branch", RyujinxBranch, RyujinxInstallFolder & "\RyujinxConfig.ini"
-WriteIni "Ryujinx", "Firmware", RyujinxFirmware, RyujinxInstallFolder & "\RyujinxConfig.ini"
+    If cbFirmware.Text <> "加载中 ..." Then
+        Select Case ImageCombo1.SelectedItem.key
+        Case "Mainline"
+            RyujinxBranch = "主线版"
+        Case "LDN"
+            RyujinxBranch = "LDN联机版"
+        Case "CN"
+            RyujinxBranch = "中文版"
+        Case "Vulkan"
+            RyujinxBranch = "Vulkan"
+        End Select
+        RyujinxVersion = txtVersion.Text
+        RyujinxFirmware = cbFirmware.Text
+        WriteIni "Ryujinx", "Version", RyujinxVersion, RyujinxInstallFolder & "\RyujinxConfig.ini"
+        WriteIni "Ryujinx", "Branch", RyujinxBranch, RyujinxInstallFolder & "\RyujinxConfig.ini"
+        WriteIni "Ryujinx", "Firmware", RyujinxFirmware, RyujinxInstallFolder & "\RyujinxConfig.ini"
 
-If IsMissing = False Then
-    If Checks(0).Value = 0 Then
-        RyujinxCustomDataFolder = "False"
-    Else
-        If txtDataFolder.Text = "<请点击“浏览”>" Then
-            RyujinxCustomDataFolder = "False"
+        If IsMissing = False Then
+            If Checks(0).Value = 0 Then
+                RyujinxCustomDataFolder = "False"
+            Else
+                If txtDataFolder.Text = "<请点击“浏览”>" Then
+                    RyujinxCustomDataFolder = "False"
+                Else
+                    RyujinxCustomDataFolder = txtDataFolder.Text
+                End If
+            End If
+            If RyujinxCustomDataFolder = RyujinxInstallFolder & "\portable" Then RyujinxCustomDataFolder = "False"
+            MoveRyujinxDataFolder
+            WriteIni "Ryujinx", "CustomDataFolder", RyujinxCustomDataFolder, RyujinxInstallFolder & "\RyujinxConfig.ini"
         Else
-            RyujinxCustomDataFolder = txtDataFolder.Text
+            RyujinxCustomDataFolder = "False"
+            WriteIni "Ryujinx", "CustomDataFolder", RyujinxCustomDataFolder, RyujinxInstallFolder & "\RyujinxConfig.ini"
         End If
-    End If
-    If RyujinxCustomDataFolder = RyujinxInstallFolder & "\portable" Then RyujinxCustomDataFolder = "False"
-    MoveRyujinxDataFolder
-    WriteIni "Ryujinx", "CustomDataFolder", RyujinxCustomDataFolder, RyujinxInstallFolder & "\RyujinxConfig.ini"
-Else
-    RyujinxCustomDataFolder = "False"
-    WriteIni "Ryujinx", "CustomDataFolder", RyujinxCustomDataFolder, RyujinxInstallFolder & "\RyujinxConfig.ini"
-End If
-If IsMissing Then
-    Unload frmManage
-    frmMain.Show
-Else
-    frmManage.Show
-End If
+        If IsMissing Then
+            Unload frmManage
+            frmMain.Show
+        Else
+            frmManage.Show
+        End If
 
-'迁移数据相关
-Dim fso As Object
-If Dir$(Environ("AppData") & "\Ryujinx", vbDirectory) <> "" Then
-'appdata存在
-    If Dir$(RyujinxInstallFolder & "\portable", vbDirectory) <> "" Then
-    Else
-    'user不存在
-        Set fso = CreateObject("Scripting.FileSystemObject") '创建FSO
-        Set folder = fso.GetFolder(Environ("AppData") & "\Ryujinx")
-        folder.Move RyujinxInstallFolder & "\portable"
-        Set folder = Nothing
-        Set fso = Nothing
-        MsgBox "之前的模拟器数据存放在 C 盘，已经自动迁移到模拟器文件夹。", vbOKOnly + vbInformation, "提示"
+        '迁移数据相关
+        Dim fso As Object
+        If Dir$(Environ("AppData") & "\Ryujinx", vbDirectory) <> "" Then
+            'appdata存在
+            If Dir$(RyujinxInstallFolder & "\portable", vbDirectory) <> "" Then
+            Else
+                'user不存在
+                Set fso = CreateObject("Scripting.FileSystemObject")    '创建FSO
+                Set folder = fso.GetFolder(Environ("AppData") & "\Ryujinx")
+                folder.Move RyujinxInstallFolder & "\portable"
+                Set folder = Nothing
+                Set fso = Nothing
+                MsgBox "之前的模拟器数据存放在 C 盘，已经自动迁移到模拟器文件夹。", vbOKOnly + vbInformation, "提示"
+            End If
+        End If
+        Unload Me
     End If
-End If
-Unload Me
-End If
 End Sub
 
-Private Sub Checks_Click(Index As Integer)
+Private Sub Checks_Click(index As Integer)
 '选框
-If Checks(Index).Value = 1 Then
-    Checks(Index).Caption = "是"
-    If Index = 0 Then btnBrowse.Visible = True: txtDataFolder.Visible = True
-Else
-    Checks(Index).Caption = "否"
-    If Index = 0 Then btnBrowse.Visible = False: txtDataFolder.Visible = False
-End If
+    If Checks(index).Value = 1 Then
+        Checks(index).Caption = "是"
+        If index = 0 Then btnBrowse.Visible = True: txtDataFolder.Visible = True
+    Else
+        Checks(index).Caption = "否"
+        If index = 0 Then btnBrowse.Visible = False: txtDataFolder.Visible = False
+    End If
 End Sub
 
 Private Sub Form_Activate()
 '加载设置和界面
-Debug.Print RyujinxCustomDataFolder
-If RyujinxCustomDataFolder = RyujinxInstallFolder & "\portable" Then
-    RyujinxCustomDataFolder = "False"
-    WriteIni "Ryujinx", "CustomDataFolder", RyujinxCustomDataFolder, RyujinxInstallFolder & "\RyujinxConfig.ini"
-End If
+    Debug.Print RyujinxCustomDataFolder
+    If RyujinxCustomDataFolder = RyujinxInstallFolder & "\portable" Then
+        RyujinxCustomDataFolder = "False"
+        WriteIni "Ryujinx", "CustomDataFolder", RyujinxCustomDataFolder, RyujinxInstallFolder & "\RyujinxConfig.ini"
+    End If
 
-If RyujinxCustomDataFolder = "False" Then
-    Checks(0).Value = 0
-    Checks(0).Caption = "否"
-    btnBrowse.Visible = False
-    txtDataFolder.Visible = False
-Else
-    Checks(0).Value = 1
-    Checks(0).Caption = "是"
-    btnBrowse.Visible = True
-    txtDataFolder.Visible = True
-    txtDataFolder.Text = RyujinxCustomDataFolder
-End If
-If Left(RyujinxBranch, 3) = "LDN" Then
-    Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(2).Picture
-Else
-    Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(1).Picture
-End If
-'Unload frmRyujinxInstaller
-RyujinxPreDataFolder = RyujinxCustomDataFolder
+    If RyujinxCustomDataFolder = "False" Then
+        Checks(0).Value = 0
+        Checks(0).Caption = "否"
+        btnBrowse.Visible = False
+        txtDataFolder.Visible = False
+    Else
+        Checks(0).Value = 1
+        Checks(0).Caption = "是"
+        btnBrowse.Visible = True
+        txtDataFolder.Visible = True
+        txtDataFolder.Text = RyujinxCustomDataFolder
+    End If
+    If Left(RyujinxBranch, 3) = "LDN" Then
+        Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(2).Picture
+    Else
+        Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(1).Picture
+    End If
+    'Unload frmRyujinxInstaller
+    RyujinxPreDataFolder = RyujinxCustomDataFolder
 
-Me.Caption = "Ryujinx 模拟器相关设置"
-If IsMissing Then
-    '没有RyujinxConfig.ini
-    Labels(0).Caption = "该模拟器不是用本工具安装的，" & vbCrLf & "请先完善它的版本信息。"
-    Labels(3).Visible = False
-    Checks(0).Visible = False
-    txtDataFolder.Visible = False
-    btnBrowse.Visible = fase
-    btnSave.Top = 2520
-    btnCancel.Top = 2520
-    Me.Height = 3650
-    
-    frmManage.Hide
-    frmRyujinxConfig.SetFocus
-Else
-    Labels(0).Caption = "Ryujinx 版本信息设置" & vbCrLf & "如果你手动更新了模拟器，可以在此更改版本信息。"
-    btnSave.Top = 4200
-    btnCancel.Top = 4200
-    Me.Height = 5325
-End If
-ImageCombo1.ComboItems.Clear
-ImageCombo1.ComboItems.Add 1, "Mainline", "主线版", 1
-ImageCombo1.ComboItems.Add 2, "CN", "中文版", 1
-ImageCombo1.ComboItems.Add 3, "LDN", "LDN联机版", 2
-ImageCombo1.ComboItems.Add 4, "Vulkan", "Vulkan", 1
-ImageCombo1.ComboItems(1).Selected = True
-cbFirmware.Text = "加载中 ..."
+    Me.Caption = "Ryujinx 模拟器相关设置"
+    If IsMissing Then
+        '没有RyujinxConfig.ini
+        Labels(0).Caption = "该模拟器不是用本工具安装的，" & vbCrLf & "请先完善它的版本信息。"
+        Labels(3).Visible = False
+        Checks(0).Visible = False
+        txtDataFolder.Visible = False
+        btnBrowse.Visible = fase
+        btnSave.Top = 2520
+        btnCancel.Top = 2520
+        Me.Height = 3650
 
-DoEvents
-WindowList = ""
-Shell RyujinxInstallFolder & "\Ryujinx.exe"
-Dim tmpRyujinxName As String
-Do Until InStr(tmpRyujinxName, "Ryujinx Console") <> False
-    '遍历所有窗口句柄
-    Call EnumWindows(AddressOf EnumAllWindows, ByVal 0&)
-    tmpRyujinxName = Join(Filter(Split(WindowList, vbCrLf), "Ryujinx Console"), vbCrLf)
-    DoEvents
-    Sleep 100
-Loop
-Shell "cmd /c taskkill /f /im Ryujinx.exe"
-tmpRyujinxName = Replace(tmpRyujinxName, "Ryujinx Console ", "")
-If InStr(tmpRyujinxName, "vulkan") Then
-    ImageCombo1.ComboItems(4).Selected = True
-    txtVersion.Text = Replace(tmpRyujinxName, "-vulkan", "")
-ElseIf InStr(tmpRyujinxName, "ldn") Then
-    ImageCombo1.ComboItems(3).Selected = True
-    txtVersion.Text = tmpRyujinxName
-Else
+        frmManage.Hide
+        frmRyujinxConfig.SetFocus
+    Else
+        Labels(0).Caption = "Ryujinx 版本信息设置" & vbCrLf & "如果你手动更新了模拟器，可以在此更改版本信息。"
+        btnSave.Top = 4200
+        btnCancel.Top = 4200
+        Me.Height = 5325
+    End If
+    ImageCombo1.ComboItems.Clear
+    ImageCombo1.ComboItems.Add 1, "Mainline", "主线版", 1
+    ImageCombo1.ComboItems.Add 2, "CN", "中文版", 1
+    ImageCombo1.ComboItems.Add 3, "LDN", "LDN联机版", 2
+    ImageCombo1.ComboItems.Add 4, "Vulkan", "Vulkan", 1
     ImageCombo1.ComboItems(1).Selected = True
-    txtVersion.Text = tmpRyujinxName
-End If
-txtVersion.SetFocus
+    cbFirmware.Text = "加载中 ..."
 
-Dim FirmwareVersionArr() As String
-FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
-Dim I As Integer
-For I = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
-cbFirmware.AddItem FirmwareVersionArr(I)
-Next
-If IsMissing Then
-    cbFirmware.Text = "选择固件版本"
-Else
-    cbFirmware.Text = RyujinxFirmware
-End If
+    DoEvents
+    WindowList = ""
+    Shell RyujinxInstallFolder & "\Ryujinx.exe"
+    Dim tmpRyujinxName As String
+    Do Until InStr(tmpRyujinxName, "Ryujinx Console") <> False
+        '遍历所有窗口句柄
+        Call EnumWindows(AddressOf EnumAllWindows, ByVal 0&)
+        tmpRyujinxName = Join(Filter(Split(WindowList, vbCrLf), "Ryujinx Console"), vbCrLf)
+        DoEvents
+        Sleep 100
+    Loop
+    Shell "cmd /c taskkill /f /im Ryujinx.exe"
+    tmpRyujinxName = Replace(tmpRyujinxName, "Ryujinx Console ", "")
+    If InStr(tmpRyujinxName, "vulkan") Then
+        ImageCombo1.ComboItems(4).Selected = True
+        txtVersion.Text = Replace(tmpRyujinxName, "-vulkan", "")
+    ElseIf InStr(tmpRyujinxName, "ldn") Then
+        ImageCombo1.ComboItems(3).Selected = True
+        txtVersion.Text = tmpRyujinxName
+    Else
+        ImageCombo1.ComboItems(1).Selected = True
+        txtVersion.Text = tmpRyujinxName
+    End If
+    txtVersion.SetFocus
+
+    Dim FirmwareVersionArr() As String
+    FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+    Dim i As Integer
+    For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+        cbFirmware.AddItem FirmwareVersionArr(i)
+    Next
+    If IsMissing Then
+        cbFirmware.Text = "选择固件版本"
+    Else
+        cbFirmware.Text = RyujinxFirmware
+    End If
 
 End Sub
 
 Private Sub Form_Initialize()
-InitCommonControls
+    InitCommonControls
 End Sub
 
 Private Sub ImageCombo1_Click()
-txtVersion.Text = "加载中 ..."
-If ImageCombo1.SelectedItem.Index = 3 Then
-    Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(2).Picture
-    Dim Tmp() As String
-    Tmp = Split(GetRyujinxLDNVersionAli, vbCrLf)
-    txtVersion.Text = Tmp(UBound(Tmp))
-Else
-    Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(1).Picture
-    txtVersion.Text = GetRyujinxVersion
-End If
-txtVersion.SetFocus
+    txtVersion.Text = "加载中 ..."
+    If ImageCombo1.SelectedItem.index = 3 Then
+        Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(2).Picture
+        Dim Tmp() As String
+        Tmp = Split(GetRyujinxLDNVersionAli, vbCrLf)
+        txtVersion.Text = Tmp(UBound(Tmp))
+    Else
+        Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(1).Picture
+        txtVersion.Text = GetRyujinxVersion
+    End If
+    txtVersion.SetFocus
 End Sub
 
 Private Sub txtVersion_KeyPress(KeyAscii As Integer)
 '只能输入数字
-If KeyAscii = 8 Or KeyAscii = 46 Then Exit Sub
-If KeyAscii < 48 Or KeyAscii > 57 Then KeyAscii = 0
+    If KeyAscii = 8 Or KeyAscii = 46 Then Exit Sub
+    If KeyAscii < 48 Or KeyAscii > 57 Then KeyAscii = 0
 End Sub
 
 Private Sub MoveRyujinxDataFolder()
-On Error GoTo MoveFailed2
-Dim fso As Object, folder As Object
-'迁移 Ryujinx 数据文件夹
-'RyujinxPreDataFolder 前数据文件夹
-If RyujinxPreDataFolder = RyujinxCustomDataFolder Then Exit Sub
-If RyujinxPreDataFolder = "False" Or RyujinxPreDataFolder = "<请点击“浏览”>" Then RyujinxPreDataFolder = RyujinxInstallFolder & "\portable"
-If RyujinxCustomDataFolder = "False" Or RyujinxCustomDataFolder = "<请点击“浏览”>" Then RyujinxCustomDataFolder = RyujinxInstallFolder & "\portable"
-If TestEmptyFolder(RyujinxCustomDataFolder) = False Then
-    MsgBox "新的数据文件夹为:" & RyujinxCustomDataFolder & vbCrLf & "这个文件夹非空，迁移失败！" & vbCrLf & "请清空该文件夹之后再试。", vbOKOnly + vbCritical, "错误"
-    GoTo MoveFailed
-End If
-If RyujinxCustomDataFolder <> RyujinxInstallFolder & "\portable" Then
-    '新文件夹空了，继续迁移
-    '移动内容
-    Set fso = CreateObject("Scripting.FileSystemObject") '创建FSO
-    Set folder = fso.GetFolder(RyujinxPreDataFolder)
-    RmDir RyujinxCustomDataFolder
-    folder.Move RyujinxCustomDataFolder
-    Set folder = Nothing
-    Set fso = Nothing
-    '创建符号链接
-    Shell "cmd /c mklink /d /j " & Chr(34) & RyujinxInstallFolder & "\portable" & Chr(34) & " " & Chr(34) & RyujinxCustomDataFolder & Chr(34)
-Else
-    '迁移回 portable 文件夹
-    Shell "cmd /c rmdir " & Chr(34) & RyujinxInstallFolder & "\portable" & Chr(34) ' 删除旧的符号链接
-    '移动内容
-    Set fso = CreateObject("Scripting.FileSystemObject") '创建FSO
-    Set folder = fso.GetFolder(RyujinxPreDataFolder)
-    RmDir RyujinxInstallFolder & "\portable"
-    folder.Move RyujinxInstallFolder & "\portable"
-    Set folder = Nothing
-    Set fso = Nothing
-End If
-MsgBox "数据文件夹迁移成功！" & vbCrLf & vbCrLf & "从 " & RyujinxPreDataFolder & "，" & vbCrLf & "迁移到了 " & RyujinxCustomDataFolder & "。", vbOKOnly + vbInformation, "提示"
-Exit Sub
+    On Error GoTo MoveFailed2
+    Dim fso As Object, folder As Object
+    '迁移 Ryujinx 数据文件夹
+    'RyujinxPreDataFolder 前数据文件夹
+    If RyujinxPreDataFolder = RyujinxCustomDataFolder Then Exit Sub
+    If RyujinxPreDataFolder = "False" Or RyujinxPreDataFolder = "<请点击“浏览”>" Then RyujinxPreDataFolder = RyujinxInstallFolder & "\portable"
+    If RyujinxCustomDataFolder = "False" Or RyujinxCustomDataFolder = "<请点击“浏览”>" Then RyujinxCustomDataFolder = RyujinxInstallFolder & "\portable"
+    If TestEmptyFolder(RyujinxCustomDataFolder) = False Then
+        MsgBox "新的数据文件夹为:" & RyujinxCustomDataFolder & vbCrLf & "这个文件夹非空，迁移失败！" & vbCrLf & "请清空该文件夹之后再试。", vbOKOnly + vbCritical, "错误"
+        GoTo MoveFailed
+    End If
+    If RyujinxCustomDataFolder <> RyujinxInstallFolder & "\portable" Then
+        '新文件夹空了，继续迁移
+        '移动内容
+        Set fso = CreateObject("Scripting.FileSystemObject")    '创建FSO
+        Set folder = fso.GetFolder(RyujinxPreDataFolder)
+        RmDir RyujinxCustomDataFolder
+        folder.Move RyujinxCustomDataFolder
+        Set folder = Nothing
+        Set fso = Nothing
+        '创建符号链接
+        Shell "cmd /c mklink /d /j " & Chr(34) & RyujinxInstallFolder & "\portable" & Chr(34) & " " & Chr(34) & RyujinxCustomDataFolder & Chr(34)
+    Else
+        '迁移回 portable 文件夹
+        Shell "cmd /c rmdir " & Chr(34) & RyujinxInstallFolder & "\portable" & Chr(34)    ' 删除旧的符号链接
+        '移动内容
+        Set fso = CreateObject("Scripting.FileSystemObject")    '创建FSO
+        Set folder = fso.GetFolder(RyujinxPreDataFolder)
+        RmDir RyujinxInstallFolder & "\portable"
+        folder.Move RyujinxInstallFolder & "\portable"
+        Set folder = Nothing
+        Set fso = Nothing
+    End If
+    MsgBox "数据文件夹迁移成功！" & vbCrLf & vbCrLf & "从 " & RyujinxPreDataFolder & "，" & vbCrLf & "迁移到了 " & RyujinxCustomDataFolder & "。", vbOKOnly + vbInformation, "提示"
+    Exit Sub
 
 MoveFailed:
     If RyujinxPreDataFolder = RyujinxInstallFolder & "\portable" Then RyujinxPreDataFolder = "False"
     If RyujinxCustomDataFolder = RyujinxInstallFolder & "\portable" Then RyujinxCustomDataFolder = "False"
     RyujinxCustomDataFolder = RyujinxPreDataFolder
     WriteIni "Ryujinx", "CustomDataFolder", RyujinxCustomDataFolder, RyujinxInstallFolder & "\RyujinxConfig.ini"
-Exit Sub
+    Exit Sub
 
 MoveFailed2:
     MsgBox "迁移失败，发生了未知错误。" & vbCrLf & "运行时错误 " & CStr(Err.Number) & "：" & Err.Description, vbOKOnly + vbCritical, "错误"
@@ -473,15 +474,15 @@ MoveFailed2:
     If RyujinxCustomDataFolder = RyujinxInstallFolder & "\portable" Then RyujinxCustomDataFolder = "False"
     RyujinxCustomDataFolder = RyujinxPreDataFolder
     WriteIni "Ryujinx", "CustomDataFolder", RyujinxCustomDataFolder, RyujinxInstallFolder & "\RyujinxConfig.ini"
-Exit Sub
+    Exit Sub
 End Sub
 
 Private Function TestEmptyFolder(FolderName As String) As Boolean
-On Error GoTo Err
-RmDir (FolderName) '删除目录，如果出错表示不为空
-MkDir (FolderName) '重新建目录
-TestEmptyFolder = True
-Exit Function
+    On Error GoTo Err
+    RmDir (FolderName)    '删除目录，如果出错表示不为空
+    MkDir (FolderName)    '重新建目录
+    TestEmptyFolder = True
+    Exit Function
 Err:
-TestEmptyFolder = False
+    TestEmptyFolder = False
 End Function

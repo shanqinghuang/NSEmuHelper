@@ -334,107 +334,107 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Private Sub btnAbout_Click()
-frmAbout.Show
+    frmAbout.Show
 End Sub
 
-Private Sub btnBrowse_Click(Index As Integer)
-CfgTexts(Index).Text = ChooseDir(Labels(Index).Caption, Me)
+Private Sub btnBrowse_Click(index As Integer)
+    CfgTexts(index).Text = ChooseDir(Labels(index).Caption, Me)
 End Sub
 
 Private Sub btnCancel_Click()
-Unload frmAbout
-Unload Me
+    Unload frmAbout
+    Unload Me
 End Sub
 
 Private Sub btnSave_Click()
-If InStr(CfgTexts(0).Text, "yuzu-windows-msvc-early-access") Then
-    MsgBox "Yuzu 安装文件夹名为 yuzu-windows-msvc-early-access 会导致更新丢存档，请重命名该文件夹，或者不使用本工具。", vbCritical
-    Exit Sub
-End If
-If InStr(CfgTexts(1).Text, "publish") Then
-    MsgBox "Ryujinx 安装文件夹名为 publish 会导致更新丢存档，请重命名该文件夹，或者不使用本工具。", vbCritical
-    Exit Sub
-End If
-'保存设置
-YuzuInstallFolder = CfgTexts(0).Text
-RyujinxInstallFolder = CfgTexts(1).Text
-If Checks(0).Value = 1 Then
-    AlwaysUseCloudFlare = True
-Else
-    AlwaysUseCloudFlare = False
-End If
-If Checks(1).Value = 1 Then
-    AutoCheckForUpdate = True
-Else
-    AutoCheckForUpdate = False
-End If
-DownloadSource = ImageCombo1.SelectedItem.key
-WriteIni "Folder", "YuzuInstallFolder", YuzuInstallFolder, App.Path & "\Config.ini"
-WriteIni "Folder", "RyujinxInstallFolder", RyujinxInstallFolder, App.Path & "\Config.ini"
-WriteIni "Network", "AlwaysUseCloudFlare", CStr(AlwaysUseCloudFlare), App.Path & "\Config.ini"
-WriteIni "Network", "DownloadSource", DownloadSource, App.Path & "\Config.ini"
-WriteIni "Tool", "AutoCheckForUpdate", CStr(AutoCheckForUpdate), App.Path & "\Config.ini"
-Unload Me
+    If InStr(CfgTexts(0).Text, "yuzu-windows-msvc-early-access") Then
+        MsgBox "Yuzu 安装文件夹名为 yuzu-windows-msvc-early-access 会导致更新丢存档，请重命名该文件夹，或者不使用本工具。", vbCritical
+        Exit Sub
+    End If
+    If InStr(CfgTexts(1).Text, "publish") Then
+        MsgBox "Ryujinx 安装文件夹名为 publish 会导致更新丢存档，请重命名该文件夹，或者不使用本工具。", vbCritical
+        Exit Sub
+    End If
+    '保存设置
+    YuzuInstallFolder = CfgTexts(0).Text
+    RyujinxInstallFolder = CfgTexts(1).Text
+    If Checks(0).Value = 1 Then
+        AlwaysUseCloudFlare = True
+    Else
+        AlwaysUseCloudFlare = False
+    End If
+    If Checks(1).Value = 1 Then
+        AutoCheckForUpdate = True
+    Else
+        AutoCheckForUpdate = False
+    End If
+    DownloadSource = ImageCombo1.SelectedItem.key
+    WriteIni "Folder", "YuzuInstallFolder", YuzuInstallFolder, App.Path & "\Config.ini"
+    WriteIni "Folder", "RyujinxInstallFolder", RyujinxInstallFolder, App.Path & "\Config.ini"
+    WriteIni "Network", "AlwaysUseCloudFlare", CStr(AlwaysUseCloudFlare), App.Path & "\Config.ini"
+    WriteIni "Network", "DownloadSource", DownloadSource, App.Path & "\Config.ini"
+    WriteIni "Tool", "AutoCheckForUpdate", CStr(AutoCheckForUpdate), App.Path & "\Config.ini"
+    Unload Me
 End Sub
 
 
-Private Sub Checks_Click(Index As Integer)
-If Checks(Index).Value = 1 Then
-    Checks(Index).Caption = "是"
-Else
-    Checks(Index).Caption = "否"
-End If
+Private Sub Checks_Click(index As Integer)
+    If Checks(index).Value = 1 Then
+        Checks(index).Caption = "是"
+    Else
+        Checks(index).Caption = "否"
+    End If
 End Sub
 
 Private Sub Form_Activate()
 '加载设置
-CfgTexts(0).Text = YuzuInstallFolder
-CfgTexts(1).Text = RyujinxInstallFolder
-If AlwaysUseCloudFlare = "True" Then
-    Checks(Index).Value = 1
-Else
-    Checks(Index).Value = 0
-End If
-If DownloadSource = "Aliyundrive" Then
-    ImageCombo1.ComboItems(1).Selected = True
-ElseIf DownloadSource = "Github" Then
-    ImageCombo1.ComboItems(2).Selected = True
-End If
-Images(3).Picture = ImageList1.ListImages(ImageCombo1.SelectedItem.Index).Picture
+    CfgTexts(0).Text = YuzuInstallFolder
+    CfgTexts(1).Text = RyujinxInstallFolder
+    If AlwaysUseCloudFlare = "True" Then
+        Checks(index).Value = 1
+    Else
+        Checks(index).Value = 0
+    End If
+    If DownloadSource = "Aliyundrive" Then
+        ImageCombo1.ComboItems(1).Selected = True
+    ElseIf DownloadSource = "Github" Then
+        ImageCombo1.ComboItems(2).Selected = True
+    End If
+    Images(3).Picture = ImageList1.ListImages(ImageCombo1.SelectedItem.index).Picture
 
-If AutoCheckForUpdate Then Checks(1).Value = 1
+    If AutoCheckForUpdate Then Checks(1).Value = 1
 
-btnSave.SetFocus
+    btnSave.SetFocus
 End Sub
 
 Private Sub Form_Load()
-Me.Caption = "NS模拟器助手 - 设置"
-ImageCombo1.ComboItems.Clear
-ImageCombo1.ComboItems.Add 1, "Aliyundrive", "阿里云盘 (速度更快，但保留版本少)", 1
-ImageCombo1.ComboItems.Add 2, "Github", "Github / CloudFlare (速度慢，但保留全部版本)", 2
-ImageCombo1.ComboItems(1).Selected = True
+    Me.Caption = "NS模拟器助手 - 设置"
+    ImageCombo1.ComboItems.Clear
+    ImageCombo1.ComboItems.Add 1, "Aliyundrive", "阿里云盘 (速度更快，但保留版本少)", 1
+    ImageCombo1.ComboItems.Add 2, "Github", "Github / CloudFlare (速度慢，但保留全部版本)", 2
+    ImageCombo1.ComboItems(1).Selected = True
 End Sub
 
 Private Sub Form_Initialize()
-InitCommonControls
+    InitCommonControls
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-Unload frmAbout
+    Unload frmAbout
 End Sub
 
 Private Sub ImageCombo1_Click()
-Images(3).Picture = ImageList1.ListImages(ImageCombo1.SelectedItem.Index).Picture
+    Images(3).Picture = ImageList1.ListImages(ImageCombo1.SelectedItem.index).Picture
 
 End Sub
 
-Private Sub Labels2_Click(Index As Integer)
-If Index = 2 Then
-    If CheckFileExists(App.Path & "\ImportRegistry.exe") Then
-        Shell App.Path & "\ImportRegistry.exe", vbNormalFocus
-        End
-    Else
-        MsgBox "ImportRegistry.exe 未找到，请重新安装本工具。", vbCritical, "文件未找到"
+Private Sub Labels2_Click(index As Integer)
+    If index = 2 Then
+        If CheckFileExists(App.Path & "\ImportRegistry.exe") Then
+            Shell App.Path & "\ImportRegistry.exe", vbNormalFocus
+            End
+        Else
+            MsgBox "ImportRegistry.exe 未找到，请重新安装本工具。", vbCritical, "文件未找到"
+        End If
     End If
-End If
 End Sub

@@ -136,33 +136,33 @@ Private Declare Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" (B
 Public IsYuzu As Boolean
 
 Private Sub btnFirmware_Click()
-InstallMode = 3
-If IsYuzu Then
-    frmYuzuInstaller.Show
-Else
-    frmRyujinxInstaller.Show
-End If
-frmManage.Hide
+    InstallMode = 3
+    If IsYuzu Then
+        frmYuzuInstaller.Show
+    Else
+        frmRyujinxInstaller.Show
+    End If
+    frmManage.Hide
 End Sub
 
 Private Sub btnKey_Click()
     On Error Resume Next
     Dim KeyFile As String
-If IsYuzu Then
-    KeyFile = ChooseFile("选择密钥文件 (prod.keys)", "NS 密钥文件", "prod.keys", frmManage.hwnd)
-    If KeyFile = "" Then Exit Sub
-    Kill YuzuInstallFolder & "\user\keys\prod.keys"
-    FileCopy KeyFile, YuzuInstallFolder & "\user\keys\prod.keys"
-    MsgBox "Yuzu 密钥文件更新 / 替换成功！", vbOKOnly + vbInformation, "提示"
-    Exit Sub
-Else
-    KeyFile = ChooseFile("选择密钥文件 (prod.keys)", "NS 密钥文件", "prod.keys", frmManage.hwnd)
-    If KeyFile = "" Then Exit Sub
-    Kill RyujinxInstallFolder & "\portable\system\prod.keys"
-    FileCopy KeyFile, RyujinxInstallFolder & "\portable\system\prod.keys"
-    MsgBox "Ryujinx 密钥文件更新 / 替换成功！", vbOKOnly + vbInformation, "提示"
-    Exit Sub
-End If
+    If IsYuzu Then
+        KeyFile = ChooseFile("选择密钥文件 (prod.keys)", "NS 密钥文件", "prod.keys", frmManage.hwnd)
+        If KeyFile = "" Then Exit Sub
+        Kill YuzuInstallFolder & "\user\keys\prod.keys"
+        FileCopy KeyFile, YuzuInstallFolder & "\user\keys\prod.keys"
+        MsgBox "Yuzu 密钥文件更新 / 替换成功！", vbOKOnly + vbInformation, "提示"
+        Exit Sub
+    Else
+        KeyFile = ChooseFile("选择密钥文件 (prod.keys)", "NS 密钥文件", "prod.keys", frmManage.hwnd)
+        If KeyFile = "" Then Exit Sub
+        Kill RyujinxInstallFolder & "\portable\system\prod.keys"
+        FileCopy KeyFile, RyujinxInstallFolder & "\portable\system\prod.keys"
+        MsgBox "Ryujinx 密钥文件更新 / 替换成功！", vbOKOnly + vbInformation, "提示"
+        Exit Sub
+    End If
 End Sub
 
 
@@ -176,142 +176,142 @@ Private Sub btnModDownloader_Click()
 End Sub
 
 Private Sub btnSaveSettings_Click()
-If IsYuzu Then
-    frmYuzuConfig.IsMissing = False
-    frmYuzuConfig.Show
-Else
-    frmRyujinxConfig.IsMissing = False
-    frmRyujinxConfig.Show
-End If
+    If IsYuzu Then
+        frmYuzuConfig.IsMissing = False
+        frmYuzuConfig.Show
+    Else
+        frmRyujinxConfig.IsMissing = False
+        frmRyujinxConfig.Show
+    End If
 End Sub
 
 Private Sub btnShortcut_Click()
     Dim nPath As String, sh, ShortCut
-If IsYuzu Then
-    On Error Resume Next
-    Set sh = CreateObject("wscript.shell") '
-    nPath = sh.RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders\Desktop") '获取当前用户的桌面目录
-    If Right(nPath, 1) <> "" Then nPath = nPath & "\"
-    ShortF = nPath & "Yuzu.lnk"
-    Set ShortCut = sh.CreateShortcut(ShortF) '开始创建快捷方式对象
-    ShortCut.TargetPath = YuzuInstallFolder & "\yuzu.exe" '快捷方式指向的目标文件，写完整路径
-    ShortCut.Save
-    MsgBox "Yuzu 快捷方式创建成功！", vbOKOnly + vbInformation, "提示"
-Else
-    On Error Resume Next
-    Set sh = CreateObject("wscript.shell") '
-    nPath = sh.RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders\Desktop") '获取当前用户的桌面目录
-    If Right(nPath, 1) <> "" Then nPath = nPath & "\"
-    ShortF = nPath & "Ryujinx.lnk"
-    Set ShortCut = sh.CreateShortcut(ShortF) '开始创建快捷方式对象
-    ShortCut.TargetPath = RyujinxInstallFolder & "\Ryujinx.exe" '快捷方式指向的目标文件，写完整路径
-    ShortCut.Save
-    MsgBox "Ryujinx 快捷方式创建成功！", vbOKOnly + vbInformation, "提示"
-End If
+    If IsYuzu Then
+        On Error Resume Next
+        Set sh = CreateObject("wscript.shell")    '
+        nPath = sh.RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders\Desktop")    '获取当前用户的桌面目录
+        If Right(nPath, 1) <> "" Then nPath = nPath & "\"
+        ShortF = nPath & "Yuzu.lnk"
+        Set ShortCut = sh.CreateShortcut(ShortF)    '开始创建快捷方式对象
+        ShortCut.TargetPath = YuzuInstallFolder & "\yuzu.exe"    '快捷方式指向的目标文件，写完整路径
+        ShortCut.Save
+        MsgBox "Yuzu 快捷方式创建成功！", vbOKOnly + vbInformation, "提示"
+    Else
+        On Error Resume Next
+        Set sh = CreateObject("wscript.shell")    '
+        nPath = sh.RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders\Desktop")    '获取当前用户的桌面目录
+        If Right(nPath, 1) <> "" Then nPath = nPath & "\"
+        ShortF = nPath & "Ryujinx.lnk"
+        Set ShortCut = sh.CreateShortcut(ShortF)    '开始创建快捷方式对象
+        ShortCut.TargetPath = RyujinxInstallFolder & "\Ryujinx.exe"    '快捷方式指向的目标文件，写完整路径
+        ShortCut.Save
+        MsgBox "Ryujinx 快捷方式创建成功！", vbOKOnly + vbInformation, "提示"
+    End If
 End Sub
 
 Private Sub btnLog_Click()
-If IsYuzu Then
-    ShellExecute Me.hwnd, "open", YuzuInstallFolder & "\user\log\yuzu_log.txt", vbNullString, vbNullString, vbNormalFocus
-Else
-    Shell "explorer.exe " & Chr(34) & ryujinsintallfolder & "\Logs" & Chr(34), vbNormalFocus
-End If
+    If IsYuzu Then
+        ShellExecute Me.hwnd, "open", YuzuInstallFolder & "\user\log\yuzu_log.txt", vbNullString, vbNullString, vbNormalFocus
+    Else
+        Shell "explorer.exe " & Chr(34) & ryujinsintallfolder & "\Logs" & Chr(34), vbNormalFocus
+    End If
 End Sub
 
 Private Sub btnSaves_Click()
-If IsYuzu Then
-    Shell "explorer.exe " & Chr(34) & YuzuInstallFolder & "\user\nand\user\save\0000000000000000" & Chr(34), vbNormalFocus
-Else
-    Shell "explorer.exe " & Chr(34) & RyujinxInstallFolder & "\portable\bis\user\save" & Chr(34), vbNormalFocus
-End If
+    If IsYuzu Then
+        Shell "explorer.exe " & Chr(34) & YuzuInstallFolder & "\user\nand\user\save\0000000000000000" & Chr(34), vbNormalFocus
+    Else
+        Shell "explorer.exe " & Chr(34) & RyujinxInstallFolder & "\portable\bis\user\save" & Chr(34), vbNormalFocus
+    End If
 End Sub
 
 Private Sub btnUpdate_Click()
-InstallMode = 2
-If IsYuzu Then
-    frmYuzuInstaller.Show
-Else
-    frmRyujinxInstaller.Show
-End If
-frmManage.Hide
+    InstallMode = 2
+    If IsYuzu Then
+        frmYuzuInstaller.Show
+    Else
+        frmRyujinxInstaller.Show
+    End If
+    frmManage.Hide
 End Sub
 
 Private Sub Form_Activate()
 '窗口外观
-Labels(2).Visible = False
-If IsYuzu Then
-    Me.Caption = "NS模拟器助手 " & Version & " - Yuzu 管理"
-    Me.Icon = frmMain.Icon
-Else
-    Me.Caption = "NS模拟器助手 " & Version & " - Ryujinx 管理"
-    Me.Icon = frmRyujinxInstaller.Icon
-    Unload frmRyujinxInstaller
-End If
-'加载配置
-If IsYuzu Then
-    btnUpdate.Caption = "更新模拟器"
-    btnUpdate.Width = 1455
-    btnModDownloader.Visible = True
-    If CheckFileExists(YuzuInstallFolder & "\YuzuConfig.ini") = False Then
-        frmYuzuConfig.IsMissing = True
-        frmYuzuConfig.Show
+    Labels(2).Visible = False
+    If IsYuzu Then
+        Me.Caption = "NS模拟器助手 " & Version & " - Yuzu 管理"
+        Me.Icon = frmMain.Icon
     Else
-        YuzuVersion = GetIni("Yuzu", "Version", YuzuInstallFolder & "\YuzuConfig.ini")
-        YuzuBranch = GetIni("Yuzu", "Branch", YuzuInstallFolder & "\YuzuConfig.ini")
-        If Left(YuzuBranch, 3) = "主线版" Then
-            Images(0).Picture = frmYuzuInstaller.ImageList2.ListImages(2).Picture
-            Unload frmYuzuInstaller
-        Else
-            Images(0).Picture = frmYuzuInstaller.ImageList2.ListImages(1).Picture
-            Unload frmYuzuInstaller
-        End If
-        YuzuFirmware = GetIni("Yuzu", "Firmware", YuzuInstallFolder & "\YuzuConfig.ini")
-        Labels(0).Caption = "模拟器版本：" & YuzuBranch
-        Labels(0).Caption = Labels(0).Caption & " " & YuzuVersion
-        Labels(1).Caption = "固件版本：" & YuzuFirmware
-        YuzuCustomDataFolder = GetIni("Yuzu", "CustomDataFolder", YuzuInstallFolder & "\YuzuConfig.ini")
-        If YuzuCustomDataFolder <> "False" Then
-            Labels(2).Visible = True
-            Labels(2).Caption = "数据文件夹：" & YuzuCustomDataFolder
-        End If
-        DoEvents
+        Me.Caption = "NS模拟器助手 " & Version & " - Ryujinx 管理"
+        Me.Icon = frmRyujinxInstaller.Icon
+        Unload frmRyujinxInstaller
     End If
-Else
-    btnUpdate.Caption = "更新模拟器或更换版本"
-    btnUpdate.Width = 3135
-    btnModDownloader.Visible = False
-    If CheckFileExists(RyujinxInstallFolder & "\RyujinxConfig.ini") = False Then
-        frmRyujinxConfig.IsMissing = True
-        frmRyujinxConfig.Show
+    '加载配置
+    If IsYuzu Then
+        btnUpdate.Caption = "更新模拟器"
+        btnUpdate.Width = 1455
+        btnModDownloader.Visible = True
+        If CheckFileExists(YuzuInstallFolder & "\YuzuConfig.ini") = False Then
+            frmYuzuConfig.IsMissing = True
+            frmYuzuConfig.Show
+        Else
+            YuzuVersion = GetIni("Yuzu", "Version", YuzuInstallFolder & "\YuzuConfig.ini")
+            YuzuBranch = GetIni("Yuzu", "Branch", YuzuInstallFolder & "\YuzuConfig.ini")
+            If Left(YuzuBranch, 3) = "主线版" Then
+                Images(0).Picture = frmYuzuInstaller.ImageList2.ListImages(2).Picture
+                Unload frmYuzuInstaller
+            Else
+                Images(0).Picture = frmYuzuInstaller.ImageList2.ListImages(1).Picture
+                Unload frmYuzuInstaller
+            End If
+            YuzuFirmware = GetIni("Yuzu", "Firmware", YuzuInstallFolder & "\YuzuConfig.ini")
+            Labels(0).Caption = "模拟器版本：" & YuzuBranch
+            Labels(0).Caption = Labels(0).Caption & " " & YuzuVersion
+            Labels(1).Caption = "固件版本：" & YuzuFirmware
+            YuzuCustomDataFolder = GetIni("Yuzu", "CustomDataFolder", YuzuInstallFolder & "\YuzuConfig.ini")
+            If YuzuCustomDataFolder <> "False" Then
+                Labels(2).Visible = True
+                Labels(2).Caption = "数据文件夹：" & YuzuCustomDataFolder
+            End If
+            DoEvents
+        End If
     Else
-        RyujinxVersion = GetIni("Ryujinx", "Version", RyujinxInstallFolder & "\RyujinxConfig.ini")
-        RyujinxBranch = GetIni("Ryujinx", "Branch", RyujinxInstallFolder & "\RyujinxConfig.ini")
-        If Left(RyujinxBranch, 3) = "LDN" Then
-            Images(0).Picture = frmRyujinxInstaller.ImageList2.ListImages(2).Picture
-            Unload frmRyujinxInstaller
+        btnUpdate.Caption = "更新模拟器或更换版本"
+        btnUpdate.Width = 3135
+        btnModDownloader.Visible = False
+        If CheckFileExists(RyujinxInstallFolder & "\RyujinxConfig.ini") = False Then
+            frmRyujinxConfig.IsMissing = True
+            frmRyujinxConfig.Show
         Else
-            Images(0).Picture = frmRyujinxInstaller.ImageList2.ListImages(1).Picture
-            Unload frmRyujinxInstaller
+            RyujinxVersion = GetIni("Ryujinx", "Version", RyujinxInstallFolder & "\RyujinxConfig.ini")
+            RyujinxBranch = GetIni("Ryujinx", "Branch", RyujinxInstallFolder & "\RyujinxConfig.ini")
+            If Left(RyujinxBranch, 3) = "LDN" Then
+                Images(0).Picture = frmRyujinxInstaller.ImageList2.ListImages(2).Picture
+                Unload frmRyujinxInstaller
+            Else
+                Images(0).Picture = frmRyujinxInstaller.ImageList2.ListImages(1).Picture
+                Unload frmRyujinxInstaller
+            End If
+            RyujinxFirmware = GetIni("Ryujinx", "Firmware", RyujinxInstallFolder & "\RyujinxConfig.ini")
+            Labels(0).Caption = "模拟器版本：" & RyujinxBranch
+            Labels(0).Caption = Labels(0).Caption & " " & RyujinxVersion
+            Labels(1).Caption = "固件版本：" & RyujinxFirmware
+            RyujinxCustomDataFolder = GetIni("Ryujinx", "CustomDataFolder", RyujinxInstallFolder & "\RyujinxConfig.ini")
+            If RyujinxCustomDataFolder <> "False" Then
+                Labels(2).Visible = True
+                Labels(2).Caption = "数据文件夹：" & RyujinxCustomDataFolder
+            End If
+            DoEvents
         End If
-        RyujinxFirmware = GetIni("Ryujinx", "Firmware", RyujinxInstallFolder & "\RyujinxConfig.ini")
-        Labels(0).Caption = "模拟器版本：" & RyujinxBranch
-        Labels(0).Caption = Labels(0).Caption & " " & RyujinxVersion
-        Labels(1).Caption = "固件版本：" & RyujinxFirmware
-        RyujinxCustomDataFolder = GetIni("Ryujinx", "CustomDataFolder", RyujinxInstallFolder & "\RyujinxConfig.ini")
-        If RyujinxCustomDataFolder <> "False" Then
-            Labels(2).Visible = True
-            Labels(2).Caption = "数据文件夹：" & RyujinxCustomDataFolder
-        End If
-        DoEvents
     End If
-End If
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-frmMain.Show
+    frmMain.Show
 End Sub
 
 
 Private Sub Form_Initialize()
-InitCommonControls
+    InitCommonControls
 End Sub

@@ -201,128 +201,128 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Sub Form_Activate()
-Labels(5).Alignment = 1
-Labels(5).Caption = "2021-2022 是一刀斩哒" & vbCrLf & "版本 " & Version
-If FirstActivate = False Then
-    If AutoCheckForUpdate Then
-        CheckUpdate (True)
-        FirstActivate = True
+    Labels(5).Alignment = 1
+    Labels(5).Caption = "2021-2022 是一刀斩哒" & vbCrLf & "版本 " & Version
+    If FirstActivate = False Then
+        If AutoCheckForUpdate Then
+            CheckUpdate (True)
+            FirstActivate = True
+        End If
     End If
-End If
 End Sub
 
 Private Sub Form_Initialize()
-InitCommonControls
-'加载配置
-ConfigFileVersion = ""
-If CheckFileExists(App.Path & "\Config.Defaults.ini") = False And CheckFileExists(App.Path & "\Config.ini") = False Then
-    MsgBox "配置文件不存在，程序无法启动！", vbCritical
-End If
-If CheckFileExists(App.Path & "\Config.Defaults.ini") = True And CheckFileExists(App.Path & "\Config.ini") = False Then
-'创建默认配置
-    Name App.Path & "\Config.Defaults.ini" As App.Path & "\Config.ini"
-End If
-YuzuInstallFolder = GetIni("Folder", "YuzuInstallFolder", App.Path & "\Config.ini")
-RyujinxInstallFolder = GetIni("Folder", "RyujinxInstallFolder", App.Path & "\Config.ini")
-CloudFlareReverseProxyUrl = GetIni("Network", "CloudFlareReverseProxyUrl", App.Path & "\Config.ini")
-DownloadSource = GetIni("Network", "DownloadSource", App.Path & "\Config.ini")
-AliyundriveDomain = GetIni("Network", "AliyundriveDomain", App.Path & "\Config.ini")
+    InitCommonControls
+    '加载配置
+    ConfigFileVersion = ""
+    If CheckFileExists(App.Path & "\Config.Defaults.ini") = False And CheckFileExists(App.Path & "\Config.ini") = False Then
+        MsgBox "配置文件不存在，程序无法启动！", vbCritical
+    End If
+    If CheckFileExists(App.Path & "\Config.Defaults.ini") = True And CheckFileExists(App.Path & "\Config.ini") = False Then
+        '创建默认配置
+        Name App.Path & "\Config.Defaults.ini" As App.Path & "\Config.ini"
+    End If
+    YuzuInstallFolder = GetIni("Folder", "YuzuInstallFolder", App.Path & "\Config.ini")
+    RyujinxInstallFolder = GetIni("Folder", "RyujinxInstallFolder", App.Path & "\Config.ini")
+    CloudFlareReverseProxyUrl = GetIni("Network", "CloudFlareReverseProxyUrl", App.Path & "\Config.ini")
+    DownloadSource = GetIni("Network", "DownloadSource", App.Path & "\Config.ini")
+    AliyundriveDomain = GetIni("Network", "AliyundriveDomain", App.Path & "\Config.ini")
     If AliyundriveDomain = "yidaozhan-pan-yidaozhanya.vercel.app" Then
-    'v3配置文件 懒得升级了
+        'v3配置文件 懒得升级了
         AliyundriveDomain = "nsemuhelper.herokuapp.com"
     End If
-ConfigFileVersion = GetIni("Tool", "ConfigFileVersion", App.Path & "\Config.ini")
-If Left(GetIni("Network", "AlwaysUseCloudFlare", App.Path & "\Config.ini"), 4) = "True" Then
-    AlwaysUseCloudFlare = True
-Else
-    AlwaysUseCloudFlare = False
-End If
-If Left(GetIni("Tool", "AutoCheckForUpdate", App.Path & "\Config.ini"), 4) = "True" Then
-    AutoCheckForUpdate = True
-Else
-    AutoCheckForUpdate = False
-End If
-If ConfigFileVersion <> InternalConfigFileVersion Then
-    If ConfigFileVersion = "" Then
-        MsgBox "本次更新升级了配置文件，你需要重新打开程序，之后重新设置 Yuzu 和 Ryujinx 的路径。", vbExclamation
-        WriteIni "Tool", "ConfigFileVersion", "v2", App.Path & "\Config.ini"
-        WriteIni "Folder", "YuzuInstallFolder", "D:\Yuzu", App.Path & "\Config.ini"
-        WriteIni "Folder", "RyujinxInstallFolder", "D:\Ryujinx", App.Path & "\Config.ini"
-        End
+    ConfigFileVersion = GetIni("Tool", "ConfigFileVersion", App.Path & "\Config.ini")
+    If Left(GetIni("Network", "AlwaysUseCloudFlare", App.Path & "\Config.ini"), 4) = "True" Then
+        AlwaysUseCloudFlare = True
+    Else
+        AlwaysUseCloudFlare = False
     End If
-    If ConfigFileVersion = "v2" Then
-        MsgBox "本次更新升级了配置文件，你需要重新打开程序。", vbExclamation
-        WriteIni "Tool", "ConfigFileVersion", "v3", App.Path & "\Config.ini"
-        WriteIni "Network", "CloudFlareReverseProxyUrl", "https://rp.ydz1.gq", App.Path & "\Config.ini"
-        End
+    If Left(GetIni("Tool", "AutoCheckForUpdate", App.Path & "\Config.ini"), 4) = "True" Then
+        AutoCheckForUpdate = True
+    Else
+        AutoCheckForUpdate = False
     End If
-End If
+    If ConfigFileVersion <> InternalConfigFileVersion Then
+        If ConfigFileVersion = "" Then
+            MsgBox "本次更新升级了配置文件，你需要重新打开程序，之后重新设置 Yuzu 和 Ryujinx 的路径。", vbExclamation
+            WriteIni "Tool", "ConfigFileVersion", "v2", App.Path & "\Config.ini"
+            WriteIni "Folder", "YuzuInstallFolder", "D:\Yuzu", App.Path & "\Config.ini"
+            WriteIni "Folder", "RyujinxInstallFolder", "D:\Ryujinx", App.Path & "\Config.ini"
+            End
+        End If
+        If ConfigFileVersion = "v2" Then
+            MsgBox "本次更新升级了配置文件，你需要重新打开程序。", vbExclamation
+            WriteIni "Tool", "ConfigFileVersion", "v3", App.Path & "\Config.ini"
+            WriteIni "Network", "CloudFlareReverseProxyUrl", "https://rp.ydz1.gq", App.Path & "\Config.ini"
+            End
+        End If
+    End If
 End Sub
 
 Private Sub Form_Load()
 '窗口相关
-Me.Caption = "NS模拟器助手 " & Version
-Labels(6) = "即柚子模拟器" & vbCrLf & "全速畅玩大部分游戏"
-Labels(7) = "即龙神模拟器" & vbCrLf & "兼容性好且功能强大"
+    Me.Caption = "NS模拟器助手 " & Version
+    Labels(6) = "即柚子模拟器" & vbCrLf & "全速畅玩大部分游戏"
+    Labels(7) = "即龙神模拟器" & vbCrLf & "兼容性好且功能强大"
 End Sub
 
 Private Sub Form_Terminate()
-End
+    End
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-End
+    End
 End Sub
 
-Private Sub Images_Click(Index As Integer)
-Dim PopMsgBox As Integer
-'图片按钮被点击
-If Index = 2 Then
-    frmConfig.Show
-Else
-    If Index = 0 Then
-        'Yuzu
-        frmManage.IsYuzu = True
-        If CheckFileExists(YuzuInstallFolder & "\yuzu.exe") = False Then
-            If YuzuInstallFolder = "D:\Yuzu" Then
-                PopMsgBox = MsgBox("在默认的安装位置 D:\Yuzu 中没有找到 Yuzu 模拟器。" & vbCrLf & "点“是”以在该位置安装模拟器，" & vbCrLf & "你也可以在主界面的设置中选择现有的模拟器位置，" & "或者从 Yuzu Tool 4.6 导入。", vbYesNo, "Yuzu 未找到")
-            Else
-                PopMsgBox = MsgBox("在你选择的安装位置 " & YuzuInstallFolder & " 中没有找到 Yuzu 模拟器。" & vbCrLf & "点 “是” 以在该位置安装模拟器，" & vbCrLf & "也可以在主界面的设置中选择现有的模拟器位置，" & "或者从 Yuzu Tool 4.6 导入。", vbYesNo, "Yuzu 未找到")
-            End If
-            If PopMsgBox = vbYes Then
-                InstallMode = 1
-                frmYuzuInstaller.Show
-                Me.Hide
-            End If
-        Else
-            Load frmManage
-            frmManage.Show
-            Me.Hide
-        End If
+Private Sub Images_Click(index As Integer)
+    Dim PopMsgBox As Integer
+    '图片按钮被点击
+    If index = 2 Then
+        frmConfig.Show
     Else
-        'Ryujinx
-        frmManage.IsYuzu = False
-        If CheckFileExists(RyujinxInstallFolder & "\Ryujinx.exe") = False Then
-            If RyujinxInstallFolder = "D:\Ryujinx" Then
-                PopMsgBox = MsgBox("在默认的安装位置 D:\Ryujinx 中没有找到 Ryujinx 模拟器。" & vbCrLf & "点“是”以在默认位置安装模拟器，" & vbCrLf & "你也可以在主界面的设置中选择现有的模拟器位置。", vbYesNo, "Ryujinx 未找到")
+        If index = 0 Then
+            'Yuzu
+            frmManage.IsYuzu = True
+            If CheckFileExists(YuzuInstallFolder & "\yuzu.exe") = False Then
+                If YuzuInstallFolder = "D:\Yuzu" Then
+                    PopMsgBox = MsgBox("在默认的安装位置 D:\Yuzu 中没有找到 Yuzu 模拟器。" & vbCrLf & "点“是”以在该位置安装模拟器，" & vbCrLf & "你也可以在主界面的设置中选择现有的模拟器位置，" & "或者从 Yuzu Tool 4.6 导入。", vbYesNo, "Yuzu 未找到")
+                Else
+                    PopMsgBox = MsgBox("在你选择的安装位置 " & YuzuInstallFolder & " 中没有找到 Yuzu 模拟器。" & vbCrLf & "点 “是” 以在该位置安装模拟器，" & vbCrLf & "也可以在主界面的设置中选择现有的模拟器位置，" & "或者从 Yuzu Tool 4.6 导入。", vbYesNo, "Yuzu 未找到")
+                End If
+                If PopMsgBox = vbYes Then
+                    InstallMode = 1
+                    frmYuzuInstaller.Show
+                    Me.Hide
+                End If
             Else
-                PopMsgBox = MsgBox("在你选择的安装位置 " & RyujinxInstallFolder & " 中没有找到 Ryujinx 模拟器。" & vbCrLf & "点 “是” 以在该位置安装模拟器，" & vbCrLf & "也可以在主界面的设置中选择现有的模拟器位置。", vbYesNo, "Ryujinx 未找到")
-            End If
-            If PopMsgBox = vbYes Then
-                InstallMode = 1
-                frmRyujinxInstaller.Show
+                Load frmManage
+                frmManage.Show
                 Me.Hide
             End If
         Else
-            Load frmManage
-            frmManage.Show
-            Me.Hide
+            'Ryujinx
+            frmManage.IsYuzu = False
+            If CheckFileExists(RyujinxInstallFolder & "\Ryujinx.exe") = False Then
+                If RyujinxInstallFolder = "D:\Ryujinx" Then
+                    PopMsgBox = MsgBox("在默认的安装位置 D:\Ryujinx 中没有找到 Ryujinx 模拟器。" & vbCrLf & "点“是”以在默认位置安装模拟器，" & vbCrLf & "你也可以在主界面的设置中选择现有的模拟器位置。", vbYesNo, "Ryujinx 未找到")
+                Else
+                    PopMsgBox = MsgBox("在你选择的安装位置 " & RyujinxInstallFolder & " 中没有找到 Ryujinx 模拟器。" & vbCrLf & "点 “是” 以在该位置安装模拟器，" & vbCrLf & "也可以在主界面的设置中选择现有的模拟器位置。", vbYesNo, "Ryujinx 未找到")
+                End If
+                If PopMsgBox = vbYes Then
+                    InstallMode = 1
+                    frmRyujinxInstaller.Show
+                    Me.Hide
+                End If
+            Else
+                Load frmManage
+                frmManage.Show
+                Me.Hide
+            End If
         End If
     End If
-End If
 End Sub
 
-Private Sub Labels_Click(Index As Integer)
-If Index = 0 Then Images_Click (0)
-If Index = 1 Then Images_Click (1)
+Private Sub Labels_Click(index As Integer)
+    If index = 0 Then Images_Click (0)
+    If index = 1 Then Images_Click (1)
 End Sub

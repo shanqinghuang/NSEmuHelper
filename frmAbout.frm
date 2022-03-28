@@ -222,23 +222,23 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private Sub cmdUpdate_Click()
-CheckUpdate False
+    CheckUpdate False
 End Sub
 
 Private Sub Command2_Click()
-  Unload Me
+    Unload Me
 End Sub
 
 Private Sub Command1_Click()
-MsgBox "-- NS模拟器助手 谢志 --" & vbCrLf & vbCrLf & _
-    "本应用程序使用的开源项目有：" & vbCrLf & _
-    "- VBJSON By Michael Glaser" & vbCrLf & "  http://www.ediy.co.nz/vbjson-json-parser-library-in-vb6-xidc55680.html" & vbCrLf & _
-    "- EnumWindows v2 By Jenova" & vbCrLf & "  https://www.vbforums.com/showthread.php?445492-EnumWindows-Example" & vbCrLf & vbCrLf & _
-    "本项目服务器使用的开源项目有：" & vbCrLf & _
-    "- OneManager-php by 逸笙" & vbCrLf & "  https://github.com/qkqpttgf/OneManager-php" & vbCrLf & _
-    "- 阿里云盘 CLI By wxy1343" & vbCrLf & "  https://github.com/wxy1343/aliyunpan" & vbCrLf & _
-    vbCrLf & vbCrLf & _
-    "本项目以 MIT 许可证开源，你可以在 https://github.com/YidaozhanYa/NSEmuHelper 找到源码。"
+    MsgBox "-- NS模拟器助手 谢志 --" & vbCrLf & vbCrLf & _
+           "本应用程序使用的开源项目有：" & vbCrLf & _
+           "- VBJSON By Michael Glaser" & vbCrLf & "  http://www.ediy.co.nz/vbjson-json-parser-library-in-vb6-xidc55680.html" & vbCrLf & _
+           "- EnumWindows v2 By Jenova" & vbCrLf & "  https://www.vbforums.com/showthread.php?445492-EnumWindows-Example" & vbCrLf & vbCrLf & _
+           "本项目服务器使用的开源项目有：" & vbCrLf & _
+           "- OneManager-php by 逸笙" & vbCrLf & "  https://github.com/qkqpttgf/OneManager-php" & vbCrLf & _
+           "- 阿里云盘 CLI By wxy1343" & vbCrLf & "  https://github.com/wxy1343/aliyunpan" & vbCrLf & _
+           vbCrLf & vbCrLf & _
+           "本项目以 MIT 许可证开源，你可以在 https://github.com/YidaozhanYa/NSEmuHelper 找到源码。"
 End Sub
 
 Private Sub Form_Load()
@@ -248,8 +248,8 @@ Private Sub Form_Load()
     lblTitle.Caption = App.Title
 End Sub
 
-Private Sub Label_Click(Index As Integer)
-Select Case Index
+Private Sub Label_Click(index As Integer)
+    Select Case index
     Case 0
         OpenLink "https://space.bilibili.com/485832788"
     Case 1
@@ -260,6 +260,6 @@ Select Case Index
         MsgBox "867575912", vbOKOnly, "群号已复制到剪贴板。"
         Clipboard.SetText "867575912"
         Unload Me
-End Select
+    End Select
 End Sub
 
