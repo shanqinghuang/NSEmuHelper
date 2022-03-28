@@ -1,0 +1,17 @@
+' Gambas class file
+
+
+Public Sub Form_Open()
+    Me.Title = "NS 模拟器助手 - " & Application.version
+    '加载配置
+    Gl.YuzuInstallFolder = Settings["Folder/YuzuInstallFolder", "~/.local/share/nsemuhelper/yuzu"]
+    Gl.RyujinxInstallFolder = Settings["Folder/RyujinxInstallFolder", "~/.local/share/nsemuhelper/ryujinx"]
+    Gl.AlwaysUseCloudFlare = Settings["Network/AlwaysUseCloudFlare", 0]
+    Gl.CloudFlareReverseProxyUrl = Settings["Network/CloudFlareReverseProxyUrl", "https://rp.ydz1.gq"]
+    Gl.DownloadSource = Settings["Network/DownloadSource", "Aliyundrive"]
+    Gl.AliyundriveDomain = Settings["Network/AliyundriveDomain", "nsemuhelper.herokuapp.com"]
+    Gl.AutoCheckForUpdate = Settings["Tool/AutoCheckForUpdate", 0]
+    '界面
+    Label3.Text &= " " & Application.version
+    
+End

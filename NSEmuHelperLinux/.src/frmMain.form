@@ -1,0 +1,65 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,47,49)
+  Background = &HFFFFFF&
+  Icon = Picture["Resources/yuzu.svg"]
+  Resizable = False
+  { lblMain Label
+    MoveScaled(1,1,45,8)
+    Font = Font["+5"]
+    Alignment = Align.Center
+    Text = ("NS 模拟器助手 For Linux")
+  }
+  { lblMain2 Label
+    MoveScaled(1,8,45,5)
+    Foreground = &HA0A0A0&
+    Alignment = Align.Top
+    Text = ("高效全能的 NS 模拟器辅助工具")
+  }
+  { lblMain3 Label
+    MoveScaled(1,13,45,4)
+    Alignment = Align.Center
+    Text = ("请选择要管理的模拟器")
+  }
+  { picYuzu PictureBox
+    MoveScaled(12,19,6,7)
+    Picture = Picture.Load("Resources/yuzu.png")
+    Stretch = True
+  }
+  { picRyujinx PictureBox
+    MoveScaled(12,30,6,6)
+    Picture = Picture.Load("Resources/ryujinx.gif")
+    Stretch = True
+  }
+  { lblYuzu Label
+    MoveScaled(19,18,19,4)
+    Font = Font["+3"]
+    Text = ("Yuzu")
+  }
+  { Label1 Label
+    MoveScaled(19,21,17,6)
+    Text = ("即柚子模拟器\n全速畅玩大部分游戏")
+  }
+  { Label2 Label
+    MoveScaled(19,32,17,6)
+    Text = ("即龙神模拟器\n兼容性好且功能强大")
+  }
+  { lblRyujinx Label
+    MoveScaled(19,29,19,4)
+    Font = Font["+3"]
+    Text = ("Ryujinx")
+  }
+  { picConfig PictureBox
+    MoveScaled(1,44,4,4)
+    ToolTip = ("设置")
+    Picture = Picture.Load("Resources/cfg.gif")
+    Stretch = True
+  }
+  { Label3 Label
+    MoveScaled(26,41,20,7)
+    Foreground = &H808080&
+    Alignment = Align.BottomRight
+    Text = ("2022 是一刀斩哒\n版本")
+  }
+}
