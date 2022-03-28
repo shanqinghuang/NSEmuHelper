@@ -7,3 +7,19 @@ Public CloudFlareReverseProxyUrl As String
 Public DownloadSource As String
 Public AliyundriveDomain As String
 Public AutoCheckForUpdate As Short
+
+Public TempBrowse As String
+
+
+Public Function OpenFileChooseDialog() As String
+    TempBrowse = ""
+    frmFileChooser.show
+    Do While TempBrowse = ""
+        Wait 0.01
+    Loop
+    If TempBrowse = "Cancel" Then 
+        Return ""
+    Else
+        Return TempBrowse
+    Endif
+End

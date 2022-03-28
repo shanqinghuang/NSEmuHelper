@@ -2,7 +2,8 @@
 
 
 Public Sub Form_Open()
-    Me.Title = "NS 模拟器助手 - " & Application.version
+Me.hide
+    Me.Title = "NS 模拟器助手 " & Application.version
     '加载配置
     Gl.YuzuInstallFolder = Settings["Folder/YuzuInstallFolder", "~/.local/share/nsemuhelper/yuzu"]
     Gl.RyujinxInstallFolder = Settings["Folder/RyujinxInstallFolder", "~/.local/share/nsemuhelper/ryujinx"]
@@ -13,5 +14,12 @@ Public Sub Form_Open()
     Gl.AutoCheckForUpdate = Settings["Tool/AutoCheckForUpdate", 0]
     '界面
     Label3.Text &= " " & Application.version
+    If Not Exist("/usr/bin/gamemoderun") Then Message.Warning("建议您先安装 gamemode 包，使用它可以提高 NS 模拟器的运行效率。")
+    Me.show
     
+End
+
+Public Sub picConfig_MouseDown()
+    Me.hide
+    frmConfig.show
 End

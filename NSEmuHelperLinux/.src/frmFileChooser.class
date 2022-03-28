@@ -1,0 +1,21 @@
+' Gambas class file
+
+
+Public Sub Form_Open()
+    Me.Title = "选择文件"
+    FileChooser1.ShowDirectory = True
+    FileChooser1.ShowFile = False
+End
+
+
+Public Sub FileChooser1_Cancel()
+gl.TempBrowse = "Cancel"
+    Me.close
+End
+
+
+Public Sub FileChooser1_Activate()
+    gl.TempBrowse = (FileChooser1.SelectedPath)
+    Me.close
+End
+

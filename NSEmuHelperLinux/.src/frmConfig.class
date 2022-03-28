@@ -1,0 +1,26 @@
+' Gambas class file
+
+
+Public Sub Form_Open()
+    Me.Title = "NS 模拟器助手 " & Application.version & " - " & "设置"
+    Me.Background = Color.white
+    '加载配置
+    txtYuzu.Text = gl.yuzuinstallfolder
+    txtRyujinx.Text = gl.ryujinxinstallfolder
+End
+
+Public Sub Form_Close()
+    frmMain.show
+End
+
+Public Sub btnBrowseYuzu_Click()
+    Dim tempVal As String
+    tempval = (gl.OpenFileChooseDialog())
+    If tempval <> "" Then txtYuzu.Text = tempval
+End
+
+Public Sub btnBrowseRyujinx_Click()
+    Dim tempVal As String
+    tempval = (gl.OpenFileChooseDialog())
+    If tempval <> "" Then txtRyujinx.Text = tempval
+End
