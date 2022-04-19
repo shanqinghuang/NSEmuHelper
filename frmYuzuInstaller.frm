@@ -489,7 +489,7 @@ Private Sub Step1()
     ImageCombo1.ComboItems.Add 1, "EA", "预先测试版", 1
     ImageCombo1.ComboItems.Add 2, "Mainline", "主线版", 2
     ImageCombo1.ComboItems(1).Selected = True
-    If DownloadSource = "Github" Then
+    If DownloadSource = "GitHub" Then
         txtVersion.Visible = True
         ComboVersion.Visible = False
         txtVersion.Text = GetYuzuVersion
@@ -514,7 +514,7 @@ End Sub
 
 Private Sub Step2()
     On Error GoTo Step2Error
-    If DownloadSource = "Github" Then
+    If DownloadSource = "GitHub" Then
         If txtVersion.Text = "加载中 ..." Then Exit Sub
         iVersion = txtVersion.Text
     Else
@@ -592,7 +592,7 @@ Private Sub Step3()
     cbFirmware.Clear
     cbFirmware.Text = "加载中 ..."
     Dim FirmwareVersionArr() As String
-    FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+    FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
     Dim i As Integer
     For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
         cbFirmware.AddItem FirmwareVersionArr(i)
@@ -601,6 +601,8 @@ Private Sub Step3()
 End Sub
 
 Private Sub Step4()
+    Dim ReDownloadCount As Integer
+    ReDownloadCount = 0
     Dim fso As Object, folder As Object
     Set fso = CreateObject("scripting.filesystemobject")    '创建FSO对象
     'dependencies
@@ -618,8 +620,8 @@ Private Sub Step4()
         Else
             iFirmwareOnline = True
             iFirmwareVersion = cbFirmware.Text
-            If DownloadSource = "Github" Then
-                iFirmwarePath = CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
+            If DownloadSource = "GitHub" Then
+                iFirmwarePath = CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
             Else
                 iFirmwarePath = "https://" & AliyundriveDomain & "/NSFirmwareMirror/Firmware_" & cbFirmware.Text & ".zip"
             End If
@@ -627,7 +629,7 @@ Private Sub Step4()
             'iFirmwarePath = "https://download.sydzy.workers.dev/api/download?url=https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
         End If
     ElseIf InstallMode = 2 Then
-        If DownloadSource = "Github" Then
+        If DownloadSource = "GitHub" Then
             If txtVersion.Text = "加载中 ..." Then Exit Sub
             iVersion = txtVersion.Text
         Else
@@ -688,15 +690,15 @@ Private Sub Step4()
     Labels(5).Caption = ""
     iVersion = CStr(CInt(iVersion))
     Dim YuzuUrl As String
-    If DownloadSource = "Github" Then
+    If DownloadSource = "GitHub" Then
         If iIsEarlyAccess Then
             YuzuUrl = "https://github.com/PineappleEA/pineapple-src/releases/download/EA-" & iVersion & "/Windows-Yuzu-EA-" & iVersion & ".7z"
         Else
             '主线
             Dim TmpArr() As String
-            TmpArr = Split(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases"), Chr(34), ""), ",")
+            TmpArr = Split(Replace(GetDataStr2(CloudflareReverseProxyUrl & "/https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases"), Chr(34), ""), ",")
             If Err.Number = 9 Then
-                MsgBox "运行时错误 (9): 下标越界，可能是你的网络对 CloudFlare 的通信有问题。"
+                MsgBox "运行时错误 (9): 下标越界，可能是你的网络对 Cloudflare 的通信有问题。"
                 End
             End If
             Dim i As Integer, j As Integer
@@ -721,12 +723,12 @@ Private Sub Step4()
     End If
 
     If CheckFileExists(YuzuInstallFolder & "\Yuzu.7z") = False Then
-        If DownloadSource = "Github" Then
-            If AlwaysUseCloudFlare = False Then
+        If DownloadSource = "GitHub" Then
+            If AlwaysUseCloudflare = False Then
                 DoEvents
                 'github连通性测试
-                Labels(4).Caption = "正在测试 Github 连通性 ..."
-                Labels(5).Caption = "如果 Github 不能连通，就使用 CloudFlare Workers。"
+                Labels(4).Caption = "正在测试 GitHub 连通性 ..."
+                Labels(5).Caption = "如果 GitHub 不能连通，就使用 Cloudflare Workers。"
                 Dim Tmp As String
                 Tmp = "timeout"
                 Inet1.Cancel
@@ -735,19 +737,19 @@ Private Sub Step4()
                 Inet1.RequestTimeout = 10
                 Tmp = Inet1.OpenURL
                 If Err.Number = 35761 Then
-                    Labels(4).Caption = "正在下载模拟器，使用 CloudFlare Workers ..."
-                    YuzuUrl = CloudFlareReverseProxyUrl & "\" & YuzuUrl
+                    Labels(4).Caption = "正在下载模拟器，使用 Cloudflare Workers ..."
+                    YuzuUrl = CloudflareReverseProxyUrl & "\" & YuzuUrl
                 Else
                     If InStr(Tmp, "OpenSearchDescription") = 2 Then
-                        Labels(4).Caption = "正在下载模拟器，使用 Github ..."
+                        Labels(4).Caption = "正在下载模拟器，使用 GitHub ..."
                     Else
-                        Labels(4).Caption = "正在下载模拟器，使用 CloudFlare Workers ..."
-                        YuzuUrl = CloudFlareReverseProxyUrl & "\" & YuzuUrl
+                        Labels(4).Caption = "正在下载模拟器，使用 Cloudflare Workers ..."
+                        YuzuUrl = CloudflareReverseProxyUrl & "\" & YuzuUrl
                     End If
                 End If
                 Labels(5).Caption = "准备下载 ..."
             Else
-                YuzuUrl = CloudFlareReverseProxyUrl & "\" & YuzuUrl
+                YuzuUrl = CloudflareReverseProxyUrl & "\" & YuzuUrl
             End If
         Else
             Labels(4).Caption = "正在下载模拟器 ..."
@@ -773,13 +775,19 @@ ReDownload:
         Sleep 2000
         DoEvents
         PBarUnload 1
-        If CheckFileExists(YuzuInstallFolder & "\Yuzu.7z") = False Then
-            Sleep 1000
-            Sleep 1000
-            Sleep 1000
-            Sleep 1000
-            Sleep 1000
-            GoTo ReDownload
+        If CheckFileExists(YuzuInstallFolder & "\Yuzu.7z") = False Then    '文件不存在就火速（）重下
+            ReDownloadCount = ReDownloadCount + 1
+            If ReDownloadCount < 5 Then
+                Sleep 1000
+                Sleep 1000
+                Sleep 1000
+                Sleep 1000
+                Sleep 1000
+                GoTo ReDownload
+            Else
+                MsgBox "下载失败！请检查你的互联网连接和 DNS。", vbCritical
+                End
+            End If
         End If
     End If
 
@@ -787,6 +795,7 @@ ReDownload:
 
 
 FirmwareInstallation:
+    ReDownloadCount = 0
     If InstallMode = 1 Or InstallMode = 3 Then
         '下载固件
         DoEvents
@@ -813,12 +822,18 @@ ReDownload2:
                 PBarUnload 1
                 DoEvents
                 If CheckFileExists(YuzuInstallFolder & "\Firmware.zip") = False Then
-                    Sleep 1000
-                    Sleep 1000
-                    Sleep 1000
-                    Sleep 1000
-                    Sleep 1000
-                    GoTo ReDownload2
+                    ReDownloadCount = ReDownloadCount + 1
+                    If ReDownloadCount < 5 Then
+                        Sleep 1000
+                        Sleep 1000
+                        Sleep 1000
+                        Sleep 1000
+                        Sleep 1000
+                        GoTo ReDownload2
+                    Else
+                        MsgBox "下载失败！请检查你的互联网连接和 DNS。", vbCritical
+                        End
+                    End If
                 End If
             Else
                 Labels(4).Caption = "正在加载 ..."
@@ -1074,7 +1089,7 @@ Private Sub opFirmware_Click(index As Integer)
         cbFirmware.Top = 3120
         cbFirmware.Clear
         cbFirmware.Text = "加载中 ..."
-        FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+        FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
         For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
             cbFirmware.AddItem FirmwareVersionArr(i)
         Next
@@ -1111,7 +1126,7 @@ Private Sub ImageCombo1_Click()
     Dim YuzuVersion() As String
     Dim i As Integer
     If ImageCombo1.SelectedItem.index = 1 Then
-        If DownloadSource = "Github" Then
+        If DownloadSource = "GitHub" Then
             txtVersion.SetFocus
             txtVersion.Text = "加载中 ..."
             txtVersion.Text = GetYuzuVersion
@@ -1125,7 +1140,7 @@ Private Sub ImageCombo1_Click()
             Next
         End If
     Else
-        If DownloadSource = "Github" Then
+        If DownloadSource = "GitHub" Then
             txtVersion.SetFocus
             txtVersion.Text = "加载中 ..."
             txtVersion.Text = GetYuzuMLVersion

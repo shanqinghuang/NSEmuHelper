@@ -224,7 +224,7 @@ Private Sub Form_Initialize()
     End If
     YuzuInstallFolder = GetIni("Folder", "YuzuInstallFolder", App.Path & "\Config.ini")
     RyujinxInstallFolder = GetIni("Folder", "RyujinxInstallFolder", App.Path & "\Config.ini")
-    CloudFlareReverseProxyUrl = GetIni("Network", "CloudFlareReverseProxyUrl", App.Path & "\Config.ini")
+    CloudflareReverseProxyUrl = GetIni("Network", "CloudflareReverseProxyUrl", App.Path & "\Config.ini")
     DownloadSource = GetIni("Network", "DownloadSource", App.Path & "\Config.ini")
     AliyundriveDomain = GetIni("Network", "AliyundriveDomain", App.Path & "\Config.ini")
     If AliyundriveDomain = "yidaozhan-pan-yidaozhanya.vercel.app" Then
@@ -232,10 +232,10 @@ Private Sub Form_Initialize()
         AliyundriveDomain = "nsemuhelper.herokuapp.com"
     End If
     ConfigFileVersion = GetIni("Tool", "ConfigFileVersion", App.Path & "\Config.ini")
-    If Left(GetIni("Network", "AlwaysUseCloudFlare", App.Path & "\Config.ini"), 4) = "True" Then
-        AlwaysUseCloudFlare = True
+    If Left(GetIni("Network", "AlwaysUseCloudflare", App.Path & "\Config.ini"), 4) = "True" Then
+        AlwaysUseCloudflare = True
     Else
-        AlwaysUseCloudFlare = False
+        AlwaysUseCloudflare = False
     End If
     If Left(GetIni("Tool", "AutoCheckForUpdate", App.Path & "\Config.ini"), 4) = "True" Then
         AutoCheckForUpdate = True
@@ -253,7 +253,7 @@ Private Sub Form_Initialize()
         If ConfigFileVersion = "v2" Then
             MsgBox "本次更新升级了配置文件，你需要重新打开程序。", vbExclamation
             WriteIni "Tool", "ConfigFileVersion", "v3", App.Path & "\Config.ini"
-            WriteIni "Network", "CloudFlareReverseProxyUrl", "https://rp.ydz1.gq", App.Path & "\Config.ini"
+            WriteIni "Network", "CloudflareReverseProxyUrl", "https://rp.ydz1.gq", App.Path & "\Config.ini"
             End
         End If
     End If

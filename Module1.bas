@@ -10,16 +10,16 @@ Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 
 '公共变量常量
-Public Const Version As String = "V1.3.6"
-Public Const InternalVersion As String = "v1.3.6"
+Public Const Version As String = "V1.3.7"
+Public Const InternalVersion As String = "v1.3.7"
 Public Const InternalConfigFileVersion As String = "v3"
 
 
 '配置设置
-Public YuzuInstallFolder As String, RyujinxInstallFolder As String, AlwaysUseCloudFlare As Boolean, CloudFlareReverseProxyUrl As String, DownloadSource As String
+Public YuzuInstallFolder As String, RyujinxInstallFolder As String, AlwaysUseCloudflare As Boolean, CloudflareReverseProxyUrl As String, DownloadSource As String
 Attribute RyujinxInstallFolder.VB_VarUserMemId = 1073741824
-Attribute AlwaysUseCloudFlare.VB_VarUserMemId = 1073741824
-Attribute CloudFlareReverseProxyUrl.VB_VarUserMemId = 1073741824
+Attribute AlwaysUseCloudflare.VB_VarUserMemId = 1073741824
+Attribute CloudflareReverseProxyUrl.VB_VarUserMemId = 1073741824
 Attribute DownloadSource.VB_VarUserMemId = 1073741824
 Public YuzuVersion As String, YuzuBranch As String, YuzuFirmware As String, YuzuCustomDataFolder As String
 Attribute YuzuVersion.VB_VarUserMemId = 1073741829
@@ -111,16 +111,16 @@ Public Function GetDataStr2(ByVal Url As String) As String
 'server xhr get 字符串 (GetDataStr 已经弃用)
     On Error GoTo Err:
     Dim XMLHTTP As Object
-    Set XMLHTTP = CreateObject("MSXML2.ServerXMLHTTP.6.0")
+    Set XMLHTTP = CreateObject("MSXML2.ServerXMLHTTP") '创建 xhr 对象
     XMLHTTP.Open "GET", Url, True
-    XMLHTTP.setRequestHeader "User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36"
+    XMLHTTP.setRequestHeader "User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36" '不然某些网站会拒绝下载
     If InStr(Url, "github.com") <> 0 Then XMLHTTP.setRequestHeader "Authorization", "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"    ' github oauth token
     XMLHTTP.send
     XMLHTTP.waitForResponse 10
     If XMLHTTP.Status = 200 Then
         GetDataStr2 = XMLHTTP.responseText
     ElseIf XMLHTTP.Status = 404 Then
-        MsgBox "HTTP错误 404 Not Found" & vbCrLf & "请再次启动助手，在设置中把下载源改为 GitHub CloudFlare。", vbCritical
+        MsgBox "HTTP错误 404 Not Found" & vbCrLf & "请再次启动助手，在设置中把下载源改为 GitHub Cloudflare。", vbCritical
         End
     ElseIf XMLHTTP.Status = 503 Then
         Debug.Print "使用备用下载服务器"
@@ -150,15 +150,15 @@ Public Function GetYuzuVersion() As String
 '获取 Yuzu Early Access 版本号
     On Error GoTo ExitEA
     Dim objJson As Object
-    Set objJson = JSON.parse(GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/pineappleea/pineapple-src/releases"))
+    Set objJson = JSON.parse(GetDataStr2(CloudflareReverseProxyUrl & "/https://api.github.com/repos/pineappleea/pineapple-src/releases"))
     GetYuzuVersion = Replace(objJson(2)("tag_name"), "EA-", "")
     If InStr(GetYuzuVersion, "continuous") Then MsgBox "发生错误，请联系开发者。": End
     Exit Function
 ExitEA:
     If frmYuzuConfig.Visible = False Then
-        MsgBox "Github API 调用超出限制，请等一会重试，或者使用阿里云盘下载源。", vbCritical + vbOKOnly
+        MsgBox "GitHub API 调用超出限制，请等一会重试，或者使用阿里云盘下载源。", vbCritical + vbOKOnly
     Else
-        MsgBox "从 Github 获取版本号失败，请手动输入版本号。", vbCritical + vbOKOnly
+        MsgBox "从 GitHub 获取版本号失败，请手动输入版本号。", vbCritical + vbOKOnly
     End If
     GetYuzuVersion = "错误"
 End Function
@@ -167,14 +167,14 @@ Public Function GetYuzuMLVersion() As String
 '获取 Yuzu 主线版版本号
     On Error GoTo ExitML
     Dim objJson As Object
-    Set objJson = JSON.parse(GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases/latest"))
+    Set objJson = JSON.parse(GetDataStr2(CloudflareReverseProxyUrl & "/https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases/latest"))
     GetYuzuMLVersion = Replace(objJson("tag_name"), "mainline-0-", "")
     Exit Function
 ExitML:
     If frmYuzuConfig.Visible = False Then
-        MsgBox "Github API 调用超出限制，请等一会重试，或者使用阿里云盘下载源。", vbCritical + vbOKOnly
+        MsgBox "GitHub API 调用超出限制，请等一会重试，或者使用阿里云盘下载源。", vbCritical + vbOKOnly
     Else
-        MsgBox "从 Github 获取版本号失败，请手动输入版本号。", vbCritical + vbOKOnly
+        MsgBox "从 GitHub 获取版本号失败，请手动输入版本号。", vbCritical + vbOKOnly
     End If
     GetYuzuMLVersion = "错误"
 End Function
@@ -213,14 +213,14 @@ Public Function GetRyujinxVersion() As String
 '获取 Ryujinx 版本号
     On Error GoTo ExitRyu
     Dim objJson As Object
-    Set objJson = JSON.parse(GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/Ryujinx/release-channel-master/releases/latest"))
+    Set objJson = JSON.parse(GetDataStr2(CloudflareReverseProxyUrl & "/https://api.github.com/repos/Ryujinx/release-channel-master/releases/latest"))
     GetRyujinxVersion = objJson("tag_name")
     Exit Function
 ExitRyu:
     If frmRyujinxConfig.Visible = False Then
-        MsgBox "Github API 调用超出限制，请等一会重试，或者使用阿里云盘下载源。", vbCritical + vbOKOnly
+        MsgBox "GitHub API 调用超出限制，请等一会重试，或者使用阿里云盘下载源。", vbCritical + vbOKOnly
     Else
-        MsgBox "从 Github 获取版本号失败，请手动输入版本号。", vbCritical + vbOKOnly
+        MsgBox "从 GitHub 获取版本号失败，请手动输入版本号。", vbCritical + vbOKOnly
     End If
     GetRyujinxVersion = "错误"
 End Function
@@ -229,16 +229,16 @@ Public Function GetRyujinxCNVersion() As String
 '获取 Ryujinx CN 版本号
     On Error GoTo ExitRyu
     Dim TmpML As String
-    TmpML = GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/YidaozhanYa/RyujinxCN/releases/latest")
+    TmpML = GetDataStr2(CloudflareReverseProxyUrl & "/https://api.github.com/repos/YidaozhanYa/RyujinxCN/releases/latest")
     TmpML = Replace(Replace(TmpML, Chr(34), ""), " ", "")
     TmpML = Filter(Split(TmpML, ","), "tag_name:")(0)
     GetRyujinxCNVersion = Replace(Replace(Replace(TmpML, "tag_name:", ""), vbCrLf, ""), vbLf, "")
     Exit Function
 ExitRyu:
     If frmRyujinxConfig.Visible = False Then
-        MsgBox "Github API 调用超出限制，请等一会重试，或者使用阿里云盘下载源。", vbCritical + vbOKOnly
+        MsgBox "GitHub API 调用超出限制，请等一会重试，或者使用阿里云盘下载源。", vbCritical + vbOKOnly
     Else
-        MsgBox "从 Github 获取版本号失败，请手动输入版本号。", vbCritical + vbOKOnly
+        MsgBox "从 GitHub 获取版本号失败，请手动输入版本号。", vbCritical + vbOKOnly
     End If
     GetRyujinxCNVersion = "错误"
 End Function
@@ -340,7 +340,7 @@ Public Sub CheckUpdate(Slient As Boolean)
 '检查更新
     On Error GoTo ExitUpd
     Dim objJson As Object, qwq As Variant
-    Set objJson = JSON.parse(GetDataStr2(CloudFlareReverseProxyUrl & "/https://api.github.com/repos/YidaozhanYa/NSEmuHelper/releases/latest"))
+    Set objJson = JSON.parse(GetDataStr2(CloudflareReverseProxyUrl & "/https://api.github.com/repos/YidaozhanYa/NSEmuHelper/releases/latest"))
     If objJson("tag_name") <> InternalVersion Then
         '有更新！
         qwq = MsgBox("检测到更新！" & vbCrLf & vbCrLf & "当前版本：" & Version & vbCrLf & "最新版本：" & Replace(CStr(objJson("body")), "##### ", ""), vbOKCancel)
@@ -359,9 +359,9 @@ Public Sub CheckUpdate(Slient As Boolean)
     Exit Sub
 ExitUpd:
     If Slient = False Then
-        MsgBox "检查更新失败，可能是因为本小时 Github API 调用超出限制，请等一会重试。", vbCritical + vbOKOnly
+        MsgBox "检查更新失败，可能是因为本小时 GitHub API 调用超出限制，请等一会重试。", vbCritical + vbOKOnly
     Else
-        MsgBox "检查更新失败，可能是因为你的网络和 CloudFlare 的通信有问题，建议在设置中关闭自动更新。", vbCritical + vbOKOnly
+        MsgBox "检查更新失败，可能是因为你的网络和 Cloudflare 的通信有问题，建议在设置中关闭自动更新。", vbCritical + vbOKOnly
     End If
 End Sub
 

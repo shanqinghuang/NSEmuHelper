@@ -506,7 +506,7 @@ Private Sub Step1()
     ImageCombo1.ComboItems.Add 3, "LDN", "LDN联机版", 2
     ImageCombo1.ComboItems.Add 4, "Vulkan", "Vulkan", 1
     ImageCombo1.ComboItems(1).Selected = True
-    If DownloadSource = "Github" Then
+    If DownloadSource = "GitHub" Then
         txtVersion.Visible = True
         ComboVersion.Visible = False
         txtVersion.Text = GetRyujinxVersion
@@ -532,7 +532,7 @@ End Sub
 Private Sub Step2()
     On Error GoTo Step2Error
     iBranch = ImageCombo1.SelectedItem.Text
-    If DownloadSource = "Github" Then
+    If DownloadSource = "GitHub" Then
         If txtVersion.Text = "加载中 ..." Then Exit Sub
         iVersion = txtVersion.Text
     Else
@@ -602,7 +602,7 @@ Private Sub Step3()
     cbFirmware.Clear
     cbFirmware.Text = "加载中 ..."
     Dim FirmwareVersionArr() As String
-    FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+    FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
     Dim i As Integer
     For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
         cbFirmware.AddItem FirmwareVersionArr(i)
@@ -611,6 +611,7 @@ Private Sub Step3()
 End Sub
 
 Private Sub Step4()
+    Dim ReDownloadCount As Integer
     Dim fso As Object, folder As Object
     Set fso = CreateObject("scripting.filesystemobject")    '创建FSO对象
     'dependencies
@@ -628,8 +629,8 @@ Private Sub Step4()
         Else
             iFirmwareOnline = True
             iFirmwareVersion = cbFirmware.Text
-            If DownloadSource = "Github" Then
-                iFirmwarePath = CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
+            If DownloadSource = "GitHub" Then
+                iFirmwarePath = CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
             Else
                 iFirmwarePath = "https://" & AliyundriveDomain & "/NSFirmwareMirror/Firmware_" & cbFirmware.Text & ".zip"
             End If
@@ -638,7 +639,7 @@ Private Sub Step4()
         End If
     ElseIf InstallMode = 2 Then
         iBranch = ImageCombo1.SelectedItem.Text
-        If DownloadSource = "Github" Then
+        If DownloadSource = "GitHub" Then
             If txtVersion.Text = "加载中 ..." Then Exit Sub
             iVersion = txtVersion.Text
         Else
@@ -686,7 +687,7 @@ Private Sub Step4()
     Select Case iBranch
     Case "主线版"
         '主线
-        If DownloadSource = "Github" Then
+        If DownloadSource = "GitHub" Then
             RyujinxUrl = "https://github.com/Ryujinx/release-channel-master/releases/download/" & iVersion & "/ryujinx-" & iVersion & "-win_x64.zip"
         Else
             RyujinxUrl = "https://" & AliyundriveDomain & "/RyujinxMainlineMirror/ryujinx-" & iVersion & "-win_x64.zip"
@@ -696,14 +697,14 @@ Private Sub Step4()
         RyujinxUrl = "https://" & AliyundriveDomain & "/RyujinxLDNMirror/ryujinx-" & iVersion & "-win_x64.zip"
     Case "中文版"
         '汉化
-        If DownloadSource = "Github" Then
+        If DownloadSource = "GitHub" Then
             RyujinxUrl = "https://github.com/YidaozhanYa/RyujinxCN/releases/download/" & iVersion & "/ryujinx-cn-" & iVersion & "-win_x64.zip"
         Else
             RyujinxUrl = "https://" & AliyundriveDomain & "/RyujinxCNBuilds/ryujinx-cn-" & iVersion & "-win_x64.zip"
         End If
     Case "Vulkan"
         'Vulkan
-        If DownloadSource = "Github" Then
+        If DownloadSource = "GitHub" Then
             RyujinxUrl = "https://github.com/YidaozhanYa/RyujinxCN/releases/download/" & iVersion & "/ryujinx-cn-vulkan-" & iVersion & "-win_x64.zip"
         Else
             RyujinxUrl = "https://" & AliyundriveDomain & "/RyujinxCNVulkanBuilds/ryujinx-cn-vulkan-" & iVersion & "-win_x64.zip"
@@ -712,12 +713,12 @@ Private Sub Step4()
 
     If CheckFileExists(RyujinxInstallFolder & "\Ryujinx.zip") = False Then
         If iBranch <> "LDN联机版" Then
-            If DownloadSource = "Github" Then
-                If AlwaysUseCloudFlare = False Then
+            If DownloadSource = "GitHub" Then
+                If AlwaysUseCloudflare = False Then
                     DoEvents
                     'github连通性测试
-                    Labels(4).Caption = "正在测试 Github 连通性 ..."
-                    Labels(5).Caption = "如果 Github 不能连通，就使用 CloudFlare Workers。"
+                    Labels(4).Caption = "正在测试 GitHub 连通性 ..."
+                    Labels(5).Caption = "如果 GitHub 不能连通，就使用 Cloudflare Workers。"
                     Dim Tmp As String
                     Tmp = "timeout"
                     Inet1.Cancel
@@ -726,19 +727,19 @@ Private Sub Step4()
                     Inet1.RequestTimeout = 10
                     Tmp = Inet1.OpenURL
                     If Err.Number = 35761 Then
-                        Labels(4).Caption = "正在下载模拟器，使用 CloudFlare Workers ..."
-                        RyujinxUrl = CloudFlareReverseProxyUrl & "\" & RyujinxUrl
+                        Labels(4).Caption = "正在下载模拟器，使用 Cloudflare Workers ..."
+                        RyujinxUrl = CloudflareReverseProxyUrl & "\" & RyujinxUrl
                     Else
                         If InStr(Tmp, "OpenSearchDescription") = 2 Then
-                            Labels(4).Caption = "正在下载模拟器，使用 Github ..."
+                            Labels(4).Caption = "正在下载模拟器，使用 GitHub ..."
                         Else
-                            Labels(4).Caption = "正在下载模拟器，使用 CloudFlare Workers ..."
-                            RyujinxUrl = CloudFlareReverseProxyUrl & "\" & RyujinxUrl
+                            Labels(4).Caption = "正在下载模拟器，使用 Cloudflare Workers ..."
+                            RyujinxUrl = CloudflareReverseProxyUrl & "\" & RyujinxUrl
                         End If
                     End If
                     Labels(5).Caption = "准备下载 ..."
                 Else
-                    RyujinxUrl = CloudFlareReverseProxyUrl & "\" & RyujinxUrl
+                    RyujinxUrl = CloudflareReverseProxyUrl & "\" & RyujinxUrl
                 End If
             Else
                 Labels(4).Caption = "正在下载模拟器 ..."
@@ -748,6 +749,7 @@ Private Sub Step4()
 
     DoEvents
     '下载模拟器
+    ReDownloadCount = 0
     If CheckFileExists(RyujinxInstallFolder & "\Ryujinx.zip") = False Then
 ReDownload:
         PBarLoad 1, Me.hwnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
@@ -766,16 +768,23 @@ ReDownload:
         DoEvents
         PBarUnload 1
         If CheckFileExists(RyujinxInstallFolder & "\Ryujinx.zip") = False Then
-            Sleep 1000
-            Sleep 1000
-            Sleep 1000
-            Sleep 1000
-            Sleep 1000
-            GoTo ReDownload
+            ReDownloadCount = ReDownloadCount + 1
+            If ReDownloadCount < 5 Then
+                Sleep 1000
+                Sleep 1000
+                Sleep 1000
+                Sleep 1000
+                Sleep 1000
+                GoTo ReDownload
+            Else
+                MsgBox "下载失败！请检查你的互联网连接和 DNS。", vbCritical
+                End
+            End If
         End If
     End If
 
 FirmwareInstallation:
+    ReDownloadCount = 0
     If InstallMode = 1 Or InstallMode = 3 Then
         '下载固件
         DoEvents
@@ -802,12 +811,17 @@ ReDownload2:
                 PBarUnload 1
                 DoEvents
                 If CheckFileExists(RyujinxInstallFolder & "\Firmware.zip") = False Then
-                    Sleep 1000
-                    Sleep 1000
-                    Sleep 1000
-                    Sleep 1000
-                    Sleep 1000
-                    GoTo ReDownload2
+                    If ReDownloadCount < 5 Then
+                        Sleep 1000
+                        Sleep 1000
+                        Sleep 1000
+                        Sleep 1000
+                        Sleep 1000
+                        GoTo ReDownload2
+                    Else
+                        MsgBox "下载失败！请检查你的互联网连接和 DNS。", vbCritical
+                        End
+                    End If
                 End If
             Else
                 Labels(4).Caption = "正在加载 ..."
@@ -1006,7 +1020,7 @@ Private Sub opFirmware_Click(index As Integer)
         cbFirmware.Top = 3120
         cbFirmware.Clear
         cbFirmware.Text = "加载中 ..."
-        FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudFlareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+        FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
         For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
             cbFirmware.AddItem FirmwareVersionArr(i)
         Next
@@ -1048,7 +1062,7 @@ Private Sub ImageCombo1_Click()
     Dim i As Integer
     Select Case ImageCombo1.SelectedItem.index
     Case 1
-        If DownloadSource = "Github" Then
+        If DownloadSource = "GitHub" Then
             txtVersion.Visible = True
             ComboVersion.Visible = False
             txtVersion.Text = GetRyujinxVersion
@@ -1066,7 +1080,7 @@ Private Sub ImageCombo1_Click()
             Next
         End If
     Case 2
-        If DownloadSource = "Github" Then
+        If DownloadSource = "GitHub" Then
             txtVersion.Visible = True
             ComboVersion.Visible = False
             txtVersion.Text = GetRyujinxCNVersion
@@ -1095,7 +1109,7 @@ Private Sub ImageCombo1_Click()
             ComboVersion.SetFocus
         Next
     Case 4
-        If DownloadSource = "Github" Then
+        If DownloadSource = "GitHub" Then
             txtVersion.Visible = True
             ComboVersion.Visible = False
             txtVersion.Text = GetRyujinxCNVersion

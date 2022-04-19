@@ -359,9 +359,9 @@ Private Sub btnSave_Click()
     YuzuInstallFolder = CfgTexts(0).Text
     RyujinxInstallFolder = CfgTexts(1).Text
     If Checks(0).Value = 1 Then
-        AlwaysUseCloudFlare = True
+        AlwaysUseCloudflare = True
     Else
-        AlwaysUseCloudFlare = False
+        AlwaysUseCloudflare = False
     End If
     If Checks(1).Value = 1 Then
         AutoCheckForUpdate = True
@@ -371,7 +371,7 @@ Private Sub btnSave_Click()
     DownloadSource = ImageCombo1.SelectedItem.key
     WriteIni "Folder", "YuzuInstallFolder", YuzuInstallFolder, App.Path & "\Config.ini"
     WriteIni "Folder", "RyujinxInstallFolder", RyujinxInstallFolder, App.Path & "\Config.ini"
-    WriteIni "Network", "AlwaysUseCloudFlare", CStr(AlwaysUseCloudFlare), App.Path & "\Config.ini"
+    WriteIni "Network", "AlwaysUseCloudflare", CStr(AlwaysUseCloudflare), App.Path & "\Config.ini"
     WriteIni "Network", "DownloadSource", DownloadSource, App.Path & "\Config.ini"
     WriteIni "Tool", "AutoCheckForUpdate", CStr(AutoCheckForUpdate), App.Path & "\Config.ini"
     Unload Me
@@ -390,14 +390,14 @@ Private Sub Form_Activate()
 '加载设置
     CfgTexts(0).Text = YuzuInstallFolder
     CfgTexts(1).Text = RyujinxInstallFolder
-    If AlwaysUseCloudFlare = "True" Then
+    If AlwaysUseCloudflare = "True" Then
         Checks(index).Value = 1
     Else
         Checks(index).Value = 0
     End If
     If DownloadSource = "Aliyundrive" Then
         ImageCombo1.ComboItems(1).Selected = True
-    ElseIf DownloadSource = "Github" Then
+    ElseIf DownloadSource = "GitHub" Then
         ImageCombo1.ComboItems(2).Selected = True
     End If
     Images(3).Picture = ImageList1.ListImages(ImageCombo1.SelectedItem.index).Picture
@@ -411,7 +411,7 @@ Private Sub Form_Load()
     Me.Caption = "NS模拟器助手 - 设置"
     ImageCombo1.ComboItems.Clear
     ImageCombo1.ComboItems.Add 1, "Aliyundrive", "阿里云盘 (速度更快，但保留版本少)", 1
-    ImageCombo1.ComboItems.Add 2, "Github", "Github / CloudFlare (速度慢，但保留全部版本)", 2
+    ImageCombo1.ComboItems.Add 2, "GitHub", "GitHub / Cloudflare (速度慢，但保留全部版本)", 2
     ImageCombo1.ComboItems(1).Selected = True
 End Sub
 

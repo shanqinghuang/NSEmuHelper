@@ -1,9 +1,0 @@
-# Gambas Form File 3.0
-
-{ Form Form
-  MoveScaled(0,0,73,50)
-  { FileChooser1 FileChooser
-    MoveScaled(1,1,71,48)
-    ShowButton = True
-  }
-}
