@@ -10,8 +10,8 @@ Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 
 '公共变量常量
-Public Const Version As String = "V1.3.7"
-Public Const InternalVersion As String = "v1.3.7"
+Public Const Version As String = "V1.3.8"
+Public Const InternalVersion As String = "v1.3.8"
 Public Const InternalConfigFileVersion As String = "v3"
 
 
@@ -31,10 +31,11 @@ Attribute RyujinxVersion.VB_VarUserMemId = 1073741833
 Attribute RyujinxBranch.VB_VarUserMemId = 1073741833
 Attribute RyujinxFirmware.VB_VarUserMemId = 1073741833
 Attribute RyujinxCustomDataFolder.VB_VarUserMemId = 1073741833
-Public AliyundriveDomain As String, AutoCheckForUpdate As Boolean, ConfigFileVersion As String
+Public AliyundriveDomain As String, AutoCheckForUpdate As Boolean, ConfigFileVersion As String, AnnouncementUrl As String
 Attribute AliyundriveDomain.VB_VarUserMemId = 1073741837
 Attribute AutoCheckForUpdate.VB_VarUserMemId = 1073741837
 Attribute ConfigFileVersion.VB_VarUserMemId = 1073741837
+Attribute AnnouncementUrl.VB_VarUserMemId = 1073741837
 Public InstallMode As Integer
 Attribute InstallMode.VB_VarUserMemId = 1073741840
 Public FirstActivate As Boolean
@@ -111,9 +112,9 @@ Public Function GetDataStr2(ByVal Url As String) As String
 'server xhr get 字符串 (GetDataStr 已经弃用)
     On Error GoTo Err:
     Dim XMLHTTP As Object
-    Set XMLHTTP = CreateObject("MSXML2.ServerXMLHTTP") '创建 xhr 对象
+    Set XMLHTTP = CreateObject("MSXML2.ServerXMLHTTP")    '创建 xhr 对象
     XMLHTTP.Open "GET", Url, True
-    XMLHTTP.setRequestHeader "User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36" '不然某些网站会拒绝下载
+    XMLHTTP.setRequestHeader "User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36"    '不然某些网站会拒绝下载
     If InStr(Url, "github.com") <> 0 Then XMLHTTP.setRequestHeader "Authorization", "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"    ' github oauth token
     XMLHTTP.send
     XMLHTTP.waitForResponse 10
@@ -133,7 +134,7 @@ Public Function GetDataStr2(ByVal Url As String) As String
             GetDataStr2 = XMLHTTP.responseText
         Else
             MsgBox "HTTP错误 " & XMLHTTP.Status & " " & XMLHTTP.statusText, vbCritical
-            MsgBox "请使用“特殊网络环境”后重试。"
+            MsgBox "请更换下载源，使用“特殊网络环境”后重试。"
             End
         End If
     Else

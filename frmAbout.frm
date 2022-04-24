@@ -24,19 +24,27 @@ Begin VB.Form frmAbout
    ScaleMode       =   0  'User
    ScaleWidth      =   5380.766
    ShowInTaskbar   =   0   'False
+   Begin VB.CommandButton cmdReadme 
+      Caption         =   "使用须知"
+      Height          =   465
+      Left            =   1680
+      TabIndex        =   11
+      Top             =   3600
+      Width           =   1365
+   End
    Begin VB.CommandButton Command2 
       Caption         =   "关闭"
       Default         =   -1  'True
       Height          =   465
-      Left            =   1920
+      Left            =   240
       TabIndex        =   10
       Top             =   3600
       Width           =   1005
    End
    Begin VB.CommandButton Command1 
-      Caption         =   "关闭"
+      Caption         =   "谢志"
       Height          =   465
-      Left            =   3000
+      Left            =   3120
       TabIndex        =   4
       Top             =   3600
       Width           =   1005
@@ -220,6 +228,11 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
+
+Private Sub cmdReadme_Click()
+    hardcodedReadme.ForceAnnouncement
+    hardcodedReadme.Readme
+End Sub
 
 Private Sub cmdUpdate_Click()
     CheckUpdate False

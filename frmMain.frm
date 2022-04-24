@@ -204,11 +204,39 @@ Private Sub Form_Activate()
     Labels(5).Alignment = 1
     Labels(5).Caption = "2021-2022 是一刀斩哒" & vbCrLf & "版本 " & Version
     If FirstActivate = False Then
-        If AutoCheckForUpdate Then
-            CheckUpdate (True)
-            FirstActivate = True
+        '判断是否第一次显示主窗口
+        If GetIni("Tool", "ReadmeCompleted", App.Path & "\Config.ini") <> "Yes" Then hardcodedReadme.Readme    '弹readme
+        '公告
+        Dim LastAnnounceDay As Integer
+        If GetIni("Tool", "LastAnnounceDay", App.Path & "\Config.ini") <> "" Then
+            LastAnnounceDay = CInt(GetIni("Tool", "LastAnnounceDay", App.Path & "\Config.ini"))
+        Else
+            LastAnnounceDay = 0
+        End If
+        LastAnnounceDay = Day(Now) - LastAnnounceDay
+        If LastAnnounceDay <> 1 And LastAnnounceDay <> 0 And LastAnnounceDay <> 2 And LastAnnounceDay <> 3 Then    '四天一次
+            If AutoCheckForUpdate Then    '检查更新
+                CheckUpdate (True)
+            End If
+
+            Dim Announcement As String, AnnouncementCache As String
+            Announcement = GetDataStr2(AnnouncementUrl)
+            AnnouncementCache = ""
+            If CheckFileExists(App.Path & "\.AnnoucementCache.txt") Then
+                Open App.Path & "\.AnnoucementCache.txt" For Input As #18
+                Input #18, AnnouncementCache
+                Close #18
+            End If
+            If AnnouncementCache <> Announcement Then
+                MsgBox Announcement, vbOKOnly, "NS模拟器助手 - 公告"
+                Open App.Path & "\.AnnoucementCache.txt" For Output As #18
+                Print #18, Announcement
+                Close #18
+            End If
+            WriteIni "Tool", "LastAnnounceDay", CStr(Day(Now)), App.Path & "\Config.ini"
         End If
     End If
+    FirstActivate = True
 End Sub
 
 Private Sub Form_Initialize()
@@ -216,7 +244,8 @@ Private Sub Form_Initialize()
     '加载配置
     ConfigFileVersion = ""
     If CheckFileExists(App.Path & "\Config.Defaults.ini") = False And CheckFileExists(App.Path & "\Config.ini") = False Then
-        MsgBox "配置文件不存在，程序无法启动！", vbCritical
+        MsgBox "配置文件不存在，程序无法启动！", vbCritical    '直接闪退
+        End
     End If
     If CheckFileExists(App.Path & "\Config.Defaults.ini") = True And CheckFileExists(App.Path & "\Config.ini") = False Then
         '创建默认配置
@@ -241,6 +270,12 @@ Private Sub Form_Initialize()
         AutoCheckForUpdate = True
     Else
         AutoCheckForUpdate = False
+    End If
+    AnnouncementUrl = ""
+    AnnouncementUrl = GetIni("Tool", "AnnouncementUrl", App.Path & "\Config.ini")
+    If AnnouncementUrl = "" Then
+        '允许自定义公告url
+        WriteIni "Tool", "AnnouncementUrl", "https://blog.yidaozhan.ga/nsemuhelper.txt", App.Path & "\Config.ini"
     End If
     If ConfigFileVersion <> InternalConfigFileVersion Then
         If ConfigFileVersion = "" Then

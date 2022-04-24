@@ -556,7 +556,7 @@ Public Function RStoJSON(rs As ADODB.Recordset) As String
             Do While Not rs.EOF And Not rs.BOF
                 lRecCnt = lRecCnt + 1
                 sFlds = ""
-                For Each fld In rs.fields
+                For Each fld In rs.Fields
                     sFlds = (sFlds & IIf(sFlds <> "", ",", "") & """" & fld.Name & """:""" & toUnicode(fld.Value & "") & """")
                 Next    'fld
                 sRecs.Append IIf((Trim(sRecs.toString) <> ""), "," & vbCrLf, "") & "{" & sFlds & "}"

@@ -232,7 +232,7 @@ Begin VB.Form frmConfig
    End
    Begin VB.Label Labels 
       BackStyle       =   0  'Transparent
-      Caption         =   "始终使用 CloudFlare 下载 Github 文件"
+      Caption         =   "始终使用 Cloudflare 下载 GitHub 文件"
       BeginProperty Font 
          Name            =   "微软雅黑 Light"
          Size            =   12
