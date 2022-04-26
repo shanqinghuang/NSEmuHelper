@@ -632,7 +632,7 @@ Private Sub Step4()
             If DownloadSource = "GitHub" Then
                 iFirmwarePath = CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
             Else
-                iFirmwarePath = "https://" & AliyundriveDomain & "/NSFirmwareMirror/Firmware_" & cbFirmware.Text & ".zip"
+                iFirmwarePath = AliyundriveDomain & "/NSFirmwareMirror/Firmware_" & cbFirmware.Text & ".zip"
             End If
             'Legacy reverse proxy for testing purpose, uncomment it when new reverse proxy is not work
             'iFirmwarePath = "https://download.sydzy.workers.dev/api/download?url=https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
@@ -690,24 +690,24 @@ Private Sub Step4()
         If DownloadSource = "GitHub" Then
             RyujinxUrl = "https://github.com/Ryujinx/release-channel-master/releases/download/" & iVersion & "/ryujinx-" & iVersion & "-win_x64.zip"
         Else
-            RyujinxUrl = "https://" & AliyundriveDomain & "/RyujinxMainlineMirror/ryujinx-" & iVersion & "-win_x64.zip"
+            RyujinxUrl = AliyundriveDomain & "/RyujinxMainlineMirror/ryujinx-" & iVersion & "-win_x64.zip"
         End If
     Case "LDN联机版"
         'LDN
-        RyujinxUrl = "https://" & AliyundriveDomain & "/RyujinxLDNMirror/ryujinx-" & iVersion & "-win_x64.zip"
+        RyujinxUrl = AliyundriveDomain & "/RyujinxLDNMirror/ryujinx-" & iVersion & "-win_x64.zip"
     Case "中文版"
         '汉化
         If DownloadSource = "GitHub" Then
             RyujinxUrl = "https://github.com/YidaozhanYa/RyujinxCN/releases/download/" & iVersion & "/ryujinx-cn-" & iVersion & "-win_x64.zip"
         Else
-            RyujinxUrl = "https://" & AliyundriveDomain & "/RyujinxCNBuilds/ryujinx-cn-" & iVersion & "-win_x64.zip"
+            RyujinxUrl = AliyundriveDomain & "/RyujinxCNBuilds/ryujinx-cn-" & iVersion & "-win_x64.zip"
         End If
     Case "Vulkan"
         'Vulkan
         If DownloadSource = "GitHub" Then
             RyujinxUrl = "https://github.com/YidaozhanYa/RyujinxCN/releases/download/" & iVersion & "/ryujinx-cn-vulkan-" & iVersion & "-win_x64.zip"
         Else
-            RyujinxUrl = "https://" & AliyundriveDomain & "/RyujinxCNVulkanBuilds/ryujinx-cn-vulkan-" & iVersion & "-win_x64.zip"
+            RyujinxUrl = AliyundriveDomain & "/RyujinxCNVulkanBuilds/ryujinx-cn-vulkan-" & iVersion & "-win_x64.zip"
         End If
     End Select
 
@@ -1008,7 +1008,7 @@ Private Sub opFirmware_Click(index As Integer)
         cbFirmware.Top = 2520
         cbFirmware.Clear
         cbFirmware.Text = "加载中 ..."
-        FirmwareVersionArr = Filter(Split(GetDataStr2("https://" & AliyundriveDomain & "/NSFirmwareMirror/?json"), Chr(34)), "firmware_")
+        FirmwareVersionArr = Filter(Split(GetDataStr2(AliyundriveDomain & "/NSFirmwareMirror/?json"), Chr(34)), "firmware_")
         For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
             cbFirmware.AddItem Replace(Replace(FirmwareVersionArr(i), "firmware_", ""), ".zip", "")
         Next

@@ -24,6 +24,41 @@ Begin VB.Form frmConfig
    ScaleHeight     =   6705
    ScaleWidth      =   7425
    StartUpPosition =   3  '窗口缺省
+   Begin MSComctlLib.ImageList ImageList1 
+      Left            =   6480
+      Top             =   4440
+      _ExtentX        =   1005
+      _ExtentY        =   1005
+      BackColor       =   -2147483643
+      ImageWidth      =   16
+      ImageHeight     =   16
+      MaskColor       =   12632256
+      UseMaskColor    =   0   'False
+      _Version        =   393216
+      BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
+         NumListImages   =   5
+         BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmConfig.frx":54AA
+            Key             =   ""
+         EndProperty
+         BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmConfig.frx":601F
+            Key             =   ""
+         EndProperty
+         BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmConfig.frx":7153
+            Key             =   ""
+         EndProperty
+         BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmConfig.frx":799C
+            Key             =   ""
+         EndProperty
+         BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmConfig.frx":8591
+            Key             =   ""
+         EndProperty
+      EndProperty
+   End
    Begin VB.CheckBox Checks 
       BackColor       =   &H80000005&
       Caption         =   "否"
@@ -64,28 +99,6 @@ Begin VB.Form frmConfig
       EndProperty
       Text            =   "ImageCombo1"
       ImageList       =   "ImageList1"
-   End
-   Begin MSComctlLib.ImageList ImageList1 
-      Left            =   6480
-      Top             =   4080
-      _ExtentX        =   1005
-      _ExtentY        =   1005
-      BackColor       =   -2147483643
-      ImageWidth      =   16
-      ImageHeight     =   16
-      MaskColor       =   12632256
-      _Version        =   393216
-      BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
-         NumListImages   =   2
-         BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmConfig.frx":54AA
-            Key             =   ""
-         EndProperty
-         BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmConfig.frx":D850
-            Key             =   ""
-         EndProperty
-      EndProperty
    End
    Begin VB.CheckBox Checks 
       BackColor       =   &H80000005&
@@ -188,7 +201,7 @@ Begin VB.Form frmConfig
       Height          =   360
       Index           =   4
       Left            =   240
-      Picture         =   "frmConfig.frx":1081E
+      Picture         =   "frmConfig.frx":B55F
       Stretch         =   -1  'True
       Top             =   4920
       Width           =   375
@@ -216,7 +229,7 @@ Begin VB.Form frmConfig
       Height          =   360
       Index           =   3
       Left            =   240
-      Picture         =   "frmConfig.frx":12312
+      Picture         =   "frmConfig.frx":D053
       Stretch         =   -1  'True
       Top             =   3120
       Width           =   375
@@ -225,7 +238,7 @@ Begin VB.Form frmConfig
       Height          =   360
       Index           =   2
       Left            =   240
-      Picture         =   "frmConfig.frx":12CFB
+      Picture         =   "frmConfig.frx":DA3C
       Stretch         =   -1  'True
       Top             =   4320
       Width           =   375
@@ -275,7 +288,7 @@ Begin VB.Form frmConfig
       Height          =   360
       Index           =   1
       Left            =   240
-      Picture         =   "frmConfig.frx":136E4
+      Picture         =   "frmConfig.frx":E425
       Stretch         =   -1  'True
       Top             =   1680
       Width           =   375
@@ -284,7 +297,7 @@ Begin VB.Form frmConfig
       Height          =   360
       Index           =   0
       Left            =   240
-      Picture         =   "frmConfig.frx":141B5
+      Picture         =   "frmConfig.frx":EEF6
       Stretch         =   -1  'True
       Top             =   240
       Width           =   375
@@ -372,8 +385,14 @@ Private Sub btnSave_Click()
     WriteIni "Folder", "YuzuInstallFolder", YuzuInstallFolder, App.Path & "\Config.ini"
     WriteIni "Folder", "RyujinxInstallFolder", RyujinxInstallFolder, App.Path & "\Config.ini"
     WriteIni "Network", "AlwaysUseCloudflare", CStr(AlwaysUseCloudflare), App.Path & "\Config.ini"
-    WriteIni "Network", "DownloadSource", DownloadSource, App.Path & "\Config.ini"
+    WriteIni "Network", "DownloadSourceNext", DownloadSource, App.Path & "\Config.ini"
     WriteIni "Tool", "AutoCheckForUpdate", CStr(AutoCheckForUpdate), App.Path & "\Config.ini"
+    Select Case DownloadSource
+        Case "Heroku": AliyundriveDomain = "https://nsemuhelper.herokuapp.com"
+        Case "Azure": AliyundriveDomain = "http://azure.yidaozhan.ga:5678"
+        Case "Vercel": AliyundriveDomain = "https://pan.yidaozhan.ga/ns_emu_helper"
+        Case "Replit": AliyundriveDomain = "https://onemanager-nsemuhelper.yidaozhanyaqwq.repl.co"
+    End Select
     Unload Me
 End Sub
 
@@ -395,11 +414,18 @@ Private Sub Form_Activate()
     Else
         Checks(index).Value = 0
     End If
-    If DownloadSource = "Aliyundrive" Then
+    Select Case DownloadSource
+    Case "Heroku"
         ImageCombo1.ComboItems(1).Selected = True
-    ElseIf DownloadSource = "GitHub" Then
+    Case "Replit"
         ImageCombo1.ComboItems(2).Selected = True
-    End If
+    Case "Vercel"
+        ImageCombo1.ComboItems(3).Selected = True
+    Case "Azure"
+        ImageCombo1.ComboItems(4).Selected = True
+    Case "GitHub"
+        ImageCombo1.ComboItems(5).Selected = True
+    End Select
     Images(3).Picture = ImageList1.ListImages(ImageCombo1.SelectedItem.index).Picture
 
     If AutoCheckForUpdate Then Checks(1).Value = 1
@@ -410,8 +436,11 @@ End Sub
 Private Sub Form_Load()
     Me.Caption = "NS模拟器助手 - 设置"
     ImageCombo1.ComboItems.Clear
-    ImageCombo1.ComboItems.Add 1, "Aliyundrive", "阿里云盘 (速度更快，但保留版本少)", 1
-    ImageCombo1.ComboItems.Add 2, "GitHub", "GitHub / Cloudflare (速度慢，但保留全部版本)", 2
+    ImageCombo1.ComboItems.Add 1, "Heroku", "Heroku", 1
+    ImageCombo1.ComboItems.Add 2, "Replit", "Replit", 2
+    ImageCombo1.ComboItems.Add 3, "Vercel", "Vercel", 3
+    ImageCombo1.ComboItems.Add 4, "Azure", "Azure", 4
+    ImageCombo1.ComboItems.Add 5, "GitHub", "GitHub / Cloudflare", 5
     ImageCombo1.ComboItems(1).Selected = True
 End Sub
 

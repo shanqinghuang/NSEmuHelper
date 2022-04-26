@@ -623,7 +623,7 @@ Private Sub Step4()
             If DownloadSource = "GitHub" Then
                 iFirmwarePath = CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
             Else
-                iFirmwarePath = "https://" & AliyundriveDomain & "/NSFirmwareMirror/Firmware_" & cbFirmware.Text & ".zip"
+                iFirmwarePath = AliyundriveDomain & "/NSFirmwareMirror/Firmware_" & cbFirmware.Text & ".zip"
             End If
             'Legacy reverse proxy for testing purpose, uncomment it when new reverse proxy is not work
             'iFirmwarePath = "https://download.sydzy.workers.dev/api/download?url=https://archive.org/download/nintendo-switch-global-firmwares/Firmware " & cbFirmware.Text & ".zip"
@@ -716,9 +716,9 @@ Private Sub Step4()
     Else
         '∞¢¿Ô
         If iIsEarlyAccess Then
-            YuzuUrl = "https://" & AliyundriveDomain & "/YuzuEAMirror/Windows-Yuzu-EA-" & iVersion & ".7z"
+            YuzuUrl = AliyundriveDomain & "/YuzuEAMirror/Windows-Yuzu-EA-" & iVersion & ".7z"
         Else
-            YuzuUrl = "https://" & AliyundriveDomain & "/YuzuMainlineMirror/yuzu-windows-msvc-" & iVersion & ".7z"
+            YuzuUrl = AliyundriveDomain & "/YuzuMainlineMirror/yuzu-windows-msvc-" & iVersion & ".7z"
         End If
     End If
 
@@ -852,7 +852,7 @@ ReDownload2:
             PBarLoad 1, Me.hwnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
             PBarSetRange 1, 0, 100
             PBarSetPos 1, 0
-            AsyncReads(0) = "https://" & AliyundriveDomain & "/ali/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/sysdata.zip"
+            AsyncReads(0) = AliyundriveDomain & "/ali/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/sysdata.zip"
             AsyncReads(1) = YuzuInstallFolder & "\Sysdata.zip"
             ucDownload1.DownloadFile AsyncReads(0), AsyncReads(1)
             DoEvents
@@ -1077,7 +1077,7 @@ Private Sub opFirmware_Click(index As Integer)
         cbFirmware.Top = 2520
         cbFirmware.Clear
         cbFirmware.Text = "º”‘ÿ÷– ..."
-        FirmwareVersionArr = Filter(Split(GetDataStr2("https://" & AliyundriveDomain & "/NSFirmwareMirror/?json"), Chr(34)), "firmware_")
+        FirmwareVersionArr = Filter(Split(GetDataStr2(AliyundriveDomain & "/NSFirmwareMirror/?json"), Chr(34)), "firmware_")
         For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
             cbFirmware.AddItem Replace(Replace(FirmwareVersionArr(i), "firmware_", ""), ".zip", "")
         Next

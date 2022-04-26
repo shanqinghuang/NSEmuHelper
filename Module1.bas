@@ -10,8 +10,8 @@ Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 
 '公共变量常量
-Public Const Version As String = "V1.3.8"
-Public Const InternalVersion As String = "v1.3.8"
+Public Const Version As String = "V1.4.0"
+Public Const InternalVersion As String = "v1.4.0"
 Public Const InternalConfigFileVersion As String = "v3"
 
 
@@ -111,6 +111,7 @@ End Function
 Public Function GetDataStr2(ByVal Url As String) As String
 'server xhr get 字符串 (GetDataStr 已经弃用)
     On Error GoTo Err:
+    Debug.Print Url
     Dim XMLHTTP As Object
     Set XMLHTTP = CreateObject("MSXML2.ServerXMLHTTP")    '创建 xhr 对象
     XMLHTTP.Open "GET", Url, True
@@ -125,7 +126,7 @@ Public Function GetDataStr2(ByVal Url As String) As String
         End
     ElseIf XMLHTTP.Status = 503 Then
         Debug.Print "使用备用下载服务器"
-        XMLHTTP.Open "GET", Replace(Url, AliyundriveDomain, "pan.yidaozhan.ga/ns_emu_helper"), True
+        XMLHTTP.Open "GET", Replace(Url, AliyundriveDomain, "https://pan.yidaozhan.ga/ns_emu_helper"), True
         AliyundriveDomain = "pan.yidaozhan.ga/ns_emu_helper"
         XMLHTTP.setRequestHeader "User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36"
         XMLHTTP.send
@@ -184,7 +185,7 @@ Public Function GetYuzuVersionAli() As String
 '获取 Yuzu Early Access 版本号 阿里云盘
     Dim TmpEAAli As String
     Do Until TmpEAAli <> ""
-        TmpEAAli = GetDataStr2("https://" & AliyundriveDomain & "/YuzuEAMirror/?json")
+        TmpEAAli = GetDataStr2(AliyundriveDomain & "/YuzuEAMirror/?json")
     Loop
     GetYuzuVersionAli = ""
     Dim objJson As Object, VersionName As Variant
@@ -199,7 +200,7 @@ Public Function GetYuzuMLVersionAli() As String
 '获取 Yuzu 主线版版本号 阿里云盘
     Dim TmpMLAli As String
     Do Until TmpMLAli <> ""
-        TmpMLAli = GetDataStr2("https://" & AliyundriveDomain & "/YuzuMainlineMirror/?json")
+        TmpMLAli = GetDataStr2(AliyundriveDomain & "/YuzuMainlineMirror/?json")
     Loop
     GetYuzuMLVersionAli = ""
     Dim objJson As Object, VersionName As Variant
@@ -248,7 +249,7 @@ Public Function GetRyujinxVersionAli() As String
 '获取 Ryujinx 版本号 阿里云盘
     Dim TmpMLAli As String
     Do Until TmpMLAli <> ""
-        TmpMLAli = GetDataStr2("https://" & AliyundriveDomain & "/RyujinxMainlineMirror/?json")
+        TmpMLAli = GetDataStr2(AliyundriveDomain & "/RyujinxMainlineMirror/?json")
     Loop
     GetRyujinxVersionAli = ""
     Dim objJson As Object, VersionName As Variant
@@ -263,7 +264,7 @@ Public Function GetRyujinxLDNVersionAli() As String
 '获取 Ryujinx LDN 版本号 阿里云盘
     Dim TmpMLAli As String
     Do Until TmpMLAli <> ""
-        TmpMLAli = GetDataStr2("https://" & AliyundriveDomain & "/RyujinxLDNMirror/?json")
+        TmpMLAli = GetDataStr2(AliyundriveDomain & "/RyujinxLDNMirror/?json")
     Loop
     GetRyujinxLDNVersionAli = ""
     Dim objJson As Object, VersionName As Variant
@@ -278,7 +279,7 @@ Public Function GetRyujinxCNVersionAli() As String
 '获取 Ryujinx CN 版本号 阿里云盘
     Dim TmpMLAli As String
     Do Until TmpMLAli <> ""
-        TmpMLAli = GetDataStr2("https://" & AliyundriveDomain & "/RyujinxCNBuilds/?json")
+        TmpMLAli = GetDataStr2(AliyundriveDomain & "/RyujinxCNBuilds/?json")
     Loop
     GetRyujinxCNVersionAli = ""
     Dim objJson As Object, VersionName As Variant
@@ -293,7 +294,7 @@ Public Function GetRyujinxVulkanVersionAli() As String
 '获取 Ryujinx Vulkan 版本号 阿里云盘
     Dim TmpMLAli As String
     Do Until TmpMLAli <> ""
-        TmpMLAli = GetDataStr2("https://" & AliyundriveDomain & "/RyujinxCNVulkanBuilds/?json")
+        TmpMLAli = GetDataStr2(AliyundriveDomain & "/RyujinxCNVulkanBuilds/?json")
     Loop
     GetRyujinxVulkanVersionAli = ""
     Dim objJson As Object, VersionName As Variant

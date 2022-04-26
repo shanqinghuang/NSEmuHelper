@@ -254,11 +254,22 @@ Private Sub Form_Initialize()
     YuzuInstallFolder = GetIni("Folder", "YuzuInstallFolder", App.Path & "\Config.ini")
     RyujinxInstallFolder = GetIni("Folder", "RyujinxInstallFolder", App.Path & "\Config.ini")
     CloudflareReverseProxyUrl = GetIni("Network", "CloudflareReverseProxyUrl", App.Path & "\Config.ini")
-    DownloadSource = GetIni("Network", "DownloadSource", App.Path & "\Config.ini")
-    AliyundriveDomain = GetIni("Network", "AliyundriveDomain", App.Path & "\Config.ini")
+    DownloadSource = GetIni("Network", "DownloadSourceNext", App.Path & "\Config.ini") '更换新的下载源机制
+    'AliyundriveDomain = GetIni("Network", "AliyundriveDomain", App.Path & "\Config.ini")
+    If DownloadSource = "" Then
+        DownloadSource = "Heroku"
+        AliyundriveDomain = "https://nsemuhelper.herokuapp.com"
+        WriteIni "Network", "DownloadSourceNext", "Heroku", App.Path & "\Config.ini"
+    End If
+    Select Case DownloadSource
+        Case "Heroku": AliyundriveDomain = "https://nsemuhelper.herokuapp.com"
+        Case "Azure": AliyundriveDomain = "http://azure.yidaozhan.ga:5678"
+        Case "Vercel": AliyundriveDomain = "https://pan.yidaozhan.ga/ns_emu_helper"
+        Case "Replit": AliyundriveDomain = "https://onemanager-nsemuhelper.yidaozhanyaqwq.repl.co"
+    End Select
     If AliyundriveDomain = "yidaozhan-pan-yidaozhanya.vercel.app" Then
         'v3配置文件 懒得升级了
-        AliyundriveDomain = "nsemuhelper.herokuapp.com"
+        AliyundriveDomain = "https://nsemuhelper.herokuapp.com"
     End If
     ConfigFileVersion = GetIni("Tool", "ConfigFileVersion", App.Path & "\Config.ini")
     If Left(GetIni("Network", "AlwaysUseCloudflare", App.Path & "\Config.ini"), 4) = "True" Then
