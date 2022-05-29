@@ -350,8 +350,8 @@ Private Sub btnAbout_Click()
     frmAbout.Show
 End Sub
 
-Private Sub btnBrowse_Click(index As Integer)
-    CfgTexts(index).Text = ChooseDir(Labels(index).Caption, Me)
+Private Sub btnBrowse_Click(Index As Integer)
+    CfgTexts(Index).Text = ChooseDir(Labels(Index).Caption, Me)
 End Sub
 
 Private Sub btnCancel_Click()
@@ -397,11 +397,11 @@ Private Sub btnSave_Click()
 End Sub
 
 
-Private Sub Checks_Click(index As Integer)
-    If Checks(index).Value = 1 Then
-        Checks(index).Caption = "是"
+Private Sub Checks_Click(Index As Integer)
+    If Checks(Index).Value = 1 Then
+        Checks(Index).Caption = "是"
     Else
-        Checks(index).Caption = "否"
+        Checks(Index).Caption = "否"
     End If
 End Sub
 
@@ -410,9 +410,9 @@ Private Sub Form_Activate()
     CfgTexts(0).Text = YuzuInstallFolder
     CfgTexts(1).Text = RyujinxInstallFolder
     If AlwaysUseCloudflare = "True" Then
-        Checks(index).Value = 1
+        Checks(Index).Value = 1
     Else
-        Checks(index).Value = 0
+        Checks(Index).Value = 0
     End If
     Select Case DownloadSource
     Case "Heroku"
@@ -426,7 +426,7 @@ Private Sub Form_Activate()
     Case "GitHub"
         ImageCombo1.ComboItems(5).Selected = True
     End Select
-    Images(3).Picture = ImageList1.ListImages(ImageCombo1.SelectedItem.index).Picture
+    Images(3).Picture = ImageList1.ListImages(ImageCombo1.SelectedItem.Index).Picture
 
     If AutoCheckForUpdate Then Checks(1).Value = 1
 
@@ -434,7 +434,7 @@ Private Sub Form_Activate()
 End Sub
 
 Private Sub Form_Load()
-    Me.Caption = "NS模拟器助手 - 设置"
+        Me.Caption = "NS模拟器助手 " & App.Major & "." & App.Minor & "." & App.Revision & " - 设置"
     ImageCombo1.ComboItems.Clear
     ImageCombo1.ComboItems.Add 1, "Heroku", "Heroku", 1
     ImageCombo1.ComboItems.Add 2, "Replit", "Replit", 2
@@ -453,12 +453,12 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Private Sub ImageCombo1_Click()
-    Images(3).Picture = ImageList1.ListImages(ImageCombo1.SelectedItem.index).Picture
+    Images(3).Picture = ImageList1.ListImages(ImageCombo1.SelectedItem.Index).Picture
 
 End Sub
 
-Private Sub Labels2_Click(index As Integer)
-    If index = 2 Then
+Private Sub Labels2_Click(Index As Integer)
+    If Index = 2 Then
         If CheckFileExists(App.Path & "\ImportRegistry.exe") Then
             Shell App.Path & "\ImportRegistry.exe", vbNormalFocus
             End

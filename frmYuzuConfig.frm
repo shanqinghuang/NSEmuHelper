@@ -292,14 +292,14 @@ Private Sub btnSave_Click()
     End If
 End Sub
 
-Private Sub Checks_Click(index As Integer)
+Private Sub Checks_Click(Index As Integer)
 '选框
-    If Checks(index).Value = 1 Then
-        Checks(index).Caption = "是"
-        If index = 0 Then btnBrowse.Visible = True: txtDataFolder.Visible = True
+    If Checks(Index).Value = 1 Then
+        Checks(Index).Caption = "是"
+        If Index = 0 Then btnBrowse.Visible = True: txtDataFolder.Visible = True
     Else
-        Checks(index).Caption = "否"
-        If index = 0 Then btnBrowse.Visible = False: txtDataFolder.Visible = False
+        Checks(Index).Caption = "否"
+        If Index = 0 Then btnBrowse.Visible = False: txtDataFolder.Visible = False
     End If
 End Sub
 
@@ -377,7 +377,7 @@ Private Sub Form_Activate()
     txtVersion.Text = tmpYuzuName
 
     Dim FirmwareVersionArr() As String
-    FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+    FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetData(CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
     Dim i As Integer
     For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
         cbFirmware.AddItem FirmwareVersionArr(i)
@@ -405,14 +405,16 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Private Sub ImageCombo1_Click()
-    Image1.Picture = frmYuzuInstaller.ImageList2.ListImages(ImageCombo1.SelectedItem.index).Picture
+ImageCombo1.Enabled = False
+    Image1.Picture = frmYuzuInstaller.ImageList2.ListImages(ImageCombo1.SelectedItem.Index).Picture
     txtVersion.SetFocus
     txtVersion.Text = "加载中 ..."
-    If ImageCombo1.SelectedItem.index = 1 Then
+    If ImageCombo1.SelectedItem.Index = 1 Then
         txtVersion.Text = GetYuzuVersion
     Else
         txtVersion.Text = GetYuzuMLVersion
     End If
+ImageCombo1.Enabled = False
 End Sub
 
 Private Sub txtVersion_KeyPress(KeyAscii As Integer)

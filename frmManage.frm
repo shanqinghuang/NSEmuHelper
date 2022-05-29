@@ -240,10 +240,10 @@ Private Sub Form_Activate()
 '窗口外观
     Labels(2).Visible = False
     If IsYuzu Then
-        Me.Caption = "NS模拟器助手 " & Version & " - Yuzu 管理"
+        Me.Caption = "NS模拟器助手 " & App.Major & "." & App.Minor & "." & App.Revision & " - Yuzu 管理"
         Me.Icon = frmMain.Icon
     Else
-        Me.Caption = "NS模拟器助手 " & Version & " - Ryujinx 管理"
+        Me.Caption = "NS模拟器助手 " & App.Major & "." & App.Minor & "." & App.Revision & " - Ryujinx 管理"
         Me.Icon = frmRyujinxInstaller.Icon
         Unload frmRyujinxInstaller
     End If

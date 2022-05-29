@@ -9,9 +9,7 @@ Public Declare Sub CoTaskMemFree Lib "ole32.dll" (ByVal pv As Long)
 Public Declare Sub InitCommonControls Lib "comctl32.dll" ()
 
 
-'公共变量常量
-Public Const Version As String = "V1.4.0"
-Public Const InternalVersion As String = "v1.4.0"
+'公共常量
 Public Const InternalConfigFileVersion As String = "v3"
 
 
@@ -108,8 +106,8 @@ Err:
     CheckFileExists = False
 End Function
 
-Public Function GetDataStr2(ByVal Url As String) As String
-'server xhr get 字符串 (GetDataStr 已经弃用)
+Public Function GetData(ByVal Url As String) As String
+'server xhr get 字符串
     On Error GoTo Err:
     Debug.Print Url
     Dim XMLHTTP As Object
@@ -120,7 +118,7 @@ Public Function GetDataStr2(ByVal Url As String) As String
     XMLHTTP.send
     XMLHTTP.waitForResponse 10
     If XMLHTTP.Status = 200 Then
-        GetDataStr2 = XMLHTTP.responseText
+        GetData = XMLHTTP.responseText
     ElseIf XMLHTTP.Status = 404 Then
         MsgBox "HTTP错误 404 Not Found" & vbCrLf & "请再次启动助手，在设置中把下载源改为 GitHub Cloudflare。", vbCritical
         End
@@ -132,7 +130,7 @@ Public Function GetDataStr2(ByVal Url As String) As String
         XMLHTTP.send
         XMLHTTP.waitForResponse 10
         If XMLHTTP.Status = 200 Then
-            GetDataStr2 = XMLHTTP.responseText
+            GetData = XMLHTTP.responseText
         Else
             MsgBox "HTTP错误 " & XMLHTTP.Status & " " & XMLHTTP.statusText, vbCritical
             MsgBox "请更换下载源，使用“特殊网络环境”后重试。"
@@ -145,14 +143,14 @@ Public Function GetDataStr2(ByVal Url As String) As String
     Set XMLHTTP = Nothing
     Exit Function
 Err:
-    GetDataStr2 = ""
+    GetData = ""
 End Function
 
 Public Function GetYuzuVersion() As String
 '获取 Yuzu Early Access 版本号
     On Error GoTo ExitEA
     Dim objJson As Object
-    Set objJson = JSON.parse(GetDataStr2(CloudflareReverseProxyUrl & "/https://api.github.com/repos/pineappleea/pineapple-src/releases"))
+    Set objJson = JSON.parse(GetData(CloudflareReverseProxyUrl & "/https://api.github.com/repos/pineappleea/pineapple-src/releases"))
     GetYuzuVersion = Replace(objJson(2)("tag_name"), "EA-", "")
     If InStr(GetYuzuVersion, "continuous") Then MsgBox "发生错误，请联系开发者。": End
     Exit Function
@@ -169,7 +167,7 @@ Public Function GetYuzuMLVersion() As String
 '获取 Yuzu 主线版版本号
     On Error GoTo ExitML
     Dim objJson As Object
-    Set objJson = JSON.parse(GetDataStr2(CloudflareReverseProxyUrl & "/https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases/latest"))
+    Set objJson = JSON.parse(GetData(CloudflareReverseProxyUrl & "/https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases/latest"))
     GetYuzuMLVersion = Replace(objJson("tag_name"), "mainline-0-", "")
     Exit Function
 ExitML:
@@ -185,7 +183,7 @@ Public Function GetYuzuVersionAli() As String
 '获取 Yuzu Early Access 版本号 阿里云盘
     Dim TmpEAAli As String
     Do Until TmpEAAli <> ""
-        TmpEAAli = GetDataStr2(AliyundriveDomain & "/YuzuEAMirror/?json")
+        TmpEAAli = GetData(AliyundriveDomain & "/YuzuEAMirror/?json")
     Loop
     GetYuzuVersionAli = ""
     Dim objJson As Object, VersionName As Variant
@@ -200,7 +198,7 @@ Public Function GetYuzuMLVersionAli() As String
 '获取 Yuzu 主线版版本号 阿里云盘
     Dim TmpMLAli As String
     Do Until TmpMLAli <> ""
-        TmpMLAli = GetDataStr2(AliyundriveDomain & "/YuzuMainlineMirror/?json")
+        TmpMLAli = GetData(AliyundriveDomain & "/YuzuMainlineMirror/?json")
     Loop
     GetYuzuMLVersionAli = ""
     Dim objJson As Object, VersionName As Variant
@@ -212,10 +210,10 @@ Public Function GetYuzuMLVersionAli() As String
 End Function
 
 Public Function GetRyujinxVersion() As String
-'获取 Ryujinx 版本号
-    On Error GoTo ExitRyu
     Dim objJson As Object
-    Set objJson = JSON.parse(GetDataStr2(CloudflareReverseProxyUrl & "/https://api.github.com/repos/Ryujinx/release-channel-master/releases/latest"))
+    On Error GoTo ExitRyu
+    '获取 Ryujinx 版本号
+    Set objJson = JSON.parse(GetData(CloudflareReverseProxyUrl & "/https://api.github.com/repos/Ryujinx/release-channel-master/releases/latest"))
     GetRyujinxVersion = objJson("tag_name")
     Exit Function
 ExitRyu:
@@ -226,85 +224,45 @@ ExitRyu:
     End If
     GetRyujinxVersion = "错误"
 End Function
-
-Public Function GetRyujinxCNVersion() As String
-'获取 Ryujinx CN 版本号
-    On Error GoTo ExitRyu
-    Dim TmpML As String
-    TmpML = GetDataStr2(CloudflareReverseProxyUrl & "/https://api.github.com/repos/YidaozhanYa/RyujinxCN/releases/latest")
-    TmpML = Replace(Replace(TmpML, Chr(34), ""), " ", "")
-    TmpML = Filter(Split(TmpML, ","), "tag_name:")(0)
-    GetRyujinxCNVersion = Replace(Replace(Replace(TmpML, "tag_name:", ""), vbCrLf, ""), vbLf, "")
-    Exit Function
-ExitRyu:
-    If frmRyujinxConfig.Visible = False Then
-        MsgBox "GitHub API 调用超出限制，请等一会重试，或者使用阿里云盘下载源。", vbCritical + vbOKOnly
-    Else
-        MsgBox "从 GitHub 获取版本号失败，请手动输入版本号。", vbCritical + vbOKOnly
-    End If
-    GetRyujinxCNVersion = "错误"
-End Function
-
-Public Function GetRyujinxVersionAli() As String
-'获取 Ryujinx 版本号 阿里云盘
-    Dim TmpMLAli As String
-    Do Until TmpMLAli <> ""
-        TmpMLAli = GetDataStr2(AliyundriveDomain & "/RyujinxMainlineMirror/?json")
-    Loop
-    GetRyujinxVersionAli = ""
+Public Function GetRyujinxVersionAli(Branch As String) As String
     Dim objJson As Object, VersionName As Variant
-    Set objJson = JSON.parse(TmpMLAli)
-    For Each VersionName In objJson("list")
-        GetRyujinxVersionAli = GetRyujinxVersionAli & Replace(Replace(VersionName, "ryujinx-", ""), "-win_x64.zip", "") & vbCrLf
-    Next VersionName
-    GetRyujinxVersionAli = Left(GetRyujinxVersionAli, Len(GetRyujinxVersionAli) - 1)
-End Function
-
-Public Function GetRyujinxLDNVersionAli() As String
-'获取 Ryujinx LDN 版本号 阿里云盘
     Dim TmpMLAli As String
-    Do Until TmpMLAli <> ""
-        TmpMLAli = GetDataStr2(AliyundriveDomain & "/RyujinxLDNMirror/?json")
-    Loop
-    GetRyujinxLDNVersionAli = ""
-    Dim objJson As Object, VersionName As Variant
-    Set objJson = JSON.parse(TmpMLAli)
-    For Each VersionName In objJson("list")
-        GetRyujinxLDNVersionAli = GetRyujinxLDNVersionAli & Replace(Replace(VersionName, "ryujinx-", ""), "-win_x64.zip", "") & vbCrLf
-    Next VersionName
-    GetRyujinxLDNVersionAli = Left(GetRyujinxLDNVersionAli, Len(GetRyujinxLDNVersionAli) - 1)
+    Select Case Branch
+    Case "Mainline"
+        '获取 Ryujinx 版本号 阿里云盘
+        Do Until TmpMLAli <> ""
+            TmpMLAli = GetData(AliyundriveDomain & "/RyujinxMainlineMirror/?json")
+        Loop
+        GetRyujinxVersionAli = ""
+        Set objJson = JSON.parse(TmpMLAli)
+        For Each VersionName In objJson("list")
+            GetRyujinxVersionAli = GetRyujinxVersionAli & Replace(Replace(VersionName, "ryujinx-", ""), "-win_x64.zip", "") & vbCrLf
+        Next VersionName
+        GetRyujinxVersionAli = Left(GetRyujinxVersionAli, Len(GetRyujinxVersionAli) - 1)
+    Case "Ava"
+        '获取 Ryujinx Ava 版本号 阿里云盘
+        Do Until TmpMLAli <> ""
+            TmpMLAli = GetData(AliyundriveDomain & "/RyujinxAvaMirror/?json")
+        Loop
+        GetRyujinxVersionAli = ""
+        Set objJson = JSON.parse(TmpMLAli)
+        For Each VersionName In objJson("list")
+            GetRyujinxVersionAli = GetRyujinxVersionAli & Replace(Replace(VersionName, "test-ava-ryujinx-", ""), "-win_x64.zip", "") & vbCrLf
+        Next VersionName
+        GetRyujinxVersionAli = Left(GetRyujinxVersionAli, Len(GetRyujinxVersionAli) - 1)
+    Case "LDN"
+        '获取 Ryujinx LDN 版本号 阿里云盘
+        Do Until TmpMLAli <> ""
+            TmpMLAli = GetData(AliyundriveDomain & "/RyujinxLDNMirror/?json")
+        Loop
+        GetRyujinxVersionAli = ""
+        Set objJson = JSON.parse(TmpMLAli)
+        For Each VersionName In objJson("list")
+            GetRyujinxVersionAli = GetRyujinxVersionAli & Replace(Replace(VersionName, "ryujinx-", ""), "-win_x64.zip", "") & vbCrLf
+        Next VersionName
+        GetRyujinxVersionAli = Left(GetRyujinxVersionAli, Len(GetRyujinxVersionAli) - 1)
+    End Select
 End Function
-
-Public Function GetRyujinxCNVersionAli() As String
-'获取 Ryujinx CN 版本号 阿里云盘
-    Dim TmpMLAli As String
-    Do Until TmpMLAli <> ""
-        TmpMLAli = GetDataStr2(AliyundriveDomain & "/RyujinxCNBuilds/?json")
-    Loop
-    GetRyujinxCNVersionAli = ""
-    Dim objJson As Object, VersionName As Variant
-    Set objJson = JSON.parse(TmpMLAli)
-    For Each VersionName In objJson("list")
-        If InStr(VersionName, "win") Then GetRyujinxCNVersionAli = GetRyujinxCNVersionAli & Replace(Replace(VersionName, "ryujinx-cn-", ""), "-win_x64.zip", "") & vbCrLf
-    Next VersionName
-    GetRyujinxCNVersionAli = Left(GetRyujinxCNVersionAli, Len(GetRyujinxCNVersionAli) - 1)
-End Function
-
-Public Function GetRyujinxVulkanVersionAli() As String
-'获取 Ryujinx Vulkan 版本号 阿里云盘
-    Dim TmpMLAli As String
-    Do Until TmpMLAli <> ""
-        TmpMLAli = GetDataStr2(AliyundriveDomain & "/RyujinxCNVulkanBuilds/?json")
-    Loop
-    GetRyujinxVulkanVersionAli = ""
-    Dim objJson As Object, VersionName As Variant
-    Set objJson = JSON.parse(TmpMLAli)
-    For Each VersionName In objJson("list")
-        If InStr(VersionName, "win") Then GetRyujinxVulkanVersionAli = GetRyujinxVulkanVersionAli & Replace(Replace(VersionName, "ryujinx-cn-vulkan-", ""), "-win_x64.zip", "") & vbCrLf
-    Next VersionName
-    GetRyujinxVulkanVersionAli = Left(GetRyujinxVulkanVersionAli, Len(GetRyujinxVulkanVersionAli) - 1)
-End Function
-
 Public Function MkDirs(ByVal PathIn As String) As Boolean
 '连环套文件夹创建
     Dim nPos As Long
@@ -342,10 +300,10 @@ Public Sub CheckUpdate(Slient As Boolean)
 '检查更新
     On Error GoTo ExitUpd
     Dim objJson As Object, qwq As Variant
-    Set objJson = JSON.parse(GetDataStr2(CloudflareReverseProxyUrl & "/https://api.github.com/repos/YidaozhanYa/NSEmuHelper/releases/latest"))
-    If objJson("tag_name") <> InternalVersion Then
+    Set objJson = JSON.parse(GetData(CloudflareReverseProxyUrl & "/https://api.github.com/repos/YidaozhanYa/NSEmuHelper/releases/latest"))
+    If objJson("tag_name") <> "v" & App.Major & "." & App.Minor & "." & App.Revision Then
         '有更新！
-        qwq = MsgBox("检测到更新！" & vbCrLf & vbCrLf & "当前版本：" & Version & vbCrLf & "最新版本：" & Replace(CStr(objJson("body")), "##### ", ""), vbOKCancel)
+        qwq = MsgBox("检测到更新！" & vbCrLf & vbCrLf & "当前版本：V" & App.Major & "." & App.Minor & "." & App.Revision & vbCrLf & "最新版本：" & Replace(CStr(objJson("body")), "##### ", ""), vbOKCancel)
         If qwq = vbOK Then
             frmMain.Hide
             frmConfig.Hide
@@ -356,7 +314,7 @@ Public Sub CheckUpdate(Slient As Boolean)
             Exit Sub
         End If
     Else
-        If Slient = False Then MsgBox Version & " 已经是最新版本。", vbInformation
+        If Slient = False Then MsgBox App.Major & "." & App.Minor & "." & App.Revision & " 已经是最新版本。", vbInformation
     End If
     Exit Sub
 ExitUpd:

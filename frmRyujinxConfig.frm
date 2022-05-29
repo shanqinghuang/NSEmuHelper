@@ -240,10 +240,8 @@ Private Sub btnSave_Click()
             RyujinxBranch = "主线版"
         Case "LDN"
             RyujinxBranch = "LDN联机版"
-        Case "CN"
-            RyujinxBranch = "中文版"
-        Case "Vulkan"
-            RyujinxBranch = "Vulkan"
+        Case "Ava"
+            RyujinxBranch = "Ava版"
         End Select
         RyujinxVersion = txtVersion.Text
         RyujinxFirmware = cbFirmware.Text
@@ -294,14 +292,14 @@ Private Sub btnSave_Click()
     End If
 End Sub
 
-Private Sub Checks_Click(index As Integer)
+Private Sub Checks_Click(Index As Integer)
 '选框
-    If Checks(index).Value = 1 Then
-        Checks(index).Caption = "是"
-        If index = 0 Then btnBrowse.Visible = True: txtDataFolder.Visible = True
+    If Checks(Index).Value = 1 Then
+        Checks(Index).Caption = "是"
+        If Index = 0 Then btnBrowse.Visible = True: txtDataFolder.Visible = True
     Else
-        Checks(index).Caption = "否"
-        If index = 0 Then btnBrowse.Visible = False: txtDataFolder.Visible = False
+        Checks(Index).Caption = "否"
+        If Index = 0 Then btnBrowse.Visible = False: txtDataFolder.Visible = False
     End If
 End Sub
 
@@ -355,9 +353,8 @@ Private Sub Form_Activate()
     End If
     ImageCombo1.ComboItems.Clear
     ImageCombo1.ComboItems.Add 1, "Mainline", "主线版", 1
-    ImageCombo1.ComboItems.Add 2, "CN", "中文版", 1
+    ImageCombo1.ComboItems.Add 2, "Ava", "Ava版", 1
     ImageCombo1.ComboItems.Add 3, "LDN", "LDN联机版", 2
-    ImageCombo1.ComboItems.Add 4, "Vulkan", "Vulkan", 1
     ImageCombo1.ComboItems(1).Selected = True
     cbFirmware.Text = "加载中 ..."
 
@@ -374,10 +371,7 @@ Private Sub Form_Activate()
     Loop
     Shell "cmd /c taskkill /f /im Ryujinx.exe"
     tmpRyujinxName = Replace(tmpRyujinxName, "Ryujinx Console ", "")
-    If InStr(tmpRyujinxName, "vulkan") Then
-        ImageCombo1.ComboItems(4).Selected = True
-        txtVersion.Text = Replace(tmpRyujinxName, "-vulkan", "")
-    ElseIf InStr(tmpRyujinxName, "ldn") Then
+    If InStr(tmpRyujinxName, "ldn") Then
         ImageCombo1.ComboItems(3).Selected = True
         txtVersion.Text = tmpRyujinxName
     Else
@@ -387,7 +381,7 @@ Private Sub Form_Activate()
     txtVersion.SetFocus
 
     Dim FirmwareVersionArr() As String
-    FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+    FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetData(CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
     Dim i As Integer
     For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
         cbFirmware.AddItem FirmwareVersionArr(i)
@@ -405,17 +399,19 @@ Private Sub Form_Initialize()
 End Sub
 
 Private Sub ImageCombo1_Click()
+ImageCombo1.Enabled = False
     txtVersion.Text = "加载中 ..."
-    If ImageCombo1.SelectedItem.index = 3 Then
+    If ImageCombo1.SelectedItem.Index = 3 Then
         Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(2).Picture
         Dim Tmp() As String
-        Tmp = Split(GetRyujinxLDNVersionAli, vbCrLf)
+        Tmp = Split(GetRyujinxVersionAli("LDN"), vbCrLf)
         txtVersion.Text = Tmp(UBound(Tmp))
     Else
         Image1.Picture = frmRyujinxInstaller.ImageList2.ListImages(1).Picture
         txtVersion.Text = GetRyujinxVersion
     End If
     txtVersion.SetFocus
+ImageCombo1.Enabled = True
 End Sub
 
 Private Sub txtVersion_KeyPress(KeyAscii As Integer)

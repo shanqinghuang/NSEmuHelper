@@ -202,7 +202,7 @@ Option Explicit
 
 Private Sub Form_Activate()
     Labels(5).Alignment = 1
-    Labels(5).Caption = "2021-2022 是一刀斩哒" & vbCrLf & "版本 " & Version
+    Labels(5).Caption = "2021-2022 是一刀斩哒" & vbCrLf & "版本 " & App.Major & "." & App.Minor & "." & App.Revision
     If FirstActivate = False Then
         '判断是否第一次显示主窗口
         If GetIni("Tool", "ReadmeCompleted", App.Path & "\Config.ini") <> "Yes" Then hardcodedReadme.Readme    '弹readme
@@ -220,7 +220,7 @@ Private Sub Form_Activate()
             End If
 
             Dim Announcement As String, AnnouncementCache As String
-            Announcement = GetDataStr2(AnnouncementUrl)
+            Announcement = GetData(AnnouncementUrl)
             AnnouncementCache = ""
             If CheckFileExists(App.Path & "\.AnnoucementCache.txt") Then
                 Open App.Path & "\.AnnoucementCache.txt" For Input As #18
@@ -307,7 +307,7 @@ End Sub
 
 Private Sub Form_Load()
 '窗口相关
-    Me.Caption = "NS模拟器助手 " & Version
+    Me.Caption = "NS模拟器助手 " & App.Major & "." & App.Minor & "." & App.Revision
     Labels(6) = "即柚子模拟器" & vbCrLf & "全速畅玩大部分游戏"
     Labels(7) = "即龙神模拟器" & vbCrLf & "兼容性好且功能强大"
 End Sub
@@ -320,13 +320,13 @@ Private Sub Form_Unload(Cancel As Integer)
     End
 End Sub
 
-Private Sub Images_Click(index As Integer)
+Private Sub Images_Click(Index As Integer)
     Dim PopMsgBox As Integer
     '图片按钮被点击
-    If index = 2 Then
+    If Index = 2 Then
         frmConfig.Show
     Else
-        If index = 0 Then
+        If Index = 0 Then
             'Yuzu
             frmManage.IsYuzu = True
             If CheckFileExists(YuzuInstallFolder & "\yuzu.exe") = False Then
@@ -368,7 +368,7 @@ Private Sub Images_Click(index As Integer)
     End If
 End Sub
 
-Private Sub Labels_Click(index As Integer)
-    If index = 0 Then Images_Click (0)
-    If index = 1 Then Images_Click (1)
+Private Sub Labels_Click(Index As Integer)
+    If Index = 0 Then Images_Click (0)
+    If Index = 1 Then Images_Click (1)
 End Sub

@@ -363,8 +363,6 @@ Attribute iFirmwareVersion.VB_VarUserMemId = 1073938434
 '1：分支 True EA False Mainline
 '2：版本号
 Public CurrentStep As Integer, YuzuVersionName As String
-Attribute CurrentStep.VB_VarUserMemId = 1073938440
-Attribute YuzuVersionName.VB_VarUserMemId = 1073938440
 Private Sub btnBrowse_Click()
     Debug.Print CurrentStep
     '浏览
@@ -476,11 +474,11 @@ Private Sub Step1()
     ComboVersion.Visible = True
     Image1.Picture = ImageList2.ListImages(1).Picture
     If InstallMode = 1 Then
-        Me.Caption = TitlePrefix & " - Step 1"
+        Me.Caption = "NS模拟器助手 " & App.Major & "." & App.Minor & "." & App.Revision & " - " & TitlePrefix & " - Step 1"
         Labels(1).Caption = "Step 1 - 选择模拟器版本"
         Labels(2).Caption = "在安装模拟器之前，你需要先进行几步选择。" & vbCrLf & "如果追求最新功能，就使用预先测试版，如果追求稳定，就使用主线版。"
     Else
-        Me.Caption = TitlePrefix
+        Me.Caption = "NS模拟器助手 " & App.Major & "." & App.Minor & "." & App.Revision & " - " & TitlePrefix
         Labels(1).Caption = "选择模拟器版本"
         Labels(2).Caption = "请选择要更换到的模拟器版本。" & vbCrLf & "如果追求最新功能，就使用预先测试版，如果追求稳定，就使用主线版。"
     End If
@@ -489,6 +487,7 @@ Private Sub Step1()
     ImageCombo1.ComboItems.Add 1, "EA", "预先测试版", 1
     ImageCombo1.ComboItems.Add 2, "Mainline", "主线版", 2
     ImageCombo1.ComboItems(1).Selected = True
+    ImageCombo1.Enabled = False
     If DownloadSource = "GitHub" Then
         txtVersion.Visible = True
         ComboVersion.Visible = False
@@ -510,6 +509,7 @@ Private Sub Step1()
     End If
     '确保文件夹存在
     MkDirs YuzuInstallFolder
+    ImageCombo1.Enabled = True '加载完毕，列表框可以点击
 End Sub
 
 Private Sub Step2()
@@ -524,10 +524,10 @@ Private Sub Step2()
     CurrentStep = 2
     '第二步
     '设置第一步结果
-    If ImageCombo1.SelectedItem.index = 1 Then
+    If ImageCombo1.SelectedItem.Index = 1 Then
         iIsEarlyAccess = True
         YuzuVersionName = "yuzu-windows-msvc-early-access"
-    ElseIf ImageCombo1.SelectedItem.index = 2 Then
+    ElseIf ImageCombo1.SelectedItem.Index = 2 Then
         iIsEarlyAccess = False
         YuzuVersionName = "yuzu-windows-msvc"
     Else
@@ -539,7 +539,7 @@ Private Sub Step2()
     ComboVersion.Visible = False
     btnBrowse.Visible = True
     txtKey.Visible = True
-    Me.Caption = TitlePrefix & " - Step 2"
+        Me.Caption = "NS模拟器助手 " & App.Major & "." & App.Minor & "." & App.Revision & " - " & TitlePrefix & " - Step 2"
     Labels(1).Caption = "Step 2 - 选择密钥文件"
     Labels(2).Caption = "NS 模拟器需要密钥 (Keys) 文件才能玩游戏。" & vbCrLf & "你可以在相关的群中找到它 (prod.keys)，并在这里打开。"
     Labels(3).Caption = "密钥文件："
@@ -560,6 +560,7 @@ Private Sub Step3()
         '界面
     End If
     ComboVersion.Visible = False
+    txtVersion.Visible = False
     ImageCombo1.Visible = False
     btnShortcut.Visible = False
     btnDelYes.Visible = False
@@ -572,9 +573,10 @@ Private Sub Step3()
     txtKey.Visible = False
     txtFirmware.Visible = True
     opFirmware(0).Visible = True
+    opFirmware(0).Enabled = False
     opFirmware(1).Visible = True
     If InstallMode = 1 Then
-        Me.Caption = TitlePrefix & " - Step 3"
+        Me.Caption = "NS模拟器助手 " & App.Major & "." & App.Minor & "." & App.Revision & " - " & TitlePrefix & " - Step 3"
         Labels(1).Caption = "Step 3 - 选择固件"
         Labels(2).Caption = "Yuzu 需要固件才能使大部分游戏正常运行。" & vbCrLf & "你可以在相关的群中找到固件包，或使用“在线下载”。" & vbCrLf & "固件版本需要小于等于密钥版本。"
     ElseIf InstallMode = 3 Then
@@ -583,7 +585,7 @@ Private Sub Step3()
         Else
             Image1.Picture = ImageList2.ListImages(2).Picture
         End If
-        Me.Caption = TitlePrefix & " - 选择固件"
+        Me.Caption = "NS模拟器助手 " & App.Major & "." & App.Minor & "." & App.Revision & " - " & TitlePrefix & " - 选择固件"
         Labels(1).Caption = "更新固件版本"
         Labels(2).Caption = "你可以在此更新或更换固件的版本。" & vbCrLf & "你可以在相关的群中找到固件包，或使用“在线下载”。" & vbCrLf & "固件版本需要小于等于密钥版本。"
     End If
@@ -592,7 +594,7 @@ Private Sub Step3()
     cbFirmware.Clear
     cbFirmware.Text = "加载中 ..."
     Dim FirmwareVersionArr() As String
-    FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+    FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetData(CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
     Dim i As Integer
     For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
         cbFirmware.AddItem FirmwareVersionArr(i)
@@ -637,10 +639,10 @@ Private Sub Step4()
             iVersion = ComboVersion.Text
         End If
         '设置第一步结果
-        If ImageCombo1.SelectedItem.index = 1 Then
+        If ImageCombo1.SelectedItem.Index = 1 Then
             iIsEarlyAccess = True
             YuzuVersionName = "yuzu-windows-msvc-early-access"
-        ElseIf ImageCombo1.SelectedItem.index = 2 Then
+        ElseIf ImageCombo1.SelectedItem.Index = 2 Then
             iIsEarlyAccess = False
             YuzuVersionName = "yuzu-windows-msvc"
         Else
@@ -665,21 +667,21 @@ Private Sub Step4()
 
     Labels(2).Caption = "这可能需要十几分钟，你可以坐下来喝杯茶。" & vbCrLf & "根据网络状况和电脑性能，安装速度会有所不同。"
     If InstallMode = 1 Then
-        Me.Caption = "安装 Yuzu - 正在安装"
+        Me.Caption = "NS模拟器助手 " & App.Major & "." & App.Minor & "." & App.Revision & " - " & TitlePrefix & " - 正在安装"
         If iIsEarlyAccess Then
             Labels(1).Caption = "正在安装 Yuzu 预先测试版 " & iVersion & " ..."
         Else
             Labels(1).Caption = "正在安装 Yuzu 主线版 " & iVersion & " ..."
         End If
     ElseIf InstallMode = 2 Then
-        Me.Caption = "更新 Yuzu - 正在安装"
+        Me.Caption = "NS模拟器助手 " & App.Major & "." & App.Minor & "." & App.Revision & " - 正在安装模拟器"
         If iIsEarlyAccess Then
             Labels(1).Caption = "正在更新 Yuzu 到预先测试版 " & iVersion & " ..."
         Else
             Labels(1).Caption = "正在更新 Yuzu 到主线版 " & iVersion & " ..."
         End If
     ElseIf InstallMode = 3 Then
-        Me.Caption = "更新固件 - 正在安装"
+        Me.Caption = "NS模拟器助手 " & App.Major & "." & App.Minor & "." & App.Revision & " - 正在安装固件"
         Labels(1).Caption = "正在安装固件 ..."
         GoTo FirmwareInstallation
     End If
@@ -696,7 +698,7 @@ Private Sub Step4()
         Else
             '主线
             Dim TmpArr() As String
-            TmpArr = Split(Replace(GetDataStr2(CloudflareReverseProxyUrl & "/https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases"), Chr(34), ""), ",")
+            TmpArr = Split(Replace(GetData(CloudflareReverseProxyUrl & "/https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases"), Chr(34), ""), ",")
             If Err.Number = 9 Then
                 MsgBox "运行时错误 (9): 下标越界，可能是你的网络对 Cloudflare 的通信有问题。"
                 End
@@ -763,6 +765,7 @@ ReDownload:
         PBarLoad 1, Me.hwnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
         PBarSetRange 1, 0, 100
         PBarSetPos 1, 0
+        Debug.Print YuzuUrl
         AsyncReads(0) = YuzuUrl
         AsyncReads(1) = YuzuInstallFolder & "\Yuzu.7z"
         ucDownload1.DownloadFile AsyncReads(0), AsyncReads(1)
@@ -785,7 +788,7 @@ ReDownload:
                 Sleep 1000
                 GoTo ReDownload
             Else
-                MsgBox "下载失败！请检查你的互联网连接和 DNS。", vbCritical
+                MsgBox "下载失败！请检查您的互联网连接和 DNS。", vbCritical
                 End
             End If
         End If
@@ -808,6 +811,7 @@ ReDownload2:
                 PBarSetRange 1, 0, 100
                 PBarSetPos 1, 0
                 DoEvents
+                Debug.Print iFirmwarePath
                 AsyncReads(0) = iFirmwarePath
                 AsyncReads(1) = YuzuInstallFolder & "\Firmware.zip"
                 ucDownload1.DownloadFile AsyncReads(0), AsyncReads(1)
@@ -831,7 +835,7 @@ ReDownload2:
                         Sleep 1000
                         GoTo ReDownload2
                     Else
-                        MsgBox "下载失败！请检查你的互联网连接和 DNS。", vbCritical
+                        MsgBox "下载失败！请检查您的互联网连接和 DNS。", vbCritical
                         End
                     End If
                 End If
@@ -852,8 +856,9 @@ ReDownload2:
             PBarLoad 1, Me.hwnd, lblProgBar.Left \ Screen.TwipsPerPixelX, lblProgBar.Top \ Screen.TwipsPerPixelY, lblProgBar.Width \ Screen.TwipsPerPixelX, lblProgBar.Height \ Screen.TwipsPerPixelY
             PBarSetRange 1, 0, 100
             PBarSetPos 1, 0
-            AsyncReads(0) = AliyundriveDomain & "/ali/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/sysdata.zip"
+            AsyncReads(0) = AliyundriveDomain & "/sysdata.zip"
             AsyncReads(1) = YuzuInstallFolder & "\Sysdata.zip"
+            Debug.Print AsyncReads(0)
             ucDownload1.DownloadFile AsyncReads(0), AsyncReads(1)
             DoEvents
             DownloadCompleted = False
@@ -1066,21 +1071,31 @@ Private Sub Form_Unload(Cancel As Integer)
     End If
 End Sub
 
-Private Sub opFirmware_Click(index As Integer)
+Private Sub opFirmware_Click(Index As Integer)
 '切换固件下载方式
+If Index = 0 Then
+    opFirmware(0).Enabled = False
+    opFirmware(1).Enabled = True
+Else
+    opFirmware(0).Enabled = True
+    opFirmware(1).Enabled = False
+End If
     Dim FirmwareVersionArr() As String
     Dim i As Integer
-    If index = 1 Then
+    Dim FirmwareObject As Object, SingleItem As Variant
+    If Index = 1 Then
         '在线
         txtFirmware.Visible = False
         btnBrowse.Visible = False
         cbFirmware.Top = 2520
         cbFirmware.Clear
+        '重制后的固件列表解析
+        '之前都没用 json 解析器，可以看出我早期代码有多粪
         cbFirmware.Text = "加载中 ..."
-        FirmwareVersionArr = Filter(Split(GetDataStr2(AliyundriveDomain & "/NSFirmwareMirror/?json"), Chr(34)), "firmware_")
-        For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
-            cbFirmware.AddItem Replace(Replace(FirmwareVersionArr(i), "firmware_", ""), ".zip", "")
-        Next
+        Set FirmwareObject = JSON.parse(GetData(AliyundriveDomain & "/NSFirmwareMirror/?json"))
+        For Each SingleItem In FirmwareObject("list").keys
+        cbFirmware.AddItem Replace(Replace(FirmwareObject("list")(SingleItem)("name"), "Firmware_", ""), ".zip", "")
+        Next SingleItem
         cbFirmware.Text = "选择固件版本"
     Else
         '本地
@@ -1089,13 +1104,12 @@ Private Sub opFirmware_Click(index As Integer)
         cbFirmware.Top = 3120
         cbFirmware.Clear
         cbFirmware.Text = "加载中 ..."
-        FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetDataStr2(CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+        FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetData(CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
         For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
             cbFirmware.AddItem FirmwareVersionArr(i)
         Next
         cbFirmware.Text = "选择固件版本"
     End If
-
 End Sub
 
 
@@ -1112,7 +1126,7 @@ Private Sub ucDownload1_DownloadFailed(ByVal Status As String, ByVal StatusCode 
     DoEvents
     ShellAndWait Chr(34) & App.Path & "\Dependencies\curl.exe" & Chr(34) & " -fkL " & Chr(34) & AsyncReads(0) & Chr(34) & " -o " & Chr(34) & AsyncReads(1) & Chr(34)
     DoEvents
-    Labels(5).Caption = "备用下载成功！"
+    Labels(5).Caption = "正在备用下载 ... 如果多次看到此提示，建议重试。"
     DoEvents
     DownloadCompleted = True
 End Sub
@@ -1121,11 +1135,12 @@ Private Sub ucDownload1_DownloadComplete()
 End Sub
 
 
-Private Sub ImageCombo1_Click()
-    Image1.Picture = ImageList2.ListImages(ImageCombo1.SelectedItem.index).Picture
+Private Sub ImageCombo1_Click() '切换模拟器分支
+ImageCombo1.Enabled = False
+    Image1.Picture = ImageList2.ListImages(ImageCombo1.SelectedItem.Index).Picture
     Dim YuzuVersion() As String
     Dim i As Integer
-    If ImageCombo1.SelectedItem.index = 1 Then
+    If ImageCombo1.SelectedItem.Index = 1 Then
         If DownloadSource = "GitHub" Then
             txtVersion.SetFocus
             txtVersion.Text = "加载中 ..."
@@ -1154,6 +1169,7 @@ Private Sub ImageCombo1_Click()
             Next
         End If
     End If
+ImageCombo1.Enabled = True
 End Sub
 
 Private Sub Form_Initialize()
