@@ -125,7 +125,7 @@ Public Function GetData(ByVal Url As String) As String
     ElseIf XMLHTTP.Status = 503 Then
         Debug.Print "使用备用下载服务器"
         XMLHTTP.Open "GET", Replace(Url, AliyundriveDomain, "https://pan.yidaozhan.ga/ns_emu_helper"), True
-        AliyundriveDomain = "pan.yidaozhan.ga/ns_emu_helper"
+        AliyundriveDomain = "https://pan.yidaozhan.ga/ns_emu_helper"
         XMLHTTP.setRequestHeader "User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36"
         XMLHTTP.send
         XMLHTTP.waitForResponse 10
@@ -156,7 +156,7 @@ Public Function GetYuzuVersion() As String
     Exit Function
 ExitEA:
     If frmYuzuConfig.Visible = False Then
-        MsgBox "GitHub API 调用超出限制，请等一会重试，或者使用阿里云盘下载源。", vbCritical + vbOKOnly
+        MsgBox "GitHub API 调用超出限制，请等一会重试，或者使用其它下载源。", vbCritical + vbOKOnly
     Else
         MsgBox "从 GitHub 获取版本号失败，请手动输入版本号。", vbCritical + vbOKOnly
     End If
@@ -172,7 +172,7 @@ Public Function GetYuzuMLVersion() As String
     Exit Function
 ExitML:
     If frmYuzuConfig.Visible = False Then
-        MsgBox "GitHub API 调用超出限制，请等一会重试，或者使用阿里云盘下载源。", vbCritical + vbOKOnly
+        MsgBox "GitHub API 调用超出限制，请等一会重试，或者使用其它下载源。", vbCritical + vbOKOnly
     Else
         MsgBox "从 GitHub 获取版本号失败，请手动输入版本号。", vbCritical + vbOKOnly
     End If
@@ -348,6 +348,7 @@ End Sub
 Public Function GetIni(strSection As String, strKey As String, INIFileName As String)
     With New ClassINI
         .INIFileName = INIFileName
+        'GetIni = Replace(Replace(.GetIniKey(strSection, strKey), Chr(0), ""), vbCrLf, "")
         GetIni = .GetIniKey(strSection, strKey)
     End With
 End Function

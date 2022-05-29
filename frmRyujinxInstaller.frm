@@ -505,8 +505,8 @@ Private Sub Step1()
     ImageCombo1.ComboItems.Add 2, "Ava", "Ava版", 1
     ImageCombo1.ComboItems.Add 3, "LDN", "LDN联机版", 2
     ImageCombo1.ComboItems(1).Selected = True
-    ImageCombo1.Enabled = False '暂时锁定列表框防止点击导致多个版本号被加到同一列表中
-    If DownloadSource = "GitHub" Then '默认选择了主线版，所以获取主线版本号
+    ImageCombo1.Enabled = False    '暂时锁定列表框防止点击导致多个版本号被加到同一列表中
+    If DownloadSource = "GitHub" Then    '默认选择了主线版，所以获取主线版本号
         txtVersion.Visible = True
         ComboVersion.Visible = False
         txtVersion.Text = GetRyujinxVersion
@@ -527,7 +527,7 @@ Private Sub Step1()
     End If
     '确保文件夹存在
     MkDirs RyujinxInstallFolder
-    ImageCombo1.Enabled = True '加载完毕，列表框可以点击
+    ImageCombo1.Enabled = True    '加载完毕，列表框可以点击
 End Sub
 
 Private Sub Step2()
@@ -535,7 +535,11 @@ Private Sub Step2()
     iBranch = ImageCombo1.SelectedItem.Text
     If DownloadSource = "GitHub" Then
         If txtVersion.Text = "加载中 ..." Then Exit Sub
-        iVersion = txtVersion.Text
+            If iBranch = "LDN联机版" Then
+                iVersion = ComboVersion.Text
+            Else
+                iVersion = txtVersion.Text
+            End If
     Else
         If ComboVersion.Text = "加载中 ..." Then Exit Sub
         iVersion = ComboVersion.Text
@@ -549,7 +553,7 @@ Private Sub Step2()
     btnBrowse.Visible = True
     txtKey.Visible = True
     btnVersionHelp.Visible = False
-        Me.Caption = "NS模拟器助手 " & App.Major & "." & App.Minor & "." & App.Revision & " - " & TitlePrefix & " - Step 2"
+    Me.Caption = "NS模拟器助手 " & App.Major & "." & App.Minor & "." & App.Revision & " - " & TitlePrefix & " - Step 2"
     Labels(1).Caption = "Step 2 - 选择密钥文件"
     Labels(2).Caption = "NS 模拟器需要密钥 (Keys) 文件才能玩游戏。" & vbCrLf & "你可以在相关的群中找到它 (prod.keys)，并在这里打开。"
     Labels(3).Caption = "密钥文件："
@@ -615,7 +619,7 @@ End Sub
 Private Sub Step4()
     Dim ReDownloadCount As Integer
     Dim fso As Object, folder As Object
-    Set fso = CreateObject("scripting.filesystemobject")    '创建FSO对象
+    Set fso = New FileSystemObject    '创建FSO对象
     'dependencies
 
     On Error Resume Next
@@ -643,7 +647,11 @@ Private Sub Step4()
         iBranch = ImageCombo1.SelectedItem.Text
         If DownloadSource = "GitHub" Then
             If txtVersion.Text = "加载中 ..." Then Exit Sub
-            iVersion = txtVersion.Text
+            If iBranch = "LDN联机版" Then
+                iVersion = ComboVersion.Text
+            Else
+                iVersion = txtVersion.Text
+            End If
         Else
             If ComboVersion.Text = "加载中 ..." Then Exit Sub
             iVersion = ComboVersion.Text
@@ -686,7 +694,7 @@ Private Sub Step4()
     Labels(5).Caption = ""
     iVersion = CStr(CInt(iVersion))
     Dim RyujinxUrl As String
-    Select Case iBranch '准备生成下载链接
+    Select Case iBranch    '准备生成下载链接
     Case "主线版"
         '主线
         If DownloadSource = "GitHub" Then
@@ -721,7 +729,7 @@ Private Sub Step4()
                     Inet1.Url = "https://github.com/opensearch.xml"
                     Inet1.RequestTimeout = 10
                     Tmp = Inet1.OpenURL
-                    If Err.Number = 35761 Then '超时你！
+                    If Err.Number = 35761 Then    '超时你！
                         Labels(4).Caption = "正在下载模拟器，使用 Cloudflare Workers ..."
                         RyujinxUrl = CloudflareReverseProxyUrl & "\" & RyujinxUrl
                     Else
@@ -836,26 +844,26 @@ ReInstall:
             Labels(4).Caption = "正在删除之前的模拟器 ..."
             Labels(5).Caption = ""
             DoEvents
-            Shell "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\bin" & Chr(34)
+            fso.DeleteFolder RyujinxInstallFolder & "\bin"
             DoEvents
-            Shell "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\etc" & Chr(34)
+            fso.DeleteFolder RyujinxInstallFolder & "\etc"
             DoEvents
-            Shell "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\lib" & Chr(34)
+            fso.DeleteFolder RyujinxInstallFolder & "\lib"
             DoEvents
-            Shell "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\Logs" & Chr(34)
+            fso.DeleteFolder RyujinxInstallFolder & "\Logs"
             DoEvents
-            Shell "cmd /c rd /s /q " & Chr(34) & RyujinxInstallFolder & "\share" & Chr(34)
+            fso.DeleteFolder RyujinxInstallFolder & "\share"
             DoEvents
-            Shell "cmd /c del /s /q " & Chr(34) & RyujinxInstallFolder & "\*.dll" & Chr(34)
+            fso.DeleteFile RyujinxInstallFolder & "\*.dll"
             DoEvents
-            Shell "cmd /c del /s /q " & Chr(34) & RyujinxInstallFolder & "\*.so" & Chr(34)
-            Shell "cmd /c del /s /q " & Chr(34) & RyujinxInstallFolder & "\*.dylib" & Chr(34)
+            fso.DeleteFile RyujinxInstallFolder & "\*.so"
+            fso.DeleteFile RyujinxInstallFolder & "\*.dylib"
             DoEvents
-            Shell "cmd /c del /s /q " & Chr(34) & RyujinxInstallFolder & "\*.pdb" & Chr(34)
-            Shell "cmd /c del /s /q " & Chr(34) & RyujinxInstallFolder & "\*.config" & Chr(34)
+            fso.DeleteFile RyujinxInstallFolder & "\*.pdb"
+            fso.DeleteFile RyujinxInstallFolder & "\*.config"
             DoEvents
-            Shell "cmd /c del /s /q " & Chr(34) & RyujinxInstallFolder & "\alsoft.ini" & Chr(34)
-            Shell "cmd /c del /s /q " & Chr(34) & RyujinxInstallFolder & "\*.exe" & Chr(34)
+            fso.DeleteFile RyujinxInstallFolder & "\alsoft.ini"
+            fso.DeleteFile RyujinxInstallFolder & "\*.exe"
             DoEvents
         End If
         '安装模拟器 解压
@@ -996,38 +1004,60 @@ Private Sub Form_Unload(Cancel As Integer)
     End If
 End Sub
 
-Private Sub opFirmware_Click(Index As Integer)
+Private Sub opFirmware_Click(index As Integer)
+btnNextStep.Enabled = False
 '切换固件下载方式
 
-If Index = 0 Then
-    opFirmware(0).Enabled = False
-    opFirmware(1).Enabled = True
-Else
-    opFirmware(0).Enabled = True
-    opFirmware(1).Enabled = False
-End If
+    If index = 0 Then
+        opFirmware(0).Enabled = False
+        opFirmware(1).Enabled = True
+    Else
+        opFirmware(0).Enabled = True
+        opFirmware(1).Enabled = False
+    End If
     Dim FirmwareVersionArr() As String
     Dim i As Integer
     Dim FirmwareObject As Object, SingleItem As Variant
-    If Index = 1 Then
-        '在线
-        txtFirmware.Visible = False
-        btnBrowse.Visible = False
-        cbFirmware.Top = 2520
-        cbFirmware.Clear
-        '重制后的固件列表解析
-        '之前都没用 json 解析器，可以看出我早期代码有多粪
-        cbFirmware.Text = "加载中 ..."
-        Set FirmwareObject = JSON.parse(GetData(AliyundriveDomain & "/NSFirmwareMirror/?json"))
-        For Each SingleItem In FirmwareObject("list").keys
-        cbFirmware.AddItem Replace(Replace(FirmwareObject("list")(SingleItem)("name"), "Firmware_", ""), ".zip", "")
-        Next SingleItem
-        cbFirmware.Text = "选择固件版本"
+    If DownloadSource <> "GitHub" Then
+        If index = 1 Then
+            '在线
+            txtFirmware.Visible = False
+            btnBrowse.Visible = False
+            cbFirmware.Top = 2520
+            cbFirmware.Clear
+            '重制后的固件列表解析
+            '之前都没用 json 解析器，可以看出我早期代码有多粪
+            cbFirmware.Text = "加载中 ..."
+            Set FirmwareObject = JSON.parse(GetData(AliyundriveDomain & "/NSFirmwareMirror/?json"))
+            For Each SingleItem In FirmwareObject("list").keys
+                cbFirmware.AddItem Replace(Replace(FirmwareObject("list")(SingleItem)("name"), "Firmware_", ""), ".zip", "")
+            Next SingleItem
+            cbFirmware.Text = "选择固件版本"
+        Else
+            '本地
+            txtFirmware.Visible = True
+            btnBrowse.Visible = True
+            cbFirmware.Top = 3120
+            cbFirmware.Clear
+            cbFirmware.Text = "加载中 ..."
+            FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetData(CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+            For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+                cbFirmware.AddItem FirmwareVersionArr(i)
+            Next
+            cbFirmware.Text = "选择固件版本"
+        End If
     Else
-        '本地
-        txtFirmware.Visible = True
-        btnBrowse.Visible = True
-        cbFirmware.Top = 3120
+        If index = 1 Then
+            '在线
+            txtFirmware.Visible = False
+            btnBrowse.Visible = False
+            cbFirmware.Top = 2520
+        Else
+            '本地
+            txtFirmware.Visible = True
+            btnBrowse.Visible = True
+            cbFirmware.Top = 3120
+        End If
         cbFirmware.Clear
         cbFirmware.Text = "加载中 ..."
         FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetData(CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
@@ -1036,6 +1066,7 @@ End If
         Next
         cbFirmware.Text = "选择固件版本"
     End If
+btnNextStep.Enabled = True
 End Sub
 
 Private Sub ucDownload1_DownloadProgress(ByVal BytesRead As Long, ByVal BytesTotal As Long)
@@ -1061,17 +1092,18 @@ Private Sub ucDownload1_DownloadComplete()
 End Sub
 
 
-Private Sub ImageCombo1_Click() '切换模拟器分支
-ImageCombo1.Enabled = False
-    If ImageCombo1.SelectedItem.Index = 3 Then
+Private Sub ImageCombo1_Click()    '切换模拟器分支
+btnNextStep.Enabled = False
+    ImageCombo1.Enabled = False
+    If ImageCombo1.SelectedItem.index = 3 Then
         Image1.Picture = ImageList2.ListImages(2).Picture
     Else
         Image1.Picture = ImageList2.ListImages(1).Picture
     End If
     Dim RyujinxVersion() As String
     Dim i As Integer
-    Select Case ImageCombo1.SelectedItem.Index
-    Case 1 ' 主线
+    Select Case ImageCombo1.SelectedItem.index
+    Case 1    ' 主线
         If DownloadSource = "GitHub" Then
             txtVersion.Visible = True
             ComboVersion.Visible = False
@@ -1089,7 +1121,7 @@ ImageCombo1.Enabled = False
                 ComboVersion.SetFocus
             Next
         End If
-    Case 2 ' Ava
+    Case 2    ' Ava
         If DownloadSource = "GitHub" Then
             txtVersion.Visible = True
             ComboVersion.Visible = False
@@ -1107,19 +1139,20 @@ ImageCombo1.Enabled = False
                 ComboVersion.SetFocus
             Next
         End If
-    Case 3 ' LDN
+    Case 3    ' LDN
         txtVersion.Visible = False
         ComboVersion.Visible = True
         ComboVersion.Clear
         ComboVersion.Text = "加载中 ..."
-            RyujinxVersion = Split(GetRyujinxVersionAli("LDN"), vbCrLf)
+        RyujinxVersion = Split(GetRyujinxVersionAli("LDN"), vbCrLf)
         For i = 0 To (UBound(RyujinxVersion) - LBound(RyujinxVersion))
             ComboVersion.AddItem RyujinxVersion(i)
             ComboVersion.Text = RyujinxVersion(i)
             ComboVersion.SetFocus
         Next
     End Select
-ImageCombo1.Enabled = True
+    ImageCombo1.Enabled = True
+btnNextStep.Enabled = True
 End Sub
 
 Private Sub Form_Initialize()

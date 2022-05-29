@@ -524,10 +524,10 @@ Private Sub Step2()
     CurrentStep = 2
     '第二步
     '设置第一步结果
-    If ImageCombo1.SelectedItem.Index = 1 Then
+    If ImageCombo1.SelectedItem.index = 1 Then
         iIsEarlyAccess = True
         YuzuVersionName = "yuzu-windows-msvc-early-access"
-    ElseIf ImageCombo1.SelectedItem.Index = 2 Then
+    ElseIf ImageCombo1.SelectedItem.index = 2 Then
         iIsEarlyAccess = False
         YuzuVersionName = "yuzu-windows-msvc"
     Else
@@ -606,7 +606,7 @@ Private Sub Step4()
     Dim ReDownloadCount As Integer
     ReDownloadCount = 0
     Dim fso As Object, folder As Object
-    Set fso = CreateObject("scripting.filesystemobject")    '创建FSO对象
+    Set fso = New FileSystemObject    '创建FSO对象
     'dependencies
 
     On Error Resume Next
@@ -639,10 +639,10 @@ Private Sub Step4()
             iVersion = ComboVersion.Text
         End If
         '设置第一步结果
-        If ImageCombo1.SelectedItem.Index = 1 Then
+        If ImageCombo1.SelectedItem.index = 1 Then
             iIsEarlyAccess = True
             YuzuVersionName = "yuzu-windows-msvc-early-access"
-        ElseIf ImageCombo1.SelectedItem.Index = 2 Then
+        ElseIf ImageCombo1.SelectedItem.index = 2 Then
             iIsEarlyAccess = False
             YuzuVersionName = "yuzu-windows-msvc"
         Else
@@ -880,12 +880,14 @@ ReInstall:
             Labels(4).Caption = "正在删除之前的模拟器 ..."
             Labels(5).Caption = ""
             DoEvents
-            Shell "cmd /c rd /s /q " & Chr(34) & YuzuInstallFolder & "\plugins" & Chr(34), vbMinimizedNoFocus
-            Shell "cmd /c cd " & Chr(34) & YuzuInstallFolder & Chr(34) & " && del /s /q *.tar.xz", vbMinimizedNoFocus
+            fso.DeleteFolder YuzuInstallFolder & "\plugins"
+            fso.DeleteFile YuzuInstallFolder & "\*.tar.xz"
             DoEvents
-            Shell "cmd /c del /s /q " & Chr(34) & YuzuInstallFolder & "\*.dll" & Chr(34)
-            Shell "cmd /c del /s /q " & Chr(34) & YuzuInstallFolder & "\*.conf" & Chr(34)
-            Shell "cmd /c del /s /q " & Chr(34) & YuzuInstallFolder & "\*.exe" & Chr(34)
+            fso.DeleteFile YuzuInstallFolder & "\*.dll"
+            fso.DeleteFile YuzuInstallFolder & "\*.pak"
+            fso.DeleteFile YuzuInstallFolder & "\*.conf"
+            fso.DeleteFile YuzuInstallFolder & "\*.dat"
+            fso.DeleteFile YuzuInstallFolder & "\*.exe"
             DoEvents
         End If
         '安装模拟器 解压
@@ -904,9 +906,9 @@ ReInstall:
         'XCopy YuzuInstallFolder & "\" & YuzuVersionName & "\plugins", YuzuInstallFolder & "\plugins"
         fso.CopyFile YuzuInstallFolder & "\" & YuzuVersionName & "\*.*", YuzuInstallFolder & "\", True
         DoEvents
-        Shell "cmd /c rd /s /q " & Chr(34) & YuzuInstallFolder & "\" & YuzuVersionName & "" & Chr(34), vbHide
+        fso.DeleteFolder YuzuInstallFolder & "\" & YuzuVersionName
         DoEvents
-        Shell "cmd /c cd " & Chr(34) & YuzuInstallFolder & Chr(34) & " && del /s /q *.tar.xz", vbHide
+        fso.DeleteFile YuzuInstallFolder & "\*.tar.xz"
         DoEvents
     End If
 
@@ -1071,9 +1073,10 @@ Private Sub Form_Unload(Cancel As Integer)
     End If
 End Sub
 
-Private Sub opFirmware_Click(Index As Integer)
+Private Sub opFirmware_Click(index As Integer)
+btnNextStep.Enabled = False
 '切换固件下载方式
-If Index = 0 Then
+If index = 0 Then
     opFirmware(0).Enabled = False
     opFirmware(1).Enabled = True
 Else
@@ -1083,25 +1086,46 @@ End If
     Dim FirmwareVersionArr() As String
     Dim i As Integer
     Dim FirmwareObject As Object, SingleItem As Variant
-    If Index = 1 Then
-        '在线
-        txtFirmware.Visible = False
-        btnBrowse.Visible = False
-        cbFirmware.Top = 2520
-        cbFirmware.Clear
-        '重制后的固件列表解析
-        '之前都没用 json 解析器，可以看出我早期代码有多粪
-        cbFirmware.Text = "加载中 ..."
-        Set FirmwareObject = JSON.parse(GetData(AliyundriveDomain & "/NSFirmwareMirror/?json"))
-        For Each SingleItem In FirmwareObject("list").keys
-        cbFirmware.AddItem Replace(Replace(FirmwareObject("list")(SingleItem)("name"), "Firmware_", ""), ".zip", "")
-        Next SingleItem
-        cbFirmware.Text = "选择固件版本"
+    If DownloadSource <> "GitHub" Then
+        If index = 1 Then
+            '在线
+            txtFirmware.Visible = False
+            btnBrowse.Visible = False
+            cbFirmware.Top = 2520
+            cbFirmware.Clear
+            '重制后的固件列表解析
+            '之前都没用 json 解析器，可以看出我早期代码有多粪
+            cbFirmware.Text = "加载中 ..."
+            Set FirmwareObject = JSON.parse(GetData(AliyundriveDomain & "/NSFirmwareMirror/?json"))
+            For Each SingleItem In FirmwareObject("list").keys
+                cbFirmware.AddItem Replace(Replace(FirmwareObject("list")(SingleItem)("name"), "Firmware_", ""), ".zip", "")
+            Next SingleItem
+            cbFirmware.Text = "选择固件版本"
+        Else
+            '本地
+            txtFirmware.Visible = True
+            btnBrowse.Visible = True
+            cbFirmware.Top = 3120
+            cbFirmware.Clear
+            cbFirmware.Text = "加载中 ..."
+            FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetData(CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
+            For i = 0 To (UBound(FirmwareVersionArr) - LBound(FirmwareVersionArr))
+                cbFirmware.AddItem FirmwareVersionArr(i)
+            Next
+            cbFirmware.Text = "选择固件版本"
+        End If
     Else
-        '本地
-        txtFirmware.Visible = True
-        btnBrowse.Visible = True
-        cbFirmware.Top = 3120
+        If index = 1 Then
+            '在线
+            txtFirmware.Visible = False
+            btnBrowse.Visible = False
+            cbFirmware.Top = 2520
+        Else
+            '本地
+            txtFirmware.Visible = True
+            btnBrowse.Visible = True
+            cbFirmware.Top = 3120
+        End If
         cbFirmware.Clear
         cbFirmware.Text = "加载中 ..."
         FirmwareVersionArr = Split(Replace(Replace(Join(Filter(Split(Replace(Replace(GetData(CloudflareReverseProxyUrl & "/https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"), Chr(34), ""), " ", ""), vbLf), ".zip"), vbCrLf), "<filename=Firmware", ""), ".zipsource=original>", ""), vbCrLf)
@@ -1110,6 +1134,7 @@ End If
         Next
         cbFirmware.Text = "选择固件版本"
     End If
+btnNextStep.Enabled = True
 End Sub
 
 
@@ -1122,7 +1147,7 @@ End Sub
 Private Sub ucDownload1_DownloadFailed(ByVal Status As String, ByVal StatusCode As AsyncStatusCodeConstants)
 ' Visual Basic, F**K YOU!!!
 ' 干饭王, F**K YOU!!!
-    Labels(5).Caption = "下载失败，正在尝试使用备用下载 ..."
+    Labels(5).Caption = "下载失败，正在尝试使用备用下载 ... " & vbCrLf & AsyncReads(0)
     DoEvents
     ShellAndWait Chr(34) & App.Path & "\Dependencies\curl.exe" & Chr(34) & " -fkL " & Chr(34) & AsyncReads(0) & Chr(34) & " -o " & Chr(34) & AsyncReads(1) & Chr(34)
     DoEvents
@@ -1136,11 +1161,13 @@ End Sub
 
 
 Private Sub ImageCombo1_Click() '切换模拟器分支
+
+btnNextStep.Enabled = False
 ImageCombo1.Enabled = False
-    Image1.Picture = ImageList2.ListImages(ImageCombo1.SelectedItem.Index).Picture
+    Image1.Picture = ImageList2.ListImages(ImageCombo1.SelectedItem.index).Picture
     Dim YuzuVersion() As String
     Dim i As Integer
-    If ImageCombo1.SelectedItem.Index = 1 Then
+    If ImageCombo1.SelectedItem.index = 1 Then
         If DownloadSource = "GitHub" Then
             txtVersion.SetFocus
             txtVersion.Text = "加载中 ..."
@@ -1170,6 +1197,7 @@ ImageCombo1.Enabled = False
         End If
     End If
 ImageCombo1.Enabled = True
+btnNextStep.Enabled = True
 End Sub
 
 Private Sub Form_Initialize()

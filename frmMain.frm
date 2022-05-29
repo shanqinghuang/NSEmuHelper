@@ -271,6 +271,10 @@ Private Sub Form_Initialize()
         'v3配置文件 懒得升级了
         AliyundriveDomain = "https://nsemuhelper.herokuapp.com"
     End If
+    If AliyundriveDomain = "" Then
+        '照顾备用源
+        AliyundriveDomain = "https://nsemuhelper.herokuapp.com"
+    End If
     ConfigFileVersion = GetIni("Tool", "ConfigFileVersion", App.Path & "\Config.ini")
     If Left(GetIni("Network", "AlwaysUseCloudflare", App.Path & "\Config.ini"), 4) = "True" Then
         AlwaysUseCloudflare = True
@@ -320,13 +324,13 @@ Private Sub Form_Unload(Cancel As Integer)
     End
 End Sub
 
-Private Sub Images_Click(Index As Integer)
+Private Sub Images_Click(index As Integer)
     Dim PopMsgBox As Integer
     '图片按钮被点击
-    If Index = 2 Then
+    If index = 2 Then
         frmConfig.Show
     Else
-        If Index = 0 Then
+        If index = 0 Then
             'Yuzu
             frmManage.IsYuzu = True
             If CheckFileExists(YuzuInstallFolder & "\yuzu.exe") = False Then
@@ -368,7 +372,7 @@ Private Sub Images_Click(Index As Integer)
     End If
 End Sub
 
-Private Sub Labels_Click(Index As Integer)
-    If Index = 0 Then Images_Click (0)
-    If Index = 1 Then Images_Click (1)
+Private Sub Labels_Click(index As Integer)
+    If index = 0 Then Images_Click (0)
+    If index = 1 Then Images_Click (1)
 End Sub
