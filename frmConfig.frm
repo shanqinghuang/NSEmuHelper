@@ -350,8 +350,8 @@ Private Sub btnAbout_Click()
     frmAbout.Show
 End Sub
 
-Private Sub btnBrowse_Click(Index As Integer)
-    CfgTexts(Index).Text = ChooseDir(Labels(Index).Caption, Me)
+Private Sub btnBrowse_Click(index As Integer)
+    CfgTexts(index).Text = ChooseDir(Labels(index).Caption, Me)
 End Sub
 
 Private Sub btnCancel_Click()
@@ -397,11 +397,11 @@ Private Sub btnSave_Click()
 End Sub
 
 
-Private Sub Checks_Click(Index As Integer)
-    If Checks(Index).Value = 1 Then
-        Checks(Index).Caption = "ÊÇ"
+Private Sub Checks_Click(index As Integer)
+    If Checks(index).Value = 1 Then
+        Checks(index).Caption = "ÊÇ"
     Else
-        Checks(Index).Caption = "·ñ"
+        Checks(index).Caption = "·ñ"
     End If
 End Sub
 
@@ -410,9 +410,9 @@ Private Sub Form_Activate()
     CfgTexts(0).Text = YuzuInstallFolder
     CfgTexts(1).Text = RyujinxInstallFolder
     If AlwaysUseCloudflare = "True" Then
-        Checks(Index).Value = 1
+        Checks(index).Value = 1
     Else
-        Checks(Index).Value = 0
+        Checks(index).Value = 0
     End If
     Select Case DownloadSource
     Case "Heroku"
@@ -426,7 +426,7 @@ Private Sub Form_Activate()
     Case "GitHub"
         ImageCombo1.ComboItems(5).Selected = True
     End Select
-    Images(3).Picture = ImageList1.ListImages(ImageCombo1.SelectedItem.Index).Picture
+    Images(3).Picture = ImageList1.ListImages(ImageCombo1.SelectedItem.index).Picture
 
     If AutoCheckForUpdate Then Checks(1).Value = 1
 
@@ -438,9 +438,9 @@ Private Sub Form_Load()
     ImageCombo1.ComboItems.Clear
     ImageCombo1.ComboItems.Add 1, "Heroku", "Heroku", 1
     ImageCombo1.ComboItems.Add 2, "Replit", "Replit", 2
-    ImageCombo1.ComboItems.Add 3, "Vercel", "Vercel", 3
-    ImageCombo1.ComboItems.Add 4, "Azure", "Azure", 4
-    ImageCombo1.ComboItems.Add 5, "GitHub", "GitHub / Cloudflare", 5
+    'ImageCombo1.ComboItems.Add 3, "Vercel", "Vercel", 3
+    ImageCombo1.ComboItems.Add 3, "Azure", "Azure", 4
+    ImageCombo1.ComboItems.Add 4, "GitHub", "GitHub / Cloudflare", 5
     ImageCombo1.ComboItems(1).Selected = True
 End Sub
 
@@ -453,12 +453,12 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Private Sub ImageCombo1_Click()
-    Images(3).Picture = ImageList1.ListImages(ImageCombo1.SelectedItem.Index).Picture
+    Images(3).Picture = ImageList1.ListImages(ImageCombo1.SelectedItem.index).Picture
 
 End Sub
 
-Private Sub Labels2_Click(Index As Integer)
-    If Index = 2 Then
+Private Sub Labels2_Click(index As Integer)
+    If index = 2 Then
         If CheckFileExists(App.Path & "\ImportRegistry.exe") Then
             Shell App.Path & "\ImportRegistry.exe", vbNormalFocus
             End
