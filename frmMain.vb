@@ -37,6 +37,10 @@ Public Class frmMain
                 Me.Text = "NS 模拟器助手 - Yuzu 管理"
             Case "TabRyujinx"
                 Me.Text = "NS 模拟器助手 - Ryujinx 管理"
+            Case "TabInstall"
+                Me.Text = "NS 模拟器助手 - 安装模拟器"
+            Case "TabMods"
+                Me.Text = "NS 模拟器助手 - Yuzu 模组管理"
             Case "TabConfig"
                 Me.Text = "NS 模拟器助手 - 设置"
                 RefreshConfig()

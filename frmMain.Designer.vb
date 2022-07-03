@@ -67,6 +67,8 @@ Partial Class frmMain
         Me.MaterialCard2 = New MaterialSkin.Controls.MaterialCard()
         Me.lblAbout = New System.Windows.Forms.Label()
         Me.imgTabs = New System.Windows.Forms.ImageList(Me.components)
+        Me.TabInstall = New System.Windows.Forms.TabPage()
+        Me.TabMods = New System.Windows.Forms.TabPage()
         Me.Tabs.SuspendLayout()
         Me.TabMain.SuspendLayout()
         Me.MaterialCard4.SuspendLayout()
@@ -90,6 +92,8 @@ Partial Class frmMain
         Me.Tabs.Controls.Add(Me.TabMain)
         Me.Tabs.Controls.Add(Me.TabYuzu)
         Me.Tabs.Controls.Add(Me.TabRyujinx)
+        Me.Tabs.Controls.Add(Me.TabInstall)
+        Me.Tabs.Controls.Add(Me.TabMods)
         Me.Tabs.Controls.Add(Me.TabConfig)
         Me.Tabs.Controls.Add(Me.TabAbout)
         Me.Tabs.Depth = 0
@@ -672,6 +676,28 @@ Partial Class frmMain
         Me.imgTabs.Images.SetKeyName(2, "ryujinx.png")
         Me.imgTabs.Images.SetKeyName(3, "config.png")
         Me.imgTabs.Images.SetKeyName(4, "about.png")
+        Me.imgTabs.Images.SetKeyName(5, "briefcase-download.png")
+        Me.imgTabs.Images.SetKeyName(6, "puzzle.png")
+        '
+        'TabInstall
+        '
+        Me.TabInstall.BackColor = System.Drawing.Color.White
+        Me.TabInstall.ImageKey = "briefcase-download.png"
+        Me.TabInstall.Location = New System.Drawing.Point(4, 24)
+        Me.TabInstall.Name = "TabInstall"
+        Me.TabInstall.Size = New System.Drawing.Size(778, 354)
+        Me.TabInstall.TabIndex = 5
+        Me.TabInstall.Text = "安装"
+        '
+        'TabMods
+        '
+        Me.TabMods.BackColor = System.Drawing.Color.White
+        Me.TabMods.ImageKey = "puzzle.png"
+        Me.TabMods.Location = New System.Drawing.Point(4, 24)
+        Me.TabMods.Name = "TabMods"
+        Me.TabMods.Size = New System.Drawing.Size(778, 354)
+        Me.TabMods.TabIndex = 6
+        Me.TabMods.Text = "模组"
         '
         'frmMain
         '
@@ -760,4 +786,6 @@ Partial Class frmMain
     Friend WithEvents Label8 As Label
     Friend WithEvents cbColorScheme As MaterialSkin.Controls.MaterialComboBox
     Friend WithEvents cbGitHubSource As MaterialSkin.Controls.MaterialComboBox
+    Friend WithEvents TabInstall As TabPage
+    Friend WithEvents TabMods As TabPage
 End Class
