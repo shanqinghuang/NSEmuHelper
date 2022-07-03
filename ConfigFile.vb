@@ -9,4 +9,6 @@
     Public RyujinxFirmwareVersion As String = ""
 
     Public DownloadSource As String = "GitHub"
+
+    Public ColorScheme As String = "IndigoLight"
 End Class

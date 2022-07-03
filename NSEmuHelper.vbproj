@@ -151,5 +151,14 @@
   <ItemGroup>
     <None Include="Res\ryujinx.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Res\hammer-wrench.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Res\nintendo-switch.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Res\wan.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
