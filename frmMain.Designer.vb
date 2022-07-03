@@ -31,58 +31,58 @@ Partial Class frmMain
         Me.lblRyujinxFirmware = New System.Windows.Forms.Label()
         Me.lblRyujinx2 = New System.Windows.Forms.Label()
         Me.lblRyujinx = New System.Windows.Forms.Label()
+        Me.picRyujinx = New System.Windows.Forms.PictureBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.MaterialCard1 = New MaterialSkin.Controls.MaterialCard()
         Me.lblYuzuFirmware = New System.Windows.Forms.Label()
         Me.lblYuzu2 = New System.Windows.Forms.Label()
         Me.lblYuzu = New System.Windows.Forms.Label()
+        Me.picYuzu = New System.Windows.Forms.PictureBox()
         Me.TabYuzu = New System.Windows.Forms.TabPage()
         Me.TabRyujinx = New System.Windows.Forms.TabPage()
         Me.TabConfig = New System.Windows.Forms.TabPage()
+        Me.MaterialCard7 = New MaterialSkin.Controls.MaterialCard()
+        Me.cbColorScheme = New MaterialSkin.Controls.MaterialComboBox()
+        Me.PictureBox3 = New System.Windows.Forms.PictureBox()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.MaterialCard6 = New MaterialSkin.Controls.MaterialCard()
+        Me.cbGitHubSource = New MaterialSkin.Controls.MaterialComboBox()
+        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
         Me.MaterialCard5 = New MaterialSkin.Controls.MaterialCard()
+        Me.txtRyujinxPath = New MaterialSkin.Controls.MaterialTextBox2()
+        Me.Label8 = New System.Windows.Forms.Label()
         Me.txtYuzuPath = New MaterialSkin.Controls.MaterialTextBox2()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.lblYuzuConfig = New System.Windows.Forms.Label()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.TabAbout = New System.Windows.Forms.TabPage()
         Me.MaterialCard3 = New MaterialSkin.Controls.MaterialCard()
+        Me.MaterialButton3 = New MaterialSkin.Controls.MaterialButton()
+        Me.MaterialButton1 = New MaterialSkin.Controls.MaterialButton()
+        Me.MaterialButton2 = New MaterialSkin.Controls.MaterialButton()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.MaterialCard2 = New MaterialSkin.Controls.MaterialCard()
         Me.lblAbout = New System.Windows.Forms.Label()
         Me.imgTabs = New System.Windows.Forms.ImageList(Me.components)
-        Me.MaterialCard6 = New MaterialSkin.Controls.MaterialCard()
-        Me.MaterialTextBox21 = New MaterialSkin.Controls.MaterialTextBox2()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.MaterialCard7 = New MaterialSkin.Controls.MaterialCard()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.picRyujinx = New System.Windows.Forms.PictureBox()
-        Me.picYuzu = New System.Windows.Forms.PictureBox()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.MaterialButton3 = New MaterialSkin.Controls.MaterialButton()
-        Me.MaterialButton1 = New MaterialSkin.Controls.MaterialButton()
-        Me.MaterialButton2 = New MaterialSkin.Controls.MaterialButton()
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox3 = New System.Windows.Forms.PictureBox()
-        Me.txtRyujinxPath = New MaterialSkin.Controls.MaterialTextBox2()
-        Me.Label8 = New System.Windows.Forms.Label()
-        Me.cbColorScheme = New MaterialSkin.Controls.MaterialComboBox()
         Me.Tabs.SuspendLayout()
         Me.TabMain.SuspendLayout()
         Me.MaterialCard4.SuspendLayout()
+        CType(Me.picRyujinx, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MaterialCard1.SuspendLayout()
+        CType(Me.picYuzu, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabConfig.SuspendLayout()
+        Me.MaterialCard7.SuspendLayout()
+        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.MaterialCard6.SuspendLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MaterialCard5.SuspendLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabAbout.SuspendLayout()
         Me.MaterialCard3.SuspendLayout()
         Me.MaterialCard2.SuspendLayout()
-        Me.MaterialCard6.SuspendLayout()
-        Me.MaterialCard7.SuspendLayout()
-        CType(Me.picRyujinx, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.picYuzu, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Tabs
@@ -179,6 +179,16 @@ Partial Class frmMain
         Me.lblRyujinx.TabIndex = 2
         Me.lblRyujinx.Text = "当前状态: "
         '
+        'picRyujinx
+        '
+        Me.picRyujinx.Image = Global.NSEmuHelper.My.Resources.Resources.ryujinx
+        Me.picRyujinx.Location = New System.Drawing.Point(10, 10)
+        Me.picRyujinx.Name = "picRyujinx"
+        Me.picRyujinx.Size = New System.Drawing.Size(77, 79)
+        Me.picRyujinx.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.picRyujinx.TabIndex = 0
+        Me.picRyujinx.TabStop = False
+        '
         'Label1
         '
         Me.Label1.AutoSize = True
@@ -235,6 +245,16 @@ Partial Class frmMain
         Me.lblYuzu.TabIndex = 2
         Me.lblYuzu.Text = "当前状态: "
         '
+        'picYuzu
+        '
+        Me.picYuzu.Image = CType(resources.GetObject("picYuzu.Image"), System.Drawing.Image)
+        Me.picYuzu.Location = New System.Drawing.Point(12, 10)
+        Me.picYuzu.Name = "picYuzu"
+        Me.picYuzu.Size = New System.Drawing.Size(72, 79)
+        Me.picYuzu.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.picYuzu.TabIndex = 0
+        Me.picYuzu.TabStop = False
+        '
         'TabYuzu
         '
         Me.TabYuzu.BackColor = System.Drawing.Color.White
@@ -270,6 +290,141 @@ Partial Class frmMain
         Me.TabConfig.TabIndex = 3
         Me.TabConfig.Text = "设置"
         '
+        'MaterialCard7
+        '
+        Me.MaterialCard7.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.MaterialCard7.Controls.Add(Me.cbColorScheme)
+        Me.MaterialCard7.Controls.Add(Me.PictureBox3)
+        Me.MaterialCard7.Controls.Add(Me.Label6)
+        Me.MaterialCard7.Controls.Add(Me.Label7)
+        Me.MaterialCard7.Depth = 0
+        Me.MaterialCard7.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.MaterialCard7.Location = New System.Drawing.Point(557, 16)
+        Me.MaterialCard7.Margin = New System.Windows.Forms.Padding(14)
+        Me.MaterialCard7.MouseState = MaterialSkin.MouseState.HOVER
+        Me.MaterialCard7.Name = "MaterialCard7"
+        Me.MaterialCard7.Padding = New System.Windows.Forms.Padding(14)
+        Me.MaterialCard7.Size = New System.Drawing.Size(205, 342)
+        Me.MaterialCard7.TabIndex = 5
+        '
+        'cbColorScheme
+        '
+        Me.cbColorScheme.AutoResize = False
+        Me.cbColorScheme.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.cbColorScheme.Depth = 0
+        Me.cbColorScheme.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable
+        Me.cbColorScheme.DropDownHeight = 174
+        Me.cbColorScheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbColorScheme.DropDownWidth = 121
+        Me.cbColorScheme.Font = New System.Drawing.Font("Microsoft YaHei UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel)
+        Me.cbColorScheme.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.cbColorScheme.FormattingEnabled = True
+        Me.cbColorScheme.IntegralHeight = False
+        Me.cbColorScheme.ItemHeight = 43
+        Me.cbColorScheme.Items.AddRange(New Object() {"青色", "橙色", "青色 (夜间)"})
+        Me.cbColorScheme.Location = New System.Drawing.Point(17, 88)
+        Me.cbColorScheme.MaxDropDownItems = 4
+        Me.cbColorScheme.MouseState = MaterialSkin.MouseState.OUT
+        Me.cbColorScheme.Name = "cbColorScheme"
+        Me.cbColorScheme.Size = New System.Drawing.Size(171, 49)
+        Me.cbColorScheme.StartIndex = 0
+        Me.cbColorScheme.TabIndex = 6
+        '
+        'PictureBox3
+        '
+        Me.PictureBox3.Image = Global.NSEmuHelper.My.Resources.Resources.hammer_wrench
+        Me.PictureBox3.Location = New System.Drawing.Point(12, 17)
+        Me.PictureBox3.Name = "PictureBox3"
+        Me.PictureBox3.Size = New System.Drawing.Size(23, 23)
+        Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox3.TabIndex = 5
+        Me.PictureBox3.TabStop = False
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(17, 62)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(55, 15)
+        Me.Label6.TabIndex = 3
+        Me.Label6.Text = "颜色主题"
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(41, 19)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(55, 15)
+        Me.Label7.TabIndex = 2
+        Me.Label7.Text = "工具设置"
+        '
+        'MaterialCard6
+        '
+        Me.MaterialCard6.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.MaterialCard6.Controls.Add(Me.cbGitHubSource)
+        Me.MaterialCard6.Controls.Add(Me.PictureBox2)
+        Me.MaterialCard6.Controls.Add(Me.Label4)
+        Me.MaterialCard6.Controls.Add(Me.Label5)
+        Me.MaterialCard6.Depth = 0
+        Me.MaterialCard6.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.MaterialCard6.Location = New System.Drawing.Point(319, 16)
+        Me.MaterialCard6.Margin = New System.Windows.Forms.Padding(14)
+        Me.MaterialCard6.MouseState = MaterialSkin.MouseState.HOVER
+        Me.MaterialCard6.Name = "MaterialCard6"
+        Me.MaterialCard6.Padding = New System.Windows.Forms.Padding(14)
+        Me.MaterialCard6.Size = New System.Drawing.Size(205, 342)
+        Me.MaterialCard6.TabIndex = 5
+        '
+        'cbGitHubSource
+        '
+        Me.cbGitHubSource.AutoResize = False
+        Me.cbGitHubSource.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.cbGitHubSource.Depth = 0
+        Me.cbGitHubSource.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable
+        Me.cbGitHubSource.DropDownHeight = 174
+        Me.cbGitHubSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbGitHubSource.DropDownWidth = 121
+        Me.cbGitHubSource.Font = New System.Drawing.Font("Microsoft YaHei UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel)
+        Me.cbGitHubSource.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.cbGitHubSource.FormattingEnabled = True
+        Me.cbGitHubSource.IntegralHeight = False
+        Me.cbGitHubSource.ItemHeight = 43
+        Me.cbGitHubSource.Location = New System.Drawing.Point(17, 89)
+        Me.cbGitHubSource.MaxDropDownItems = 4
+        Me.cbGitHubSource.MouseState = MaterialSkin.MouseState.OUT
+        Me.cbGitHubSource.Name = "cbGitHubSource"
+        Me.cbGitHubSource.Size = New System.Drawing.Size(171, 49)
+        Me.cbGitHubSource.StartIndex = 0
+        Me.cbGitHubSource.TabIndex = 6
+        '
+        'PictureBox2
+        '
+        Me.PictureBox2.Image = Global.NSEmuHelper.My.Resources.Resources.wan
+        Me.PictureBox2.Location = New System.Drawing.Point(17, 17)
+        Me.PictureBox2.Name = "PictureBox2"
+        Me.PictureBox2.Size = New System.Drawing.Size(23, 23)
+        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox2.TabIndex = 5
+        Me.PictureBox2.TabStop = False
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(17, 62)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(79, 15)
+        Me.Label4.TabIndex = 3
+        Me.Label4.Text = "模拟器下载源"
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(41, 19)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(55, 15)
+        Me.Label5.TabIndex = 2
+        Me.Label5.Text = "网络设置"
+        '
         'MaterialCard5
         '
         Me.MaterialCard5.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
@@ -288,6 +443,46 @@ Partial Class frmMain
         Me.MaterialCard5.Padding = New System.Windows.Forms.Padding(14)
         Me.MaterialCard5.Size = New System.Drawing.Size(205, 342)
         Me.MaterialCard5.TabIndex = 0
+        '
+        'txtRyujinxPath
+        '
+        Me.txtRyujinxPath.AnimateReadOnly = False
+        Me.txtRyujinxPath.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None
+        Me.txtRyujinxPath.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None
+        Me.txtRyujinxPath.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.txtRyujinxPath.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal
+        Me.txtRyujinxPath.Depth = 0
+        Me.txtRyujinxPath.Font = New System.Drawing.Font("Microsoft YaHei UI", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel)
+        Me.txtRyujinxPath.HideSelection = True
+        Me.txtRyujinxPath.LeadingIcon = Nothing
+        Me.txtRyujinxPath.Location = New System.Drawing.Point(17, 185)
+        Me.txtRyujinxPath.MaxLength = 32767
+        Me.txtRyujinxPath.MouseState = MaterialSkin.MouseState.OUT
+        Me.txtRyujinxPath.Name = "txtRyujinxPath"
+        Me.txtRyujinxPath.PasswordChar = Global.Microsoft.VisualBasic.ChrW(0)
+        Me.txtRyujinxPath.PrefixSuffixText = Nothing
+        Me.txtRyujinxPath.ReadOnly = False
+        Me.txtRyujinxPath.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.txtRyujinxPath.SelectedText = ""
+        Me.txtRyujinxPath.SelectionLength = 0
+        Me.txtRyujinxPath.SelectionStart = 0
+        Me.txtRyujinxPath.ShortcutsEnabled = True
+        Me.txtRyujinxPath.Size = New System.Drawing.Size(171, 48)
+        Me.txtRyujinxPath.TabIndex = 6
+        Me.txtRyujinxPath.TabStop = False
+        Me.txtRyujinxPath.Text = "MaterialTextBox21"
+        Me.txtRyujinxPath.TextAlign = System.Windows.Forms.HorizontalAlignment.Left
+        Me.txtRyujinxPath.TrailingIcon = Nothing
+        Me.txtRyujinxPath.UseSystemPasswordChar = False
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Location = New System.Drawing.Point(17, 158)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(96, 15)
+        Me.Label8.TabIndex = 5
+        Me.Label8.Text = "Ryujinx 安装路径"
         '
         'txtYuzuPath
         '
@@ -338,6 +533,16 @@ Partial Class frmMain
         Me.lblYuzuConfig.TabIndex = 2
         Me.lblYuzuConfig.Text = "模拟器设置"
         '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.NSEmuHelper.My.Resources.Resources.nintendo_switch
+        Me.PictureBox1.Location = New System.Drawing.Point(17, 17)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(23, 23)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox1.TabIndex = 1
+        Me.PictureBox1.TabStop = False
+        '
         'TabAbout
         '
         Me.TabAbout.BackColor = System.Drawing.Color.White
@@ -366,181 +571,6 @@ Partial Class frmMain
         Me.MaterialCard3.Padding = New System.Windows.Forms.Padding(14)
         Me.MaterialCard3.Size = New System.Drawing.Size(308, 343)
         Me.MaterialCard3.TabIndex = 2
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(17, 14)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(163, 15)
-        Me.Label2.TabIndex = 0
-        Me.Label2.Text = "你可以通过以下方式联系我："
-        '
-        'MaterialCard2
-        '
-        Me.MaterialCard2.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.MaterialCard2.Controls.Add(Me.lblAbout)
-        Me.MaterialCard2.Depth = 0
-        Me.MaterialCard2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.MaterialCard2.Location = New System.Drawing.Point(78, 15)
-        Me.MaterialCard2.Margin = New System.Windows.Forms.Padding(14)
-        Me.MaterialCard2.MouseState = MaterialSkin.MouseState.HOVER
-        Me.MaterialCard2.Name = "MaterialCard2"
-        Me.MaterialCard2.Padding = New System.Windows.Forms.Padding(14)
-        Me.MaterialCard2.Size = New System.Drawing.Size(361, 343)
-        Me.MaterialCard2.TabIndex = 1
-        '
-        'lblAbout
-        '
-        Me.lblAbout.AutoSize = True
-        Me.lblAbout.Location = New System.Drawing.Point(17, 14)
-        Me.lblAbout.Name = "lblAbout"
-        Me.lblAbout.Size = New System.Drawing.Size(280, 195)
-        Me.lblAbout.TabIndex = 0
-        Me.lblAbout.Text = "NS 模拟器助手 —— 简单高效的 NS 模拟器管理工具" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "版本 2.0.0 Beta 1" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "© 2022 是一刀斩哒" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "本程序使用了以下开源项目" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Gi" &
-    "tHub Actions" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- rclone" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Aria2" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Newtonsoft.JSON" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- MaterialSkin" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Powered by" &
-    " Visual Basic .NET" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & ".NET Framework 4.5"
-        '
-        'imgTabs
-        '
-        Me.imgTabs.ImageStream = CType(resources.GetObject("imgTabs.ImageStream"), System.Windows.Forms.ImageListStreamer)
-        Me.imgTabs.TransparentColor = System.Drawing.Color.Transparent
-        Me.imgTabs.Images.SetKeyName(0, "home.png")
-        Me.imgTabs.Images.SetKeyName(1, "yuzu.png")
-        Me.imgTabs.Images.SetKeyName(2, "ryujinx.png")
-        Me.imgTabs.Images.SetKeyName(3, "config.png")
-        Me.imgTabs.Images.SetKeyName(4, "about.png")
-        '
-        'MaterialCard6
-        '
-        Me.MaterialCard6.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.MaterialCard6.Controls.Add(Me.PictureBox2)
-        Me.MaterialCard6.Controls.Add(Me.MaterialTextBox21)
-        Me.MaterialCard6.Controls.Add(Me.Label4)
-        Me.MaterialCard6.Controls.Add(Me.Label5)
-        Me.MaterialCard6.Depth = 0
-        Me.MaterialCard6.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.MaterialCard6.Location = New System.Drawing.Point(319, 16)
-        Me.MaterialCard6.Margin = New System.Windows.Forms.Padding(14)
-        Me.MaterialCard6.MouseState = MaterialSkin.MouseState.HOVER
-        Me.MaterialCard6.Name = "MaterialCard6"
-        Me.MaterialCard6.Padding = New System.Windows.Forms.Padding(14)
-        Me.MaterialCard6.Size = New System.Drawing.Size(205, 342)
-        Me.MaterialCard6.TabIndex = 5
-        '
-        'MaterialTextBox21
-        '
-        Me.MaterialTextBox21.AnimateReadOnly = False
-        Me.MaterialTextBox21.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None
-        Me.MaterialTextBox21.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None
-        Me.MaterialTextBox21.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.MaterialTextBox21.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal
-        Me.MaterialTextBox21.Depth = 0
-        Me.MaterialTextBox21.Font = New System.Drawing.Font("Microsoft YaHei UI", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel)
-        Me.MaterialTextBox21.HideSelection = True
-        Me.MaterialTextBox21.LeadingIcon = Nothing
-        Me.MaterialTextBox21.Location = New System.Drawing.Point(17, 89)
-        Me.MaterialTextBox21.MaxLength = 32767
-        Me.MaterialTextBox21.MouseState = MaterialSkin.MouseState.OUT
-        Me.MaterialTextBox21.Name = "MaterialTextBox21"
-        Me.MaterialTextBox21.PasswordChar = Global.Microsoft.VisualBasic.ChrW(0)
-        Me.MaterialTextBox21.PrefixSuffixText = Nothing
-        Me.MaterialTextBox21.ReadOnly = False
-        Me.MaterialTextBox21.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.MaterialTextBox21.SelectedText = ""
-        Me.MaterialTextBox21.SelectionLength = 0
-        Me.MaterialTextBox21.SelectionStart = 0
-        Me.MaterialTextBox21.ShortcutsEnabled = True
-        Me.MaterialTextBox21.Size = New System.Drawing.Size(171, 48)
-        Me.MaterialTextBox21.TabIndex = 4
-        Me.MaterialTextBox21.TabStop = False
-        Me.MaterialTextBox21.Text = "MaterialTextBox21"
-        Me.MaterialTextBox21.TextAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.MaterialTextBox21.TrailingIcon = Nothing
-        Me.MaterialTextBox21.UseSystemPasswordChar = False
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(17, 62)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(55, 15)
-        Me.Label4.TabIndex = 3
-        Me.Label4.Text = "安装路径"
-        '
-        'Label5
-        '
-        Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(41, 19)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(55, 15)
-        Me.Label5.TabIndex = 2
-        Me.Label5.Text = "网络设置"
-        '
-        'MaterialCard7
-        '
-        Me.MaterialCard7.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.MaterialCard7.Controls.Add(Me.cbColorScheme)
-        Me.MaterialCard7.Controls.Add(Me.PictureBox3)
-        Me.MaterialCard7.Controls.Add(Me.Label6)
-        Me.MaterialCard7.Controls.Add(Me.Label7)
-        Me.MaterialCard7.Depth = 0
-        Me.MaterialCard7.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.MaterialCard7.Location = New System.Drawing.Point(557, 16)
-        Me.MaterialCard7.Margin = New System.Windows.Forms.Padding(14)
-        Me.MaterialCard7.MouseState = MaterialSkin.MouseState.HOVER
-        Me.MaterialCard7.Name = "MaterialCard7"
-        Me.MaterialCard7.Padding = New System.Windows.Forms.Padding(14)
-        Me.MaterialCard7.Size = New System.Drawing.Size(205, 342)
-        Me.MaterialCard7.TabIndex = 5
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(17, 62)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(55, 15)
-        Me.Label6.TabIndex = 3
-        Me.Label6.Text = "颜色主题"
-        '
-        'Label7
-        '
-        Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(41, 19)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(55, 15)
-        Me.Label7.TabIndex = 2
-        Me.Label7.Text = "工具设置"
-        '
-        'picRyujinx
-        '
-        Me.picRyujinx.Image = Global.NSEmuHelper.My.Resources.Resources.ryujinx
-        Me.picRyujinx.Location = New System.Drawing.Point(10, 10)
-        Me.picRyujinx.Name = "picRyujinx"
-        Me.picRyujinx.Size = New System.Drawing.Size(77, 79)
-        Me.picRyujinx.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.picRyujinx.TabIndex = 0
-        Me.picRyujinx.TabStop = False
-        '
-        'picYuzu
-        '
-        Me.picYuzu.Image = CType(resources.GetObject("picYuzu.Image"), System.Drawing.Image)
-        Me.picYuzu.Location = New System.Drawing.Point(12, 10)
-        Me.picYuzu.Name = "picYuzu"
-        Me.picYuzu.Size = New System.Drawing.Size(72, 79)
-        Me.picYuzu.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.picYuzu.TabIndex = 0
-        Me.picYuzu.TabStop = False
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = Global.NSEmuHelper.My.Resources.Resources.nintendo_switch
-        Me.PictureBox1.Location = New System.Drawing.Point(17, 17)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(23, 23)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox1.TabIndex = 1
-        Me.PictureBox1.TabStop = False
         '
         'MaterialButton3
         '
@@ -599,88 +629,49 @@ Partial Class frmMain
         Me.MaterialButton2.UseAccentColor = True
         Me.MaterialButton2.UseVisualStyleBackColor = True
         '
-        'PictureBox2
+        'Label2
         '
-        Me.PictureBox2.Image = Global.NSEmuHelper.My.Resources.Resources.wan
-        Me.PictureBox2.Location = New System.Drawing.Point(17, 17)
-        Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(23, 23)
-        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox2.TabIndex = 5
-        Me.PictureBox2.TabStop = False
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(17, 14)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(163, 15)
+        Me.Label2.TabIndex = 0
+        Me.Label2.Text = "你可以通过以下方式联系我："
         '
-        'PictureBox3
+        'MaterialCard2
         '
-        Me.PictureBox3.Image = Global.NSEmuHelper.My.Resources.Resources.hammer_wrench
-        Me.PictureBox3.Location = New System.Drawing.Point(12, 17)
-        Me.PictureBox3.Name = "PictureBox3"
-        Me.PictureBox3.Size = New System.Drawing.Size(23, 23)
-        Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox3.TabIndex = 5
-        Me.PictureBox3.TabStop = False
+        Me.MaterialCard2.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.MaterialCard2.Controls.Add(Me.lblAbout)
+        Me.MaterialCard2.Depth = 0
+        Me.MaterialCard2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.MaterialCard2.Location = New System.Drawing.Point(78, 15)
+        Me.MaterialCard2.Margin = New System.Windows.Forms.Padding(14)
+        Me.MaterialCard2.MouseState = MaterialSkin.MouseState.HOVER
+        Me.MaterialCard2.Name = "MaterialCard2"
+        Me.MaterialCard2.Padding = New System.Windows.Forms.Padding(14)
+        Me.MaterialCard2.Size = New System.Drawing.Size(361, 343)
+        Me.MaterialCard2.TabIndex = 1
         '
-        'txtRyujinxPath
+        'lblAbout
         '
-        Me.txtRyujinxPath.AnimateReadOnly = False
-        Me.txtRyujinxPath.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None
-        Me.txtRyujinxPath.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None
-        Me.txtRyujinxPath.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.txtRyujinxPath.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal
-        Me.txtRyujinxPath.Depth = 0
-        Me.txtRyujinxPath.Font = New System.Drawing.Font("Microsoft YaHei UI", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel)
-        Me.txtRyujinxPath.HideSelection = True
-        Me.txtRyujinxPath.LeadingIcon = Nothing
-        Me.txtRyujinxPath.Location = New System.Drawing.Point(17, 185)
-        Me.txtRyujinxPath.MaxLength = 32767
-        Me.txtRyujinxPath.MouseState = MaterialSkin.MouseState.OUT
-        Me.txtRyujinxPath.Name = "txtRyujinxPath"
-        Me.txtRyujinxPath.PasswordChar = Global.Microsoft.VisualBasic.ChrW(0)
-        Me.txtRyujinxPath.PrefixSuffixText = Nothing
-        Me.txtRyujinxPath.ReadOnly = False
-        Me.txtRyujinxPath.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.txtRyujinxPath.SelectedText = ""
-        Me.txtRyujinxPath.SelectionLength = 0
-        Me.txtRyujinxPath.SelectionStart = 0
-        Me.txtRyujinxPath.ShortcutsEnabled = True
-        Me.txtRyujinxPath.Size = New System.Drawing.Size(171, 48)
-        Me.txtRyujinxPath.TabIndex = 6
-        Me.txtRyujinxPath.TabStop = False
-        Me.txtRyujinxPath.Text = "MaterialTextBox21"
-        Me.txtRyujinxPath.TextAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.txtRyujinxPath.TrailingIcon = Nothing
-        Me.txtRyujinxPath.UseSystemPasswordChar = False
+        Me.lblAbout.AutoSize = True
+        Me.lblAbout.Location = New System.Drawing.Point(17, 14)
+        Me.lblAbout.Name = "lblAbout"
+        Me.lblAbout.Size = New System.Drawing.Size(280, 195)
+        Me.lblAbout.TabIndex = 0
+        Me.lblAbout.Text = "NS 模拟器助手 —— 简单高效的 NS 模拟器管理工具" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "版本 2.0.0 Beta 1" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "© 2022 是一刀斩哒" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "本程序使用了以下开源项目" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Gi" &
+    "tHub Actions" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- rclone" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Aria2" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Newtonsoft.JSON" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- MaterialSkin" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Powered by" &
+    " Visual Basic .NET" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & ".NET Framework 4.5"
         '
-        'Label8
+        'imgTabs
         '
-        Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(17, 158)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(96, 15)
-        Me.Label8.TabIndex = 5
-        Me.Label8.Text = "Ryujinx 安装路径"
-        '
-        'cbColorScheme
-        '
-        Me.cbColorScheme.AutoResize = False
-        Me.cbColorScheme.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.cbColorScheme.Depth = 0
-        Me.cbColorScheme.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable
-        Me.cbColorScheme.DropDownHeight = 174
-        Me.cbColorScheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cbColorScheme.DropDownWidth = 121
-        Me.cbColorScheme.Font = New System.Drawing.Font("Microsoft YaHei UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel)
-        Me.cbColorScheme.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.cbColorScheme.FormattingEnabled = True
-        Me.cbColorScheme.IntegralHeight = False
-        Me.cbColorScheme.ItemHeight = 43
-        Me.cbColorScheme.Items.AddRange(New Object() {"青色", "橙色", "青色 (夜间)"})
-        Me.cbColorScheme.Location = New System.Drawing.Point(17, 88)
-        Me.cbColorScheme.MaxDropDownItems = 4
-        Me.cbColorScheme.MouseState = MaterialSkin.MouseState.OUT
-        Me.cbColorScheme.Name = "cbColorScheme"
-        Me.cbColorScheme.Size = New System.Drawing.Size(171, 49)
-        Me.cbColorScheme.StartIndex = 0
-        Me.cbColorScheme.TabIndex = 6
+        Me.imgTabs.ImageStream = CType(resources.GetObject("imgTabs.ImageStream"), System.Windows.Forms.ImageListStreamer)
+        Me.imgTabs.TransparentColor = System.Drawing.Color.Transparent
+        Me.imgTabs.Images.SetKeyName(0, "home.png")
+        Me.imgTabs.Images.SetKeyName(1, "yuzu.png")
+        Me.imgTabs.Images.SetKeyName(2, "ryujinx.png")
+        Me.imgTabs.Images.SetKeyName(3, "config.png")
+        Me.imgTabs.Images.SetKeyName(4, "about.png")
         '
         'frmMain
         '
@@ -703,25 +694,25 @@ Partial Class frmMain
         Me.TabMain.PerformLayout()
         Me.MaterialCard4.ResumeLayout(False)
         Me.MaterialCard4.PerformLayout()
+        CType(Me.picRyujinx, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MaterialCard1.ResumeLayout(False)
         Me.MaterialCard1.PerformLayout()
+        CType(Me.picYuzu, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabConfig.ResumeLayout(False)
+        Me.MaterialCard7.ResumeLayout(False)
+        Me.MaterialCard7.PerformLayout()
+        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.MaterialCard6.ResumeLayout(False)
+        Me.MaterialCard6.PerformLayout()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MaterialCard5.ResumeLayout(False)
         Me.MaterialCard5.PerformLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabAbout.ResumeLayout(False)
         Me.MaterialCard3.ResumeLayout(False)
         Me.MaterialCard3.PerformLayout()
         Me.MaterialCard2.ResumeLayout(False)
         Me.MaterialCard2.PerformLayout()
-        Me.MaterialCard6.ResumeLayout(False)
-        Me.MaterialCard6.PerformLayout()
-        Me.MaterialCard7.ResumeLayout(False)
-        Me.MaterialCard7.PerformLayout()
-        CType(Me.picRyujinx, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.picYuzu, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -761,7 +752,6 @@ Partial Class frmMain
     Friend WithEvents Label6 As Label
     Friend WithEvents Label7 As Label
     Friend WithEvents MaterialCard6 As MaterialSkin.Controls.MaterialCard
-    Friend WithEvents MaterialTextBox21 As MaterialSkin.Controls.MaterialTextBox2
     Friend WithEvents Label4 As Label
     Friend WithEvents Label5 As Label
     Friend WithEvents PictureBox3 As PictureBox
@@ -769,4 +759,5 @@ Partial Class frmMain
     Friend WithEvents txtRyujinxPath As MaterialSkin.Controls.MaterialTextBox2
     Friend WithEvents Label8 As Label
     Friend WithEvents cbColorScheme As MaterialSkin.Controls.MaterialComboBox
+    Friend WithEvents cbGitHubSource As MaterialSkin.Controls.MaterialComboBox
 End Class

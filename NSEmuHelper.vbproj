@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigFile.vb" />
+    <Compile Include="Dictionary.vb" />
     <Compile Include="frmMain.vb">
       <SubType>Form</SubType>
     </Compile>
