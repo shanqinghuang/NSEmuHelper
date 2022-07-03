@@ -12,9 +12,9 @@ Public Class frmMain
         '加载配置文件
         If My.Computer.FileSystem.FileExists(AppPath & "\Config.json") = False Then
             'MsgBox("配置文件不存在，将使用默认设置。", vbCritical)
-            FSO.WriteAllText(AppPath & "\Config.json", JsonConvert.SerializeObject(New ConfigFilePattern), False)
+            My.Computer.FileSystem.WriteAllText(AppPath & "\Config.json", JsonConvert.SerializeObject(New ConfigFilePattern), False)
         End If
-        Config = JsonConvert.DeserializeObject(Of ConfigFilePattern)(FSO.ReadAllText(AppPath & "\Config.json"))
+        Config = JsonConvert.DeserializeObject(Of ConfigFilePattern)(My.Computer.FileSystem.ReadAllText(AppPath & "\Config.json"))
 
         '加载 GitHub 下载源
         GitHubSources = JObject.Parse(My.Resources.GitHubSources)
@@ -35,6 +35,7 @@ Public Class frmMain
                 RefreshMain()
             Case "TabYuzu"
                 Me.Text = "NS 模拟器助手 - Yuzu 管理"
+                RefreshYuzu()
             Case "TabRyujinx"
                 Me.Text = "NS 模拟器助手 - Ryujinx 管理"
             Case "TabInstall"
@@ -68,10 +69,61 @@ Public Class frmMain
         If Config.YuzuVersion = "" Then
             lblYuzu.Text = "尚未安装"
             lblYuzuFirmware.Text = ""
+        Else
+            Select Case Config.YuzuBranch
+                Case "EarlyAccess"
+                    lblYuzu.Text = "预先测试版 " & Config.YuzuVersion
+                Case "Mainline"
+                    lblYuzu.Text = "主线版 " & Config.YuzuVersion
+            End Select
+            lblYuzuFirmware.Text = "固件 " & Config.YuzuFirmwareVersion
         End If
         If Config.RyujinxVersion = "" Then
             lblRyujinx.Text = "尚未安装"
             lblRyujinxFirmware.Text = ""
+        Else
+            lblRyujinx.Text = Config.RyujinxVersion
+            lblRyujinxFirmware.Text = Config.RyujinxFirmwareVersion
+        End If
+    End Sub
+    Private Sub RefreshYuzu()
+        '处理旧版配置文件
+        If My.Computer.FileSystem.FileExists(Config.YuzuPath & "\YuzuConfig.ini") Then
+            Dim OldYuzuConfig As IniParser.Model.IniData
+            With New IniParser.FileIniDataParser
+                OldYuzuConfig = .ReadFile(Config.YuzuPath & "\YuzuConfig.ini")
+            End With
+            Config.YuzuVersion = OldYuzuConfig.Item("Yuzu").Item("Version")
+            Config.YuzuFirmwareVersion = OldYuzuConfig.Item("Yuzu").Item("Firmware")
+            If OldYuzuConfig.Item("Yuzu").Item("CustomDataFolder") = "False" Then
+                Config.YuzuDataFolder = ""
+            Else
+                Config.YuzuDataFolder = OldYuzuConfig.Item("Yuzu").Item("CustomDataFolder")
+            End If
+            '这个ini库不支持gbk，只能用字符数量来判断了qwq
+            Select Case OldYuzuConfig.Item("Yuzu").Item("Branch").Length
+                Case 10
+                    Config.YuzuBranch = "EarlyAccess"
+                Case 6
+                    Config.YuzuBranch = "Mainline"
+            End Select
+            WriteConfig()
+            My.Computer.FileSystem.DeleteFile(Config.YuzuPath & "\YuzuConfig.ini")
+        End If
+        If Config.YuzuVersion = "" Then
+            lblYuzuVersion.Text = "Yuzu 模拟器尚未安装"
+            lblYuzuInfo.Text = "点击右下角的安装按钮，现在安装吧！"
+        Else
+            Select Case Config.YuzuBranch
+                Case "EarlyAccess"
+                    lblYuzuVersion.Text = "Yuzu 预先测试版 (Early Access) " & Config.YuzuVersion
+                Case "Mainline"
+                    lblYuzuVersion.Text = "Yuzu 主线版 (Mainline) " & Config.YuzuVersion
+            End Select
+            lblYuzuInfo.Text = "固件 " & Config.YuzuFirmwareVersion
+            If Config.YuzuDataFolder <> "" Then
+                lblYuzuInfo.Text &= vbCrLf & "数据文件夹: " & Config.YuzuDataFolder
+            End If
         End If
     End Sub
     Private Sub RefreshConfig()
@@ -144,7 +196,7 @@ Public Class frmMain
 
 
     Private Sub WriteConfig()
-        FSO.WriteAllText(AppPath & "\Config.json", JsonConvert.SerializeObject(Config), False)
+        My.Computer.FileSystem.WriteAllText(AppPath & "\Config.json", JsonConvert.SerializeObject(Config), False)
     End Sub
 
     Private Sub cbGitHubSource_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbGitHubSource.SelectedIndexChanged

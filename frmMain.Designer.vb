@@ -39,7 +39,12 @@ Partial Class frmMain
         Me.lblYuzu = New System.Windows.Forms.Label()
         Me.picYuzu = New System.Windows.Forms.PictureBox()
         Me.TabYuzu = New System.Windows.Forms.TabPage()
+        Me.lblYuzuInfo = New System.Windows.Forms.Label()
+        Me.lblYuzuVersion = New MaterialSkin.Controls.MaterialLabel()
+        Me.picYuzuBranch = New System.Windows.Forms.PictureBox()
         Me.TabRyujinx = New System.Windows.Forms.TabPage()
+        Me.TabInstall = New System.Windows.Forms.TabPage()
+        Me.TabMods = New System.Windows.Forms.TabPage()
         Me.TabConfig = New System.Windows.Forms.TabPage()
         Me.MaterialCard7 = New MaterialSkin.Controls.MaterialCard()
         Me.cbColorScheme = New MaterialSkin.Controls.MaterialComboBox()
@@ -67,14 +72,15 @@ Partial Class frmMain
         Me.MaterialCard2 = New MaterialSkin.Controls.MaterialCard()
         Me.lblAbout = New System.Windows.Forms.Label()
         Me.imgTabs = New System.Windows.Forms.ImageList(Me.components)
-        Me.TabInstall = New System.Windows.Forms.TabPage()
-        Me.TabMods = New System.Windows.Forms.TabPage()
+        Me.MaterialCard8 = New MaterialSkin.Controls.MaterialCard()
         Me.Tabs.SuspendLayout()
         Me.TabMain.SuspendLayout()
         Me.MaterialCard4.SuspendLayout()
         CType(Me.picRyujinx, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MaterialCard1.SuspendLayout()
         CType(Me.picYuzu, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabYuzu.SuspendLayout()
+        CType(Me.picYuzuBranch, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabConfig.SuspendLayout()
         Me.MaterialCard7.SuspendLayout()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -85,6 +91,7 @@ Partial Class frmMain
         Me.TabAbout.SuspendLayout()
         Me.MaterialCard3.SuspendLayout()
         Me.MaterialCard2.SuspendLayout()
+        Me.MaterialCard8.SuspendLayout()
         Me.SuspendLayout()
         '
         'Tabs
@@ -262,6 +269,9 @@ Partial Class frmMain
         'TabYuzu
         '
         Me.TabYuzu.BackColor = System.Drawing.Color.White
+        Me.TabYuzu.Controls.Add(Me.MaterialCard8)
+        Me.TabYuzu.Controls.Add(Me.lblYuzuInfo)
+        Me.TabYuzu.Controls.Add(Me.lblYuzuVersion)
         Me.TabYuzu.ImageKey = "yuzu.png"
         Me.TabYuzu.Location = New System.Drawing.Point(4, 24)
         Me.TabYuzu.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
@@ -270,6 +280,37 @@ Partial Class frmMain
         Me.TabYuzu.Size = New System.Drawing.Size(778, 354)
         Me.TabYuzu.TabIndex = 1
         Me.TabYuzu.Text = "Yuzu"
+        '
+        'lblYuzuInfo
+        '
+        Me.lblYuzuInfo.AutoSize = True
+        Me.lblYuzuInfo.Location = New System.Drawing.Point(78, 40)
+        Me.lblYuzuInfo.Name = "lblYuzuInfo"
+        Me.lblYuzuInfo.Size = New System.Drawing.Size(67, 15)
+        Me.lblYuzuInfo.TabIndex = 2
+        Me.lblYuzuInfo.Text = "lblYuzuInfo"
+        '
+        'lblYuzuVersion
+        '
+        Me.lblYuzuVersion.AutoSize = True
+        Me.lblYuzuVersion.Depth = 0
+        Me.lblYuzuVersion.Font = New System.Drawing.Font("Microsoft YaHei UI", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel)
+        Me.lblYuzuVersion.Location = New System.Drawing.Point(83, 11)
+        Me.lblYuzuVersion.MouseState = MaterialSkin.MouseState.HOVER
+        Me.lblYuzuVersion.Name = "lblYuzuVersion"
+        Me.lblYuzuVersion.Size = New System.Drawing.Size(132, 21)
+        Me.lblYuzuVersion.TabIndex = 1
+        Me.lblYuzuVersion.Text = "Yuzu 版本 xxx 开摆"
+        '
+        'picYuzuBranch
+        '
+        Me.picYuzuBranch.Image = Global.NSEmuHelper.My.Resources.Resources.yuzu
+        Me.picYuzuBranch.Location = New System.Drawing.Point(17, 8)
+        Me.picYuzuBranch.Name = "picYuzuBranch"
+        Me.picYuzuBranch.Size = New System.Drawing.Size(108, 122)
+        Me.picYuzuBranch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.picYuzuBranch.TabIndex = 0
+        Me.picYuzuBranch.TabStop = False
         '
         'TabRyujinx
         '
@@ -280,6 +321,26 @@ Partial Class frmMain
         Me.TabRyujinx.Size = New System.Drawing.Size(778, 354)
         Me.TabRyujinx.TabIndex = 4
         Me.TabRyujinx.Text = "Ryujinx"
+        '
+        'TabInstall
+        '
+        Me.TabInstall.BackColor = System.Drawing.Color.White
+        Me.TabInstall.ImageKey = "briefcase-download.png"
+        Me.TabInstall.Location = New System.Drawing.Point(4, 24)
+        Me.TabInstall.Name = "TabInstall"
+        Me.TabInstall.Size = New System.Drawing.Size(778, 354)
+        Me.TabInstall.TabIndex = 5
+        Me.TabInstall.Text = "安装"
+        '
+        'TabMods
+        '
+        Me.TabMods.BackColor = System.Drawing.Color.White
+        Me.TabMods.ImageKey = "puzzle.png"
+        Me.TabMods.Location = New System.Drawing.Point(4, 24)
+        Me.TabMods.Name = "TabMods"
+        Me.TabMods.Size = New System.Drawing.Size(778, 354)
+        Me.TabMods.TabIndex = 6
+        Me.TabMods.Text = "模组"
         '
         'TabConfig
         '
@@ -630,7 +691,7 @@ Partial Class frmMain
         Me.MaterialButton2.TabIndex = 2
         Me.MaterialButton2.Text = "Bilibili"
         Me.MaterialButton2.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
-        Me.MaterialButton2.UseAccentColor = True
+        Me.MaterialButton2.UseAccentColor = False
         Me.MaterialButton2.UseVisualStyleBackColor = True
         '
         'Label2
@@ -661,11 +722,11 @@ Partial Class frmMain
         Me.lblAbout.AutoSize = True
         Me.lblAbout.Location = New System.Drawing.Point(17, 14)
         Me.lblAbout.Name = "lblAbout"
-        Me.lblAbout.Size = New System.Drawing.Size(280, 195)
+        Me.lblAbout.Size = New System.Drawing.Size(280, 180)
         Me.lblAbout.TabIndex = 0
-        Me.lblAbout.Text = "NS 模拟器助手 —— 简单高效的 NS 模拟器管理工具" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "版本 2.0.0 Beta 1" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "© 2022 是一刀斩哒" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "本程序使用了以下开源项目" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Gi" &
-    "tHub Actions" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- rclone" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Aria2" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Newtonsoft.JSON" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- MaterialSkin" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Powered by" &
-    " Visual Basic .NET" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & ".NET Framework 4.5"
+        Me.lblAbout.Text = "NS 模拟器助手 —— 简单高效的 NS 模拟器管理工具" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "版本 2.0.0 Beta 1" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "© 2022 是一刀斩哒" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "本程序使用了以下开源项目" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- rc" &
+    "lone" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Aria2" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Newtonsoft.Json" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- MaterialSkin" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Powered by Visual Basic .NET" &
+    "" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & ".NET Framework 4.5"
         '
         'imgTabs
         '
@@ -679,25 +740,19 @@ Partial Class frmMain
         Me.imgTabs.Images.SetKeyName(5, "briefcase-download.png")
         Me.imgTabs.Images.SetKeyName(6, "puzzle.png")
         '
-        'TabInstall
+        'MaterialCard8
         '
-        Me.TabInstall.BackColor = System.Drawing.Color.White
-        Me.TabInstall.ImageKey = "briefcase-download.png"
-        Me.TabInstall.Location = New System.Drawing.Point(4, 24)
-        Me.TabInstall.Name = "TabInstall"
-        Me.TabInstall.Size = New System.Drawing.Size(778, 354)
-        Me.TabInstall.TabIndex = 5
-        Me.TabInstall.Text = "安装"
-        '
-        'TabMods
-        '
-        Me.TabMods.BackColor = System.Drawing.Color.White
-        Me.TabMods.ImageKey = "puzzle.png"
-        Me.TabMods.Location = New System.Drawing.Point(4, 24)
-        Me.TabMods.Name = "TabMods"
-        Me.TabMods.Size = New System.Drawing.Size(778, 354)
-        Me.TabMods.TabIndex = 6
-        Me.TabMods.Text = "模组"
+        Me.MaterialCard8.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.MaterialCard8.Controls.Add(Me.picYuzuBranch)
+        Me.MaterialCard8.Depth = 0
+        Me.MaterialCard8.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.MaterialCard8.Location = New System.Drawing.Point(619, 18)
+        Me.MaterialCard8.Margin = New System.Windows.Forms.Padding(14)
+        Me.MaterialCard8.MouseState = MaterialSkin.MouseState.HOVER
+        Me.MaterialCard8.Name = "MaterialCard8"
+        Me.MaterialCard8.Padding = New System.Windows.Forms.Padding(14)
+        Me.MaterialCard8.Size = New System.Drawing.Size(142, 138)
+        Me.MaterialCard8.TabIndex = 3
         '
         'frmMain
         '
@@ -724,6 +779,9 @@ Partial Class frmMain
         Me.MaterialCard1.ResumeLayout(False)
         Me.MaterialCard1.PerformLayout()
         CType(Me.picYuzu, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabYuzu.ResumeLayout(False)
+        Me.TabYuzu.PerformLayout()
+        CType(Me.picYuzuBranch, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabConfig.ResumeLayout(False)
         Me.MaterialCard7.ResumeLayout(False)
         Me.MaterialCard7.PerformLayout()
@@ -739,6 +797,7 @@ Partial Class frmMain
         Me.MaterialCard3.PerformLayout()
         Me.MaterialCard2.ResumeLayout(False)
         Me.MaterialCard2.PerformLayout()
+        Me.MaterialCard8.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -788,4 +847,8 @@ Partial Class frmMain
     Friend WithEvents cbGitHubSource As MaterialSkin.Controls.MaterialComboBox
     Friend WithEvents TabInstall As TabPage
     Friend WithEvents TabMods As TabPage
+    Friend WithEvents picYuzuBranch As PictureBox
+    Friend WithEvents lblYuzuVersion As MaterialSkin.Controls.MaterialLabel
+    Friend WithEvents lblYuzuInfo As Label
+    Friend WithEvents MaterialCard8 As MaterialSkin.Controls.MaterialCard
 End Class
