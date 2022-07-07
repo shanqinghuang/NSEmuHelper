@@ -8,10 +8,12 @@
         btnNo.Hide()
         MessageLabel.Text = Message
         Me.Show()
-        Do While IsOperated = True
+        Me.Activate()
+        Do Until IsOperated = True
             Threading.Thread.Sleep(60)
             Application.DoEvents()
         Loop
+        Me.Hide()
     End Sub
     Function YesNoBox(Message As String) As Integer
         IsOperated = False
@@ -20,10 +22,12 @@
         btnNo.Show()
         MessageLabel.Text = Message
         Me.Show()
-        Do While IsOperated = True
+        Me.Activate()
+        Do Until IsOperated = True
             Threading.Thread.Sleep(60)
             Application.DoEvents()
         Loop
+        Me.Hide()
         Return ReadyState
     End Function
 
@@ -38,6 +42,11 @@
 
     Private Sub btnYes_Click(sender As Object, e As EventArgs) Handles btnYes.Click
         ReadyState = vbYes
+        IsOperated = True
+    End Sub
+
+    Private Sub frmMaterialMsgBox_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        ReadyState = vbNo
         IsOperated = True
     End Sub
 End Class

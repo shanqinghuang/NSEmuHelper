@@ -4,9 +4,12 @@ Imports Newtonsoft.Json.Linq
 
 Public Class frmMain
 
-    Public IsInstalling As Boolean = False
+    Public LockTab As Boolean = False
+    Dim IgnoreLockTab As Boolean = False
+    Dim InstallStep As Integer = 0
+    Dim InstallProperties As Dictionary(Of String, Object)
+    Dim InstallingEmulator As String
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
         '样式
         For Each Control In {lblYuzu, lblYuzu2, lblYuzuFirmware, lblRyujinx, lblRyujinx2, lblRyujinxFirmware, lblYuzuConfig}
             Control.Font = SkinManager.getFontByType(MaterialSkinManager.fontType.Subtitle1)
@@ -30,7 +33,6 @@ Public Class frmMain
         RefreshMain()
         MainUILoaded = True
     End Sub
-
     Private Sub Tabs_Selected(sender As Object, e As TabControlEventArgs) Handles Tabs.Selected
         Select Case e.TabPage.Name
             Case "TabMain"
@@ -182,7 +184,6 @@ Public Class frmMain
     Private Sub MaterialButton2_Click(sender As Object, e As EventArgs) Handles MaterialButton2.Click
         Process.Start("https://space.bilibili.com/485832788")
     End Sub 'Bilibili
-    '设置
     Private Sub cbColorScheme_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbColorScheme.SelectedIndexChanged
         If Not ConfigUILoaded Then Exit Sub
         Select Case cbColorScheme.SelectedItem
@@ -234,17 +235,136 @@ Public Class frmMain
             End If
         Next
     End Sub
-
     Private Sub Tabs_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles Tabs.Selecting
-        If IsInstalling Then e.Cancel = True
+        If e.TabPageIndex = 3 And IgnoreLockTab = False Then e.Cancel = True
+        If LockTab Then e.Cancel = True
     End Sub
-
     Private Sub btnInstallYuzu_Click(sender As Object, e As EventArgs) Handles btnInstallYuzu.Click
-        IsInstalling = True
+        IgnoreLockTab = True
         Tabs.SelectedTab = Tabs.TabPages(3)
+        LockTab = True
+        IgnoreLockTab = False
+        InstallingEmulator = "Yuzu"
+        YuzuPrepareInstall()
+        YuzuRefreshInstall()
+    End Sub
+    Private Sub btnExitInstall_Click(sender As Object, e As EventArgs) Handles btnExitInstall.Click
+        If frmMaterialMsgBox.YesNoBox("是否要取消安装？") = vbYes Then
+            LockTab = False
+            Tabs.SelectedTab = Tabs.TabPages(0)
+            InstallStep = 0
+        End If
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        MsgBox(LatestVersion.YuzuEarlyAccess())
+    Private Sub YuzuRefreshInstall(Optional Previous As Boolean = False)
+        Select Case InstallStep
+            Case 0
+                InstallStep = 1
+                YuzuInstallStep1()
+            Case 1
+                YuzuPostInstallStep1()
+                InstallStep = 2
+                YuzuInstallStep2()
+        End Select
     End Sub
+    Private Sub YuzuPrepareInstall()
+        If Config.YuzuPath = "D:\Yuzu" Then
+            If frmMaterialMsgBox.YesNoBox("当前模拟器安装目录为默认的 D:\Yuzu，请确认是否安装到此文件夹？") = vbNo Then
+                LockTab = False
+                Tabs.SelectedTab = Tabs.TabPages(0)
+                InstallStep = 0
+            End If
+        End If
+        If Not My.Computer.FileSystem.DirectoryExists(Config.YuzuPath) Then My.Computer.FileSystem.CreateDirectory(Config.YuzuPath)
+    End Sub
+    Private Async Sub YuzuInstallStep1()
+        InstallProperties = New Dictionary(Of String, Object)
+        comboBranch.Show()
+        txtVersion.Show()
+        comboBranch.Enabled = False
+        btnNextStep.Enabled = False '加载时暂时禁用按钮
+        btnPreviousStep.Enabled = False
+        InstallTitle.Text = "步骤 1 - 选择模拟器版本"
+        InstallMessage.Text = "Yuzu 模拟器分两个分支：预先测试版和主线版。" & vbCrLf & "使用预先测试版可以体验到更多新功能，" & vbCrLf & "主线版比预先测试版落后几个版本，版本号也不同，" & vbCrLf & "比预先测试版更稳定。"
+        Application.DoEvents()
+        txtVersion.Text = Await LatestVersion.YuzuEarlyAccess
+        comboBranch.Enabled = True
+        btnNextStep.Enabled = True
+    End Sub
+
+    Private Sub YuzuPostInstallStep1()
+        Select Case comboBranch.SelectedItem
+            Case "预先测试版"
+                SetProperty("Branch", "EarlyAccess")
+            Case "主线版"
+                SetProperty("Branch", "Mainline")
+        End Select
+        SetProperty("Version", txtVersion.Text.Replace(" ", ""))
+        comboBranch.Hide()
+        txtVersion.Hide()
+    End Sub
+
+    Private Async Sub YuzuInstallStep2()
+        btnPreviousStep.Enabled = True
+        txtKeySelector.Show()
+        InstallTitle.Text = "步骤 2 - 选择密钥 (Keys) 文件"
+        InstallMessage.Text = "NS 模拟器需要密钥才能运行游戏。" & vbCrLf & "你可以在贴吧或相关的交流群获取密钥文件。"
+
+    End Sub
+
+    Private Async Sub comboBranch_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboBranch.SelectedIndexChanged
+        txtVersion.Enabled = False
+        btnNextStep.Enabled = False '加载时暂时禁用按钮
+        Select Case InstallingEmulator
+            Case "Yuzu"
+                Select Case comboBranch.SelectedItem
+                    Case "预先测试版"
+                        picInstall.Image = My.Resources.yuzu
+                        txtVersion.Text = Await LatestVersion.YuzuEarlyAccess
+                    Case "主线版"
+                        picInstall.Image = My.Resources.yuzu_mainline
+                        txtVersion.Text = Await LatestVersion.YuzuMainline
+                End Select
+        End Select
+        txtVersion.Enabled = True
+        btnNextStep.Enabled = True
+    End Sub
+
+    Private Sub btnNextStep_Click(sender As Object, e As EventArgs) Handles btnNextStep.Click
+        '上一步
+        Select Case InstallingEmulator
+            Case "Yuzu"
+                YuzuRefreshInstall()
+        End Select
+    End Sub
+
+    Private Sub btnPreviousStep_Click(sender As Object, e As EventArgs) Handles btnPreviousStep.Click
+        '下一步
+        Select Case InstallingEmulator
+            Case "Yuzu"
+                YuzuRefreshInstall(True)
+        End Select
+    End Sub
+
+    Private Sub txtKeySelector_DoubleClick(sender As Object, e As EventArgs) Handles txtKeySelector.DoubleClick
+        '弹出密钥选择框
+        With New OpenFileDialog
+            .InitialDirectory = AppPath
+            .Title = "选择密钥 (prod.keys) 文件"
+            .DefaultExt = "keys"
+            .Filter = "NS 系统密钥文件|prod.keys"
+            .CheckFileExists = True
+            .CheckPathExists = True
+            .ShowDialog()
+            txtKeySelector.Text = .FileName
+        End With
+    End Sub
+
+    Private Sub SetProperty(ByVal Key As String, ByVal Value As Object)
+        If InstallProperties.ContainsKey(Key) Then
+            InstallProperties(Key) = Value
+        Else
+            InstallProperties.Add(Key, Value)
+        End If
+    End Sub ' 懒人改字典
 End Class

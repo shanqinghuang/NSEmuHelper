@@ -88,7 +88,6 @@ Partial Class frmMaterialMsgBox
         '
         'MessageLabel
         '
-        Me.MessageLabel.AutoEllipsis = True
         Me.MessageLabel.Depth = 0
         Me.MessageLabel.Font = New System.Drawing.Font("Microsoft YaHei UI", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel)
         Me.MessageLabel.Location = New System.Drawing.Point(14, 79)

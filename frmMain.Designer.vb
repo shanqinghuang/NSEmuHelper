@@ -26,6 +26,7 @@ Partial Class frmMain
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
         Me.Tabs = New MaterialSkin.Controls.MaterialTabControl()
         Me.TabMain = New System.Windows.Forms.TabPage()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.MaterialLabel1 = New MaterialSkin.Controls.MaterialLabel()
         Me.MaterialCard4 = New MaterialSkin.Controls.MaterialCard()
         Me.lblRyujinxFirmware = New System.Windows.Forms.Label()
@@ -46,6 +47,16 @@ Partial Class frmMain
         Me.lblYuzuVersion = New MaterialSkin.Controls.MaterialLabel()
         Me.TabRyujinx = New System.Windows.Forms.TabPage()
         Me.TabInstall = New System.Windows.Forms.TabPage()
+        Me.txtKeySelector = New MaterialSkin.Controls.MaterialTextBox2()
+        Me.btnPreviousStep = New MaterialSkin.Controls.MaterialButton()
+        Me.btnNextStep = New MaterialSkin.Controls.MaterialButton()
+        Me.txtVersion = New MaterialSkin.Controls.MaterialTextBox2()
+        Me.comboBranch = New MaterialSkin.Controls.MaterialComboBox()
+        Me.MaterialCard9 = New MaterialSkin.Controls.MaterialCard()
+        Me.picInstall = New System.Windows.Forms.PictureBox()
+        Me.btnExitInstall = New MaterialSkin.Controls.MaterialButton()
+        Me.InstallMessage = New System.Windows.Forms.Label()
+        Me.InstallTitle = New MaterialSkin.Controls.MaterialLabel()
         Me.TabMods = New System.Windows.Forms.TabPage()
         Me.TabConfig = New System.Windows.Forms.TabPage()
         Me.MaterialCard7 = New MaterialSkin.Controls.MaterialCard()
@@ -74,7 +85,6 @@ Partial Class frmMain
         Me.MaterialCard2 = New MaterialSkin.Controls.MaterialCard()
         Me.lblAbout = New System.Windows.Forms.Label()
         Me.imgTabs = New System.Windows.Forms.ImageList(Me.components)
-        Me.Button1 = New System.Windows.Forms.Button()
         Me.Tabs.SuspendLayout()
         Me.TabMain.SuspendLayout()
         Me.MaterialCard4.SuspendLayout()
@@ -84,6 +94,9 @@ Partial Class frmMain
         Me.TabYuzu.SuspendLayout()
         Me.MaterialCard8.SuspendLayout()
         CType(Me.picYuzuBranch, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabInstall.SuspendLayout()
+        Me.MaterialCard9.SuspendLayout()
+        CType(Me.picInstall, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabConfig.SuspendLayout()
         Me.MaterialCard7.SuspendLayout()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -133,6 +146,15 @@ Partial Class frmMain
         Me.TabMain.Size = New System.Drawing.Size(778, 354)
         Me.TabMain.TabIndex = 0
         Me.TabMain.Text = "首页"
+        '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(254, 173)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(79, 48)
+        Me.Button1.TabIndex = 7
+        Me.Button1.Text = "Button1"
+        Me.Button1.UseVisualStyleBackColor = True
         '
         'MaterialLabel1
         '
@@ -363,12 +385,208 @@ Partial Class frmMain
         'TabInstall
         '
         Me.TabInstall.BackColor = System.Drawing.Color.White
+        Me.TabInstall.Controls.Add(Me.txtKeySelector)
+        Me.TabInstall.Controls.Add(Me.btnPreviousStep)
+        Me.TabInstall.Controls.Add(Me.btnNextStep)
+        Me.TabInstall.Controls.Add(Me.txtVersion)
+        Me.TabInstall.Controls.Add(Me.comboBranch)
+        Me.TabInstall.Controls.Add(Me.MaterialCard9)
+        Me.TabInstall.Controls.Add(Me.btnExitInstall)
+        Me.TabInstall.Controls.Add(Me.InstallMessage)
+        Me.TabInstall.Controls.Add(Me.InstallTitle)
         Me.TabInstall.ImageKey = "briefcase-download.png"
         Me.TabInstall.Location = New System.Drawing.Point(4, 24)
         Me.TabInstall.Name = "TabInstall"
         Me.TabInstall.Size = New System.Drawing.Size(778, 354)
         Me.TabInstall.TabIndex = 5
         Me.TabInstall.Text = "安装"
+        '
+        'txtKeySelector
+        '
+        Me.txtKeySelector.AnimateReadOnly = False
+        Me.txtKeySelector.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None
+        Me.txtKeySelector.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None
+        Me.txtKeySelector.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.txtKeySelector.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal
+        Me.txtKeySelector.Depth = 0
+        Me.txtKeySelector.Font = New System.Drawing.Font("Microsoft YaHei UI", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel)
+        Me.txtKeySelector.HideSelection = True
+        Me.txtKeySelector.LeadingIcon = Nothing
+        Me.txtKeySelector.Location = New System.Drawing.Point(87, 171)
+        Me.txtKeySelector.MaxLength = 32767
+        Me.txtKeySelector.MouseState = MaterialSkin.MouseState.OUT
+        Me.txtKeySelector.Name = "txtKeySelector"
+        Me.txtKeySelector.PasswordChar = Global.Microsoft.VisualBasic.ChrW(0)
+        Me.txtKeySelector.PrefixSuffixText = Nothing
+        Me.txtKeySelector.ReadOnly = False
+        Me.txtKeySelector.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.txtKeySelector.SelectedText = ""
+        Me.txtKeySelector.SelectionLength = 0
+        Me.txtKeySelector.SelectionStart = 0
+        Me.txtKeySelector.ShortcutsEnabled = True
+        Me.txtKeySelector.Size = New System.Drawing.Size(515, 48)
+        Me.txtKeySelector.TabIndex = 10
+        Me.txtKeySelector.TabStop = False
+        Me.txtKeySelector.Text = "双击选择密钥文件 ..."
+        Me.txtKeySelector.TextAlign = System.Windows.Forms.HorizontalAlignment.Left
+        Me.txtKeySelector.TrailingIcon = Nothing
+        Me.txtKeySelector.UseSystemPasswordChar = False
+        Me.txtKeySelector.Visible = False
+        '
+        'btnPreviousStep
+        '
+        Me.btnPreviousStep.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnPreviousStep.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnPreviousStep.Depth = 0
+        Me.btnPreviousStep.HighEmphasis = True
+        Me.btnPreviousStep.Icon = Nothing
+        Me.btnPreviousStep.Location = New System.Drawing.Point(600, 322)
+        Me.btnPreviousStep.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnPreviousStep.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnPreviousStep.Name = "btnPreviousStep"
+        Me.btnPreviousStep.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnPreviousStep.Size = New System.Drawing.Size(64, 36)
+        Me.btnPreviousStep.TabIndex = 9
+        Me.btnPreviousStep.Text = "上一步"
+        Me.btnPreviousStep.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnPreviousStep.UseAccentColor = False
+        Me.btnPreviousStep.UseVisualStyleBackColor = True
+        '
+        'btnNextStep
+        '
+        Me.btnNextStep.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnNextStep.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnNextStep.Depth = 0
+        Me.btnNextStep.HighEmphasis = True
+        Me.btnNextStep.Icon = Nothing
+        Me.btnNextStep.Location = New System.Drawing.Point(682, 322)
+        Me.btnNextStep.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnNextStep.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnNextStep.Name = "btnNextStep"
+        Me.btnNextStep.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnNextStep.Size = New System.Drawing.Size(64, 36)
+        Me.btnNextStep.TabIndex = 8
+        Me.btnNextStep.Text = "下一步"
+        Me.btnNextStep.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnNextStep.UseAccentColor = False
+        Me.btnNextStep.UseVisualStyleBackColor = True
+        '
+        'txtVersion
+        '
+        Me.txtVersion.AnimateReadOnly = False
+        Me.txtVersion.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None
+        Me.txtVersion.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None
+        Me.txtVersion.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.txtVersion.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal
+        Me.txtVersion.Depth = 0
+        Me.txtVersion.Font = New System.Drawing.Font("Microsoft YaHei UI", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel)
+        Me.txtVersion.HideSelection = True
+        Me.txtVersion.LeadingIcon = Nothing
+        Me.txtVersion.Location = New System.Drawing.Point(286, 171)
+        Me.txtVersion.MaxLength = 32767
+        Me.txtVersion.MouseState = MaterialSkin.MouseState.OUT
+        Me.txtVersion.Name = "txtVersion"
+        Me.txtVersion.PasswordChar = Global.Microsoft.VisualBasic.ChrW(0)
+        Me.txtVersion.PrefixSuffixText = Nothing
+        Me.txtVersion.ReadOnly = False
+        Me.txtVersion.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.txtVersion.SelectedText = ""
+        Me.txtVersion.SelectionLength = 0
+        Me.txtVersion.SelectionStart = 0
+        Me.txtVersion.ShortcutsEnabled = True
+        Me.txtVersion.Size = New System.Drawing.Size(151, 48)
+        Me.txtVersion.TabIndex = 7
+        Me.txtVersion.TabStop = False
+        Me.txtVersion.Text = "加载中 ..."
+        Me.txtVersion.TextAlign = System.Windows.Forms.HorizontalAlignment.Left
+        Me.txtVersion.TrailingIcon = Nothing
+        Me.txtVersion.UseSystemPasswordChar = False
+        '
+        'comboBranch
+        '
+        Me.comboBranch.AutoResize = False
+        Me.comboBranch.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.comboBranch.Depth = 0
+        Me.comboBranch.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable
+        Me.comboBranch.DropDownHeight = 174
+        Me.comboBranch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.comboBranch.DropDownWidth = 121
+        Me.comboBranch.Font = New System.Drawing.Font("Microsoft YaHei UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel)
+        Me.comboBranch.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.comboBranch.FormattingEnabled = True
+        Me.comboBranch.IntegralHeight = False
+        Me.comboBranch.ItemHeight = 43
+        Me.comboBranch.Items.AddRange(New Object() {"预先测试版", "主线版"})
+        Me.comboBranch.Location = New System.Drawing.Point(87, 170)
+        Me.comboBranch.MaxDropDownItems = 4
+        Me.comboBranch.MouseState = MaterialSkin.MouseState.OUT
+        Me.comboBranch.Name = "comboBranch"
+        Me.comboBranch.Size = New System.Drawing.Size(164, 49)
+        Me.comboBranch.StartIndex = 0
+        Me.comboBranch.TabIndex = 6
+        '
+        'MaterialCard9
+        '
+        Me.MaterialCard9.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.MaterialCard9.Controls.Add(Me.picInstall)
+        Me.MaterialCard9.Depth = 0
+        Me.MaterialCard9.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.MaterialCard9.Location = New System.Drawing.Point(619, 18)
+        Me.MaterialCard9.Margin = New System.Windows.Forms.Padding(14)
+        Me.MaterialCard9.MouseState = MaterialSkin.MouseState.HOVER
+        Me.MaterialCard9.Name = "MaterialCard9"
+        Me.MaterialCard9.Padding = New System.Windows.Forms.Padding(14)
+        Me.MaterialCard9.Size = New System.Drawing.Size(142, 138)
+        Me.MaterialCard9.TabIndex = 5
+        '
+        'picInstall
+        '
+        Me.picInstall.Image = Global.NSEmuHelper.My.Resources.Resources.yuzu
+        Me.picInstall.Location = New System.Drawing.Point(17, 8)
+        Me.picInstall.Name = "picInstall"
+        Me.picInstall.Size = New System.Drawing.Size(108, 122)
+        Me.picInstall.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.picInstall.TabIndex = 0
+        Me.picInstall.TabStop = False
+        '
+        'btnExitInstall
+        '
+        Me.btnExitInstall.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnExitInstall.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnExitInstall.Depth = 0
+        Me.btnExitInstall.HighEmphasis = True
+        Me.btnExitInstall.Icon = Nothing
+        Me.btnExitInstall.Location = New System.Drawing.Point(87, 322)
+        Me.btnExitInstall.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnExitInstall.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnExitInstall.Name = "btnExitInstall"
+        Me.btnExitInstall.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnExitInstall.Size = New System.Drawing.Size(79, 36)
+        Me.btnExitInstall.TabIndex = 4
+        Me.btnExitInstall.Text = "取消安装"
+        Me.btnExitInstall.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnExitInstall.UseAccentColor = False
+        Me.btnExitInstall.UseVisualStyleBackColor = True
+        '
+        'InstallMessage
+        '
+        Me.InstallMessage.Location = New System.Drawing.Point(84, 51)
+        Me.InstallMessage.Name = "InstallMessage"
+        Me.InstallMessage.Size = New System.Drawing.Size(518, 126)
+        Me.InstallMessage.TabIndex = 3
+        Me.InstallMessage.Text = "Label9"
+        '
+        'InstallTitle
+        '
+        Me.InstallTitle.AutoSize = True
+        Me.InstallTitle.Depth = 0
+        Me.InstallTitle.Font = New System.Drawing.Font("Microsoft YaHei UI", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel)
+        Me.InstallTitle.Location = New System.Drawing.Point(87, 18)
+        Me.InstallTitle.MouseState = MaterialSkin.MouseState.HOVER
+        Me.InstallTitle.Name = "InstallTitle"
+        Me.InstallTitle.Size = New System.Drawing.Size(81, 21)
+        Me.InstallTitle.TabIndex = 2
+        Me.InstallTitle.Text = "安装大消息"
         '
         'TabMods
         '
@@ -760,11 +978,11 @@ Partial Class frmMain
         Me.lblAbout.AutoSize = True
         Me.lblAbout.Location = New System.Drawing.Point(17, 14)
         Me.lblAbout.Name = "lblAbout"
-        Me.lblAbout.Size = New System.Drawing.Size(280, 180)
+        Me.lblAbout.Size = New System.Drawing.Size(280, 165)
         Me.lblAbout.TabIndex = 0
-        Me.lblAbout.Text = "NS 模拟器助手 —— 简单高效的 NS 模拟器管理工具" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "版本 2.0.0 Beta 1" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "© 2022 是一刀斩哒" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "本程序使用了以下开源项目" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- rc" &
-    "lone" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Aria2" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Newtonsoft.Json" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- MaterialSkin" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Powered by Visual Basic .NET" &
-    "" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & ".NET Framework 4.5"
+        Me.lblAbout.Text = "NS 模拟器助手 —— 简单高效的 NS 模拟器管理工具" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "版本 2.0.0 Beta" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "© 2022 是一刀斩哒" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "本程序使用了以下开源项目" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Aria" &
+    "2" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Newtonsoft.Json" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- MaterialSkin" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Powered by Visual Basic .NET" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & ".NET Frame" &
+    "work 4.5"
         '
         'imgTabs
         '
@@ -778,15 +996,6 @@ Partial Class frmMain
         Me.imgTabs.Images.SetKeyName(5, "briefcase-download.png")
         Me.imgTabs.Images.SetKeyName(6, "puzzle.png")
         '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(254, 173)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(79, 48)
-        Me.Button1.TabIndex = 7
-        Me.Button1.Text = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
-        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
@@ -798,6 +1007,7 @@ Partial Class frmMain
         Me.Font = New System.Drawing.Font("微软雅黑", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(134, Byte))
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.MaximizeBox = False
         Me.Name = "frmMain"
         Me.Padding = New System.Windows.Forms.Padding(3, 80, 3, 4)
         Me.Sizable = False
@@ -815,6 +1025,10 @@ Partial Class frmMain
         Me.TabYuzu.PerformLayout()
         Me.MaterialCard8.ResumeLayout(False)
         CType(Me.picYuzuBranch, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabInstall.ResumeLayout(False)
+        Me.TabInstall.PerformLayout()
+        Me.MaterialCard9.ResumeLayout(False)
+        CType(Me.picInstall, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabConfig.ResumeLayout(False)
         Me.MaterialCard7.ResumeLayout(False)
         Me.MaterialCard7.PerformLayout()
@@ -885,4 +1099,14 @@ Partial Class frmMain
     Friend WithEvents MaterialCard8 As MaterialSkin.Controls.MaterialCard
     Friend WithEvents btnInstallYuzu As MaterialSkin.Controls.MaterialButton
     Friend WithEvents Button1 As Button
+    Friend WithEvents InstallMessage As Label
+    Friend WithEvents InstallTitle As MaterialSkin.Controls.MaterialLabel
+    Friend WithEvents btnExitInstall As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents MaterialCard9 As MaterialSkin.Controls.MaterialCard
+    Friend WithEvents picInstall As PictureBox
+    Friend WithEvents comboBranch As MaterialSkin.Controls.MaterialComboBox
+    Friend WithEvents txtVersion As MaterialSkin.Controls.MaterialTextBox2
+    Friend WithEvents btnPreviousStep As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents btnNextStep As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents txtKeySelector As MaterialSkin.Controls.MaterialTextBox2
 End Class
