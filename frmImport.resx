@@ -117,36 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="GitHubSources" xml:space="preserve">
-    <value>{"Direct":{"name":"GitHub 直连","url":"https://github.com"},"US1":{"name":"美国 1 | CDN","url":"https://gh.ddlc.top/https://github.com"},"US2":{"name":"美国 2 | CDN","url":"https://gh.gh2233.ml/https://github.com"},"US3":{"name":"美国 3 | 洛杉矶","url":"https://download.cithub.icu"},"US4":{"name":"美国 4 | 圣何塞","url":"https://download.xn--p8jhe.tw"},"US5":{"name":"美国 5 | CDN","url":"https://rp.ydz1.gq/https://github.com"},"HK1":{"name":"香港 1","url":"https://ghproxy.futils.com/https://github.com"},"JP1":{"name":"日本 1 | 东京","url":"https://download.fastgit.org"},"KR1":{"name":"韩国 1 | 首尔","url":"https://ghproxy.com/https://github.com"},"KR2":{"name":"韩国 2 | 首尔","url":"https://hub.xn--gzu630h.xn--kpry57d"}}</value>
-    <comment>GitHub mirror sites</comment>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="bilibili" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Res\bilibili.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="github" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Res\github.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="nintendo-switch" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Res\nintendo-switch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ryujinx" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Res\ryujinx.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="hammer-wrench" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Res\hammer-wrench.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="qq" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Res\qq.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="yuzu" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Res\yuzu.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="wan" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Res\wan.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="yuzu-mainline" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Res\yuzu-mainline.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
 </root>

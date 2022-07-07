@@ -1,7 +1,10 @@
 ﻿Imports MaterialSkin, Newtonsoft.Json '第三方库
 Imports Newtonsoft.Json.Linq
 
+
 Public Class frmMain
+
+    Public IsInstalling As Boolean = False
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         '样式
@@ -88,37 +91,60 @@ Public Class frmMain
     End Sub
     Private Sub RefreshYuzu()
         '处理旧版配置文件
-        If My.Computer.FileSystem.FileExists(Config.YuzuPath & "\YuzuConfig.ini") Then
-            Dim OldYuzuConfig As IniParser.Model.IniData
-            With New IniParser.FileIniDataParser
-                OldYuzuConfig = .ReadFile(Config.YuzuPath & "\YuzuConfig.ini")
-            End With
-            Config.YuzuVersion = OldYuzuConfig.Item("Yuzu").Item("Version")
-            Config.YuzuFirmwareVersion = OldYuzuConfig.Item("Yuzu").Item("Firmware")
-            If OldYuzuConfig.Item("Yuzu").Item("CustomDataFolder") = "False" Then
-                Config.YuzuDataFolder = ""
-            Else
-                Config.YuzuDataFolder = OldYuzuConfig.Item("Yuzu").Item("CustomDataFolder")
-            End If
-            '这个ini库不支持gbk，只能用字符数量来判断了qwq
-            Select Case OldYuzuConfig.Item("Yuzu").Item("Branch").Length
-                Case 10
-                    Config.YuzuBranch = "EarlyAccess"
-                Case 6
-                    Config.YuzuBranch = "Mainline"
-            End Select
-            WriteConfig()
-            My.Computer.FileSystem.DeleteFile(Config.YuzuPath & "\YuzuConfig.ini")
-        End If
         If Config.YuzuVersion = "" Then
+            If My.Computer.FileSystem.FileExists(Config.YuzuPath & "\YuzuConfig.ini") Then
+                Dim OldYuzuConfig As IniParser.Model.IniData
+                With New IniParser.FileIniDataParser
+                    OldYuzuConfig = .ReadFile(Config.YuzuPath & "\YuzuConfig.ini")
+                End With
+                Config.YuzuVersion = OldYuzuConfig.Item("Yuzu").Item("Version")
+                Config.YuzuFirmwareVersion = OldYuzuConfig.Item("Yuzu").Item("Firmware")
+                If OldYuzuConfig.Item("Yuzu").Item("CustomDataFolder") = "False" Then
+                    Config.YuzuDataFolder = ""
+                Else
+                    Config.YuzuDataFolder = OldYuzuConfig.Item("Yuzu").Item("CustomDataFolder")
+                End If
+                '这个ini库不支持gbk，只能用字符数量来判断了qwq
+                Select Case OldYuzuConfig.Item("Yuzu").Item("Branch").Length
+                    Case 10
+                        Config.YuzuBranch = "EarlyAccess"
+                    Case 6
+                        Config.YuzuBranch = "Mainline"
+                End Select
+                WriteConfig()
+                My.Computer.FileSystem.DeleteFile(Config.YuzuPath & "\YuzuConfig.ini")
+            ElseIf My.Computer.FileSystem.FileExists(Config.YuzuPath & "\yuzu.exe") Then
+                Shell(Config.YuzuPath & "\yuzu.exe", vbHidden)
+                Threading.Thread.Sleep(500)
+                For Each OpenedProcess As Process In Process.GetProcesses()
+                    If InStr(OpenedProcess.MainWindowTitle, "yuzu") Then
+                        OpenedProcess.Kill()
+                        If InStr(OpenedProcess.MainWindowTitle, "Early Access") Then
+                            Config.YuzuBranch = "EarlyAccess"
+                            Config.YuzuVersion = OpenedProcess.MainWindowTitle.Replace("yuzu Early Access ", "")
+                        Else
+                            Config.YuzuBranch = "Mainline"
+                            Config.YuzuVersion = OpenedProcess.MainWindowTitle.Replace("yuzu ", "")
+                        End If
+                        Config.YuzuFirmwareVersion = "未知"
+                        WriteConfig()
+                        Exit For
+                    End If
+                Next
+            End If
+        End If
+        If Config.YuzuVersion = "" Or Not My.Computer.FileSystem.FileExists(Config.YuzuPath & "\yuzu.exe") Then
             lblYuzuVersion.Text = "Yuzu 模拟器尚未安装"
             lblYuzuInfo.Text = "点击右下角的安装按钮，现在安装吧！"
+            btnInstallYuzu.Show()
         Else
             Select Case Config.YuzuBranch
                 Case "EarlyAccess"
                     lblYuzuVersion.Text = "Yuzu 预先测试版 (Early Access) " & Config.YuzuVersion
+                    picYuzuBranch.Image = My.Resources.yuzu
                 Case "Mainline"
                     lblYuzuVersion.Text = "Yuzu 主线版 (Mainline) " & Config.YuzuVersion
+                    picYuzuBranch.Image = My.Resources.yuzu_mainline
             End Select
             lblYuzuInfo.Text = "固件 " & Config.YuzuFirmwareVersion
             If Config.YuzuDataFolder <> "" Then
@@ -193,12 +219,9 @@ Public Class frmMain
             End If
         End With
     End Sub
-
-
     Private Sub WriteConfig()
         My.Computer.FileSystem.WriteAllText(AppPath & "\Config.json", JsonConvert.SerializeObject(Config), False)
     End Sub
-
     Private Sub cbGitHubSource_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbGitHubSource.SelectedIndexChanged
         If Not ConfigUILoaded Then Exit Sub
         MsgBox(cbGitHubSource.SelectedItem.ToString)
@@ -210,5 +233,18 @@ Public Class frmMain
                 Exit For
             End If
         Next
+    End Sub
+
+    Private Sub Tabs_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles Tabs.Selecting
+        If IsInstalling Then e.Cancel = True
+    End Sub
+
+    Private Sub btnInstallYuzu_Click(sender As Object, e As EventArgs) Handles btnInstallYuzu.Click
+        IsInstalling = True
+        Tabs.SelectedTab = Tabs.TabPages(3)
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        MsgBox(LatestVersion.YuzuEarlyAccess())
     End Sub
 End Class

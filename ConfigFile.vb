@@ -17,4 +17,7 @@
     Public GitHubSource As String = "Direct"
 
     Public ColorScheme As String = "IndigoLight"
+
+    Public GitHubAPIProxy As Boolean = True
+    Public CloudflareProxyPrefix As String = "https://rp.ydz1.gq/"
 End Class

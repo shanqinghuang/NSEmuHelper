@@ -1,4 +1,5 @@
-﻿Imports System
+﻿Imports System.Resources
+Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 
@@ -8,11 +9,11 @@ Imports System.Runtime.InteropServices
 
 '查看程序集特性的值
 
-<Assembly: AssemblyTitle("NSEmuHelper")>
-<Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("")>
-<Assembly: AssemblyProduct("NSEmuHelper")>
-<Assembly: AssemblyCopyright("Copyright ©  2022")>
+<Assembly: AssemblyTitle("NS 模拟器助手")>
+<Assembly: AssemblyDescription("简单高效的 NS 模拟器安装管理工具")>
+<Assembly: AssemblyCompany("是一刀斩哒")>
+<Assembly: AssemblyProduct("NS 模拟器助手")>
+<Assembly: AssemblyCopyright("Copyright ©  2022 是一刀斩哒")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
@@ -31,5 +32,6 @@ Imports System.Runtime.InteropServices
 '通过使用 "*"，如下所示:
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("1.0.0.0")>
-<Assembly: AssemblyFileVersion("1.0.0.0")>
+<Assembly: AssemblyVersion("2.0.0.0")>
+<Assembly: AssemblyFileVersion("2.0.0.0")>
+<Assembly: NeutralResourcesLanguage("zh-CN")>

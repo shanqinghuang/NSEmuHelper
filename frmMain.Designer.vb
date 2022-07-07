@@ -39,9 +39,11 @@ Partial Class frmMain
         Me.lblYuzu = New System.Windows.Forms.Label()
         Me.picYuzu = New System.Windows.Forms.PictureBox()
         Me.TabYuzu = New System.Windows.Forms.TabPage()
+        Me.btnInstallYuzu = New MaterialSkin.Controls.MaterialButton()
+        Me.MaterialCard8 = New MaterialSkin.Controls.MaterialCard()
+        Me.picYuzuBranch = New System.Windows.Forms.PictureBox()
         Me.lblYuzuInfo = New System.Windows.Forms.Label()
         Me.lblYuzuVersion = New MaterialSkin.Controls.MaterialLabel()
-        Me.picYuzuBranch = New System.Windows.Forms.PictureBox()
         Me.TabRyujinx = New System.Windows.Forms.TabPage()
         Me.TabInstall = New System.Windows.Forms.TabPage()
         Me.TabMods = New System.Windows.Forms.TabPage()
@@ -72,7 +74,7 @@ Partial Class frmMain
         Me.MaterialCard2 = New MaterialSkin.Controls.MaterialCard()
         Me.lblAbout = New System.Windows.Forms.Label()
         Me.imgTabs = New System.Windows.Forms.ImageList(Me.components)
-        Me.MaterialCard8 = New MaterialSkin.Controls.MaterialCard()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.Tabs.SuspendLayout()
         Me.TabMain.SuspendLayout()
         Me.MaterialCard4.SuspendLayout()
@@ -80,6 +82,7 @@ Partial Class frmMain
         Me.MaterialCard1.SuspendLayout()
         CType(Me.picYuzu, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabYuzu.SuspendLayout()
+        Me.MaterialCard8.SuspendLayout()
         CType(Me.picYuzuBranch, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabConfig.SuspendLayout()
         Me.MaterialCard7.SuspendLayout()
@@ -91,7 +94,6 @@ Partial Class frmMain
         Me.TabAbout.SuspendLayout()
         Me.MaterialCard3.SuspendLayout()
         Me.MaterialCard2.SuspendLayout()
-        Me.MaterialCard8.SuspendLayout()
         Me.SuspendLayout()
         '
         'Tabs
@@ -118,6 +120,7 @@ Partial Class frmMain
         'TabMain
         '
         Me.TabMain.BackColor = System.Drawing.Color.White
+        Me.TabMain.Controls.Add(Me.Button1)
         Me.TabMain.Controls.Add(Me.MaterialLabel1)
         Me.TabMain.Controls.Add(Me.MaterialCard4)
         Me.TabMain.Controls.Add(Me.Label1)
@@ -269,6 +272,7 @@ Partial Class frmMain
         'TabYuzu
         '
         Me.TabYuzu.BackColor = System.Drawing.Color.White
+        Me.TabYuzu.Controls.Add(Me.btnInstallYuzu)
         Me.TabYuzu.Controls.Add(Me.MaterialCard8)
         Me.TabYuzu.Controls.Add(Me.lblYuzuInfo)
         Me.TabYuzu.Controls.Add(Me.lblYuzuVersion)
@@ -280,6 +284,50 @@ Partial Class frmMain
         Me.TabYuzu.Size = New System.Drawing.Size(778, 354)
         Me.TabYuzu.TabIndex = 1
         Me.TabYuzu.Text = "Yuzu"
+        '
+        'btnInstallYuzu
+        '
+        Me.btnInstallYuzu.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnInstallYuzu.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnInstallYuzu.Depth = 0
+        Me.btnInstallYuzu.HighEmphasis = True
+        Me.btnInstallYuzu.Icon = Nothing
+        Me.btnInstallYuzu.Location = New System.Drawing.Point(697, 322)
+        Me.btnInstallYuzu.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnInstallYuzu.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnInstallYuzu.Name = "btnInstallYuzu"
+        Me.btnInstallYuzu.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnInstallYuzu.Size = New System.Drawing.Size(64, 36)
+        Me.btnInstallYuzu.TabIndex = 4
+        Me.btnInstallYuzu.Text = "安装"
+        Me.btnInstallYuzu.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnInstallYuzu.UseAccentColor = False
+        Me.btnInstallYuzu.UseVisualStyleBackColor = True
+        Me.btnInstallYuzu.Visible = False
+        '
+        'MaterialCard8
+        '
+        Me.MaterialCard8.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.MaterialCard8.Controls.Add(Me.picYuzuBranch)
+        Me.MaterialCard8.Depth = 0
+        Me.MaterialCard8.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.MaterialCard8.Location = New System.Drawing.Point(619, 18)
+        Me.MaterialCard8.Margin = New System.Windows.Forms.Padding(14)
+        Me.MaterialCard8.MouseState = MaterialSkin.MouseState.HOVER
+        Me.MaterialCard8.Name = "MaterialCard8"
+        Me.MaterialCard8.Padding = New System.Windows.Forms.Padding(14)
+        Me.MaterialCard8.Size = New System.Drawing.Size(142, 138)
+        Me.MaterialCard8.TabIndex = 3
+        '
+        'picYuzuBranch
+        '
+        Me.picYuzuBranch.Image = Global.NSEmuHelper.My.Resources.Resources.yuzu_mainline
+        Me.picYuzuBranch.Location = New System.Drawing.Point(17, 8)
+        Me.picYuzuBranch.Name = "picYuzuBranch"
+        Me.picYuzuBranch.Size = New System.Drawing.Size(108, 122)
+        Me.picYuzuBranch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.picYuzuBranch.TabIndex = 0
+        Me.picYuzuBranch.TabStop = False
         '
         'lblYuzuInfo
         '
@@ -298,19 +346,9 @@ Partial Class frmMain
         Me.lblYuzuVersion.Location = New System.Drawing.Point(83, 11)
         Me.lblYuzuVersion.MouseState = MaterialSkin.MouseState.HOVER
         Me.lblYuzuVersion.Name = "lblYuzuVersion"
-        Me.lblYuzuVersion.Size = New System.Drawing.Size(132, 21)
+        Me.lblYuzuVersion.Size = New System.Drawing.Size(100, 21)
         Me.lblYuzuVersion.TabIndex = 1
-        Me.lblYuzuVersion.Text = "Yuzu 版本 xxx 开摆"
-        '
-        'picYuzuBranch
-        '
-        Me.picYuzuBranch.Image = Global.NSEmuHelper.My.Resources.Resources.yuzu
-        Me.picYuzuBranch.Location = New System.Drawing.Point(17, 8)
-        Me.picYuzuBranch.Name = "picYuzuBranch"
-        Me.picYuzuBranch.Size = New System.Drawing.Size(108, 122)
-        Me.picYuzuBranch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.picYuzuBranch.TabIndex = 0
-        Me.picYuzuBranch.TabStop = False
+        Me.lblYuzuVersion.Text = "Yuzu 版本 xxx "
         '
         'TabRyujinx
         '
@@ -398,7 +436,7 @@ Partial Class frmMain
         'PictureBox3
         '
         Me.PictureBox3.Image = Global.NSEmuHelper.My.Resources.Resources.hammer_wrench
-        Me.PictureBox3.Location = New System.Drawing.Point(12, 17)
+        Me.PictureBox3.Location = New System.Drawing.Point(17, 17)
         Me.PictureBox3.Name = "PictureBox3"
         Me.PictureBox3.Size = New System.Drawing.Size(23, 23)
         Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -740,19 +778,14 @@ Partial Class frmMain
         Me.imgTabs.Images.SetKeyName(5, "briefcase-download.png")
         Me.imgTabs.Images.SetKeyName(6, "puzzle.png")
         '
-        'MaterialCard8
+        'Button1
         '
-        Me.MaterialCard8.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.MaterialCard8.Controls.Add(Me.picYuzuBranch)
-        Me.MaterialCard8.Depth = 0
-        Me.MaterialCard8.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.MaterialCard8.Location = New System.Drawing.Point(619, 18)
-        Me.MaterialCard8.Margin = New System.Windows.Forms.Padding(14)
-        Me.MaterialCard8.MouseState = MaterialSkin.MouseState.HOVER
-        Me.MaterialCard8.Name = "MaterialCard8"
-        Me.MaterialCard8.Padding = New System.Windows.Forms.Padding(14)
-        Me.MaterialCard8.Size = New System.Drawing.Size(142, 138)
-        Me.MaterialCard8.TabIndex = 3
+        Me.Button1.Location = New System.Drawing.Point(254, 173)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(79, 48)
+        Me.Button1.TabIndex = 7
+        Me.Button1.Text = "Button1"
+        Me.Button1.UseVisualStyleBackColor = True
         '
         'frmMain
         '
@@ -763,7 +796,6 @@ Partial Class frmMain
         Me.DrawerShowIconsWhenHidden = True
         Me.DrawerTabControl = Me.Tabs
         Me.Font = New System.Drawing.Font("微软雅黑", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(134, Byte))
-        Me.FormStyle = MaterialSkin.Controls.MaterialForm.FormStyles.ActionBar_40
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.Name = "frmMain"
@@ -781,6 +813,7 @@ Partial Class frmMain
         CType(Me.picYuzu, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabYuzu.ResumeLayout(False)
         Me.TabYuzu.PerformLayout()
+        Me.MaterialCard8.ResumeLayout(False)
         CType(Me.picYuzuBranch, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabConfig.ResumeLayout(False)
         Me.MaterialCard7.ResumeLayout(False)
@@ -797,7 +830,6 @@ Partial Class frmMain
         Me.MaterialCard3.PerformLayout()
         Me.MaterialCard2.ResumeLayout(False)
         Me.MaterialCard2.PerformLayout()
-        Me.MaterialCard8.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -851,4 +883,6 @@ Partial Class frmMain
     Friend WithEvents lblYuzuVersion As MaterialSkin.Controls.MaterialLabel
     Friend WithEvents lblYuzuInfo As Label
     Friend WithEvents MaterialCard8 As MaterialSkin.Controls.MaterialCard
+    Friend WithEvents btnInstallYuzu As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents Button1 As Button
 End Class
