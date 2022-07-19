@@ -23,9 +23,9 @@ Public Class frmMain
         Config = JsonConvert.DeserializeObject(Of ConfigFilePattern)(My.Computer.FileSystem.ReadAllText(AppPath & "\Config.json"))
 
         '加载 GitHub 下载源
-        GitHubSources = JObject.Parse(My.Resources.GitHubSources)
-        For Each GitHubSource In GitHubSources
-            cbGitHubSource.Items.Add(GitHubSource.Value("name"))
+        DownloadSources = JObject.Parse(My.Resources.DownloadSources)
+        For Each GitHubSource In DownloadSources
+            cbDownloadSource.Items.Add(GitHubSource.Value("name"))
         Next
 
         '主面板
@@ -167,12 +167,13 @@ Public Class frmMain
                 cbColorScheme.SelectedItem = "青色 (夜间)"
         End Select
         'github
-        For Each GitHubSource In GitHubSources
-            If GitHubSource.Key = Config.GitHubSource Then
-                cbGitHubSource.SelectedItem = GitHubSource.Value("name")
+        For Each GitHubSource In DownloadSources
+            If GitHubSource.Key = Config.DownloadSource Then
+                cbDownloadSource.SelectedItem = GitHubSource.Value("name")
                 Exit For
             End If
         Next
+        checkProxyGitHubAPI.Checked = Config.GitHubAPIProxy
         ConfigUILoaded = True
     End Sub
     Private Sub MaterialButton3_Click(sender As Object, e As EventArgs) Handles MaterialButton3.Click
@@ -223,13 +224,13 @@ Public Class frmMain
     Private Sub WriteConfig()
         My.Computer.FileSystem.WriteAllText(AppPath & "\Config.json", JsonConvert.SerializeObject(Config), False)
     End Sub
-    Private Sub cbGitHubSource_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbGitHubSource.SelectedIndexChanged
+    Private Sub cbDownloadSource_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbDownloadSource.SelectedIndexChanged
         If Not ConfigUILoaded Then Exit Sub
-        MsgBox(cbGitHubSource.SelectedItem.ToString)
-        For Each GitHubSource In GitHubSources
+        MsgBox("下载源已更改为 " & cbDownloadSource.SelectedItem.ToString)
+        For Each GitHubSource In DownloadSources
             Debug.Print(GitHubSource.Value("name"))
-            If GitHubSource.Value("name") = cbGitHubSource.SelectedItem.ToString Then
-                Config.GitHubSource = GitHubSource.Key
+            If GitHubSource.Value("name") = cbDownloadSource.SelectedItem.ToString Then
+                Config.DownloadSource = GitHubSource.Key
                 WriteConfig()
                 Exit For
             End If
@@ -367,4 +368,9 @@ Public Class frmMain
             InstallProperties.Add(Key, Value)
         End If
     End Sub ' 懒人改字典
+
+    Private Sub checkProxyGitHubAPI_CheckedChanged(sender As Object, e As EventArgs) Handles checkProxyGitHubAPI.CheckedChanged
+        Config.GitHubAPIProxy = checkProxyGitHubAPI.Checked
+        WriteConfig()
+    End Sub
 End Class

@@ -65,7 +65,7 @@ Partial Class frmMain
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.MaterialCard6 = New MaterialSkin.Controls.MaterialCard()
-        Me.cbGitHubSource = New MaterialSkin.Controls.MaterialComboBox()
+        Me.cbDownloadSource = New MaterialSkin.Controls.MaterialComboBox()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -85,6 +85,8 @@ Partial Class frmMain
         Me.MaterialCard2 = New MaterialSkin.Controls.MaterialCard()
         Me.lblAbout = New System.Windows.Forms.Label()
         Me.imgTabs = New System.Windows.Forms.ImageList(Me.components)
+        Me.checkProxyGitHubAPI = New MaterialSkin.Controls.MaterialCheckbox()
+        Me.Label9 = New System.Windows.Forms.Label()
         Me.Tabs.SuspendLayout()
         Me.TabMain.SuspendLayout()
         Me.MaterialCard4.SuspendLayout()
@@ -682,7 +684,9 @@ Partial Class frmMain
         'MaterialCard6
         '
         Me.MaterialCard6.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.MaterialCard6.Controls.Add(Me.cbGitHubSource)
+        Me.MaterialCard6.Controls.Add(Me.Label9)
+        Me.MaterialCard6.Controls.Add(Me.checkProxyGitHubAPI)
+        Me.MaterialCard6.Controls.Add(Me.cbDownloadSource)
         Me.MaterialCard6.Controls.Add(Me.PictureBox2)
         Me.MaterialCard6.Controls.Add(Me.Label4)
         Me.MaterialCard6.Controls.Add(Me.Label5)
@@ -696,27 +700,27 @@ Partial Class frmMain
         Me.MaterialCard6.Size = New System.Drawing.Size(205, 342)
         Me.MaterialCard6.TabIndex = 5
         '
-        'cbGitHubSource
+        'cbDownloadSource
         '
-        Me.cbGitHubSource.AutoResize = False
-        Me.cbGitHubSource.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.cbGitHubSource.Depth = 0
-        Me.cbGitHubSource.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable
-        Me.cbGitHubSource.DropDownHeight = 174
-        Me.cbGitHubSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cbGitHubSource.DropDownWidth = 121
-        Me.cbGitHubSource.Font = New System.Drawing.Font("Microsoft YaHei UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel)
-        Me.cbGitHubSource.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.cbGitHubSource.FormattingEnabled = True
-        Me.cbGitHubSource.IntegralHeight = False
-        Me.cbGitHubSource.ItemHeight = 43
-        Me.cbGitHubSource.Location = New System.Drawing.Point(17, 89)
-        Me.cbGitHubSource.MaxDropDownItems = 4
-        Me.cbGitHubSource.MouseState = MaterialSkin.MouseState.OUT
-        Me.cbGitHubSource.Name = "cbGitHubSource"
-        Me.cbGitHubSource.Size = New System.Drawing.Size(171, 49)
-        Me.cbGitHubSource.StartIndex = 0
-        Me.cbGitHubSource.TabIndex = 6
+        Me.cbDownloadSource.AutoResize = False
+        Me.cbDownloadSource.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.cbDownloadSource.Depth = 0
+        Me.cbDownloadSource.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable
+        Me.cbDownloadSource.DropDownHeight = 174
+        Me.cbDownloadSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbDownloadSource.DropDownWidth = 121
+        Me.cbDownloadSource.Font = New System.Drawing.Font("Microsoft YaHei UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel)
+        Me.cbDownloadSource.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.cbDownloadSource.FormattingEnabled = True
+        Me.cbDownloadSource.IntegralHeight = False
+        Me.cbDownloadSource.ItemHeight = 43
+        Me.cbDownloadSource.Location = New System.Drawing.Point(17, 89)
+        Me.cbDownloadSource.MaxDropDownItems = 4
+        Me.cbDownloadSource.MouseState = MaterialSkin.MouseState.OUT
+        Me.cbDownloadSource.Name = "cbDownloadSource"
+        Me.cbDownloadSource.Size = New System.Drawing.Size(171, 49)
+        Me.cbDownloadSource.StartIndex = 0
+        Me.cbDownloadSource.TabIndex = 6
         '
         'PictureBox2
         '
@@ -996,6 +1000,31 @@ Partial Class frmMain
         Me.imgTabs.Images.SetKeyName(5, "briefcase-download.png")
         Me.imgTabs.Images.SetKeyName(6, "puzzle.png")
         '
+        'checkProxyGitHubAPI
+        '
+        Me.checkProxyGitHubAPI.AutoSize = True
+        Me.checkProxyGitHubAPI.Depth = 0
+        Me.checkProxyGitHubAPI.Location = New System.Drawing.Point(12, 185)
+        Me.checkProxyGitHubAPI.Margin = New System.Windows.Forms.Padding(0)
+        Me.checkProxyGitHubAPI.MouseLocation = New System.Drawing.Point(-1, -1)
+        Me.checkProxyGitHubAPI.MouseState = MaterialSkin.MouseState.HOVER
+        Me.checkProxyGitHubAPI.Name = "checkProxyGitHubAPI"
+        Me.checkProxyGitHubAPI.ReadOnly = False
+        Me.checkProxyGitHubAPI.Ripple = True
+        Me.checkProxyGitHubAPI.Size = New System.Drawing.Size(179, 37)
+        Me.checkProxyGitHubAPI.TabIndex = 7
+        Me.checkProxyGitHubAPI.Text = "始终代理 GitHub API"
+        Me.checkProxyGitHubAPI.UseVisualStyleBackColor = True
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(17, 158)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(79, 15)
+        Me.Label9.TabIndex = 8
+        Me.Label9.Text = "下载相关选项"
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
@@ -1090,7 +1119,7 @@ Partial Class frmMain
     Friend WithEvents txtRyujinxPath As MaterialSkin.Controls.MaterialTextBox2
     Friend WithEvents Label8 As Label
     Friend WithEvents cbColorScheme As MaterialSkin.Controls.MaterialComboBox
-    Friend WithEvents cbGitHubSource As MaterialSkin.Controls.MaterialComboBox
+    Friend WithEvents cbDownloadSource As MaterialSkin.Controls.MaterialComboBox
     Friend WithEvents TabInstall As TabPage
     Friend WithEvents TabMods As TabPage
     Friend WithEvents picYuzuBranch As PictureBox
@@ -1109,4 +1138,6 @@ Partial Class frmMain
     Friend WithEvents btnPreviousStep As MaterialSkin.Controls.MaterialButton
     Friend WithEvents btnNextStep As MaterialSkin.Controls.MaterialButton
     Friend WithEvents txtKeySelector As MaterialSkin.Controls.MaterialTextBox2
+    Friend WithEvents Label9 As Label
+    Friend WithEvents checkProxyGitHubAPI As MaterialSkin.Controls.MaterialCheckbox
 End Class

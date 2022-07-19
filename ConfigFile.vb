@@ -14,7 +14,7 @@
     Public YuzuDataFolder As String = ""
     Public RyujinxDataFolder As String = ""
 
-    Public GitHubSource As String = "Direct"
+    Public DownloadSource As String = "Direct"
 
     Public ColorScheme As String = "IndigoLight"
 

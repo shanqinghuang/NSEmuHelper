@@ -8,8 +8,7 @@ Module NSEmuHelperModule
     Public Config As New ConfigFilePattern
     Public MainUILoaded As Boolean = False
     Public ConfigUILoaded As Boolean = False
-    Public GitHubSources As New Newtonsoft.Json.Linq.JObject
-    Public GitHubSourceUrl As String
+    Public DownloadSources As New Newtonsoft.Json.Linq.JObject
 
     'Public Const FIREFOX_USER_AGENT As String = "Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0"
     Public Const GITHUB_PUBLIC_TOKEN As String = "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"
@@ -72,27 +71,75 @@ End Module
 
 Module LatestVersion
     Async Function YuzuEarlyAccess() As Task(Of String)
-        Try
-            Return Replace(JsonConvert.DeserializeObject(Await GitHubAPI("https://api.github.com/repos/pineappleea/pineapple-src/releases"))(2)("tag_name"), "EA-", "")
-        Catch QWQExpection As Exception
-            frmExpection.ShowMessage("可能的解决方案：GitHub API 调用超出限制，请等一会重试。" & vbCrLf & "详细报错：" & QWQExpection.Message)
-            End
-        End Try
+        Select Case DownloadSources(Config.DownloadSource)("type")
+            Case "github"
+                Try
+                    Return Replace(JsonConvert.DeserializeObject(Await GitHubAPI("https://api.github.com/repos/pineappleea/pineapple-src/releases"))(2)("tag_name"), "EA-", "")
+                Catch QWQExpection As Exception
+                    frmExpection.ShowMessage("可能的解决方案：GitHub API 调用超出限制，请等一会重试。" & vbCrLf & "详细报错：" & QWQExpection.Message)
+                    End
+                End Try
+            Case "onemanager"
+                Dim VersionNumbers As New ArrayList, VersionList As JObject
+                VersionList = JObject.Parse(Await HTTPGetAsync(DownloadSources(Config.DownloadSource)("url").ToString & "YuzuEarlyAccess/?json"))
+                For Each VersionObject As JProperty In VersionList.Item("list")
+                    VersionObject.CreateReader()
+                    VersionNumbers.Add(CInt(VersionObject.Value("name").ToString.Replace("Windows-Yuzu-EA-", "").Replace(".7z", "")))
+                Next
+                VersionNumbers.Sort()
+                VersionNumbers.Reverse()
+                Return VersionNumbers(0)
+            Case Else
+                MsgBox("无效的下载源！")
+                End
+        End Select
     End Function
     Async Function YuzuMainline() As Task(Of String)
-        Try
-            Return Replace(JsonConvert.DeserializeObject(Await GitHubAPI("https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases/latest"))("tag_name"), "mainline-0-", "")
-        Catch QWQExpection As Exception
-            frmExpection.ShowMessage("可能的解决方案：GitHub API 调用超出限制，请等一会重试。" & vbCrLf & "详细报错：" & QWQExpection.Message)
-            End
-        End Try
+        Select Case DownloadSources(Config.DownloadSource)("type")
+            Case "github"
+                Try
+                    Return Replace(JsonConvert.DeserializeObject(Await GitHubAPI("https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases/latest"))("tag_name"), "mainline-0-", "")
+                Catch QWQExpection As Exception
+                    frmExpection.ShowMessage("可能的解决方案：GitHub API 调用超出限制，请等一会重试。" & vbCrLf & "详细报错：" & QWQExpection.Message)
+                    End
+                End Try
+            Case "onemanager"
+                Dim VersionNumbers As New ArrayList, VersionList As JObject
+                VersionList = JObject.Parse(Await HTTPGetAsync(DownloadSources(Config.DownloadSource)("url").ToString & "YuzuMainline/?json"))
+                For Each VersionObject As JProperty In VersionList.Item("list")
+                    VersionObject.CreateReader()
+                    VersionNumbers.Add(CInt(VersionObject.Value("name").ToString.Replace("yuzu-windows-msvc-", "").Replace(".7z", "")))
+                Next
+                VersionNumbers.Sort()
+                VersionNumbers.Reverse()
+                Return VersionNumbers(0)
+            Case Else
+                MsgBox("无效的下载源！")
+                End
+        End Select
     End Function
     Async Function Ryujinx() As Task(Of String)
-        Try
-            Return JsonConvert.DeserializeObject(Await GitHubAPI("https://api.github.com/repos/Ryujinx/release-channel-master/releases/latest"))("tag_name")
-        Catch QWQExpection As Exception
-            frmExpection.ShowMessage("可能的解决方案：GitHub API 调用超出限制，请等一会重试。" & vbCrLf & "详细报错：" & QWQExpection.Message)
-            End
-        End Try
+        Select Case DownloadSources(Config.DownloadSource)("type")
+            Case "github"
+                Try
+                    Return JsonConvert.DeserializeObject(Await GitHubAPI("https://api.github.com/repos/Ryujinx/release-channel-master/releases/latest"))("tag_name")
+                Catch QWQExpection As Exception
+                    frmExpection.ShowMessage("可能的解决方案：GitHub API 调用超出限制，请等一会重试。" & vbCrLf & "详细报错：" & QWQExpection.Message)
+                    End
+                End Try
+            Case "onemanager"
+                Dim VersionNumbers As New ArrayList, VersionList As JObject
+                VersionList = JObject.Parse(Await HTTPGetAsync(DownloadSources(Config.DownloadSource)("url").ToString & "Ryujinx/?json"))
+                For Each VersionObject As JProperty In VersionList.Item("list")
+                    VersionObject.CreateReader()
+                    VersionNumbers.Add(CInt(VersionObject.Value("name").ToString.Replace("ryujinx-", "").Replace("-win_x64.zip", "")))
+                Next
+                VersionNumbers.Sort()
+                VersionNumbers.Reverse()
+                Return VersionNumbers(0)
+            Case Else
+                MsgBox("无效的下载源！")
+                End
+        End Select
     End Function
 End Module

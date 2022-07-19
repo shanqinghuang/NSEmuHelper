@@ -71,21 +71,45 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  查找类似 {
+        '''	&quot;OneDrive&quot;: {
+        '''		&quot;name&quot;: &quot;OneDrive | 助手自建&quot;,
+        '''		&quot;type&quot;: &quot;onemanager&quot;,
+        '''		&quot;url&quot;: &quot;https://pan.yidaozhan.top/ns_emu_helper/&quot;
+        '''	},
+        '''	&quot;Direct&quot;: {
+        '''		&quot;name&quot;: &quot;GitHub 直连&quot;,
+        '''		&quot;type&quot;: &quot;github&quot;,
+        '''		&quot;url&quot;: &quot;https://github.com&quot;
+        '''	},
+        '''	&quot;US1&quot;: {
+        '''		&quot;name&quot;: &quot;美国 1 | CDN&quot;,
+        '''		&quot;type&quot;: &quot;github&quot;,
+        '''		&quot;url&quot;: &quot;https://gh.ddlc.top/https://github.com&quot;
+        '''	},
+        '''	&quot;US2&quot;: {
+        '''		&quot;name&quot;: &quot;美国 2 | 圣何塞&quot;,
+        '''		&quot;type&quot;: &quot;github&quot;,
+        '''		&quot;url&quot;: &quot;https://download.xn--p8jhe.tw&quot;
+        '''	},
+        '''	&quot;US3&quot;: {
+        '''		&quot;name&quot;: &quot;美国 3 | CDN | 助手自建&quot;,
+        '''		&quot;type&quot;: &quot;onemanager&quot;,
+        ''' [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        '''</summary>
+        Friend ReadOnly Property DownloadSources() As String
+            Get
+                Return ResourceManager.GetString("DownloadSources", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  查找 System.Drawing.Bitmap 类型的本地化资源。
         '''</summary>
         Friend ReadOnly Property github() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("github", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  查找类似 {&quot;Direct&quot;:{&quot;name&quot;:&quot;GitHub 直连&quot;,&quot;url&quot;:&quot;https://github.com&quot;},&quot;US1&quot;:{&quot;name&quot;:&quot;美国 1 | CDN&quot;,&quot;url&quot;:&quot;https://gh.ddlc.top/https://github.com&quot;},&quot;US2&quot;:{&quot;name&quot;:&quot;美国 2 | CDN&quot;,&quot;url&quot;:&quot;https://gh.gh2233.ml/https://github.com&quot;},&quot;US3&quot;:{&quot;name&quot;:&quot;美国 3 | 洛杉矶&quot;,&quot;url&quot;:&quot;https://download.cithub.icu&quot;},&quot;US4&quot;:{&quot;name&quot;:&quot;美国 4 | 圣何塞&quot;,&quot;url&quot;:&quot;https://download.xn--p8jhe.tw&quot;},&quot;US5&quot;:{&quot;name&quot;:&quot;美国 5 | CDN&quot;,&quot;url&quot;:&quot;https://rp.ydz1.gq/https://github.com&quot;},&quot;HK1&quot;:{&quot;name&quot;:&quot;香港 1&quot;,&quot;url&quot;:&quot;https://ghproxy.futils.com/https://github.com&quot;},&quot;JP1&quot;:{&quot;name&quot;:&quot;日本 1 | 东 [字符串的其余部分被截断]&quot;; 的本地化字符串。
-        '''</summary>
-        Friend ReadOnly Property GitHubSources() As String
-            Get
-                Return ResourceManager.GetString("GitHubSources", resourceCulture)
             End Get
         End Property
         
