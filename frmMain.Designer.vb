@@ -87,6 +87,8 @@ Partial Class frmMain
         Me.imgTabs = New System.Windows.Forms.ImageList(Me.components)
         Me.checkProxyGitHubAPI = New MaterialSkin.Controls.MaterialCheckbox()
         Me.Label9 = New System.Windows.Forms.Label()
+        Me.btnCheckUpdate = New MaterialSkin.Controls.MaterialButton()
+        Me.btnDownloadKeys = New MaterialSkin.Controls.MaterialButton()
         Me.Tabs.SuspendLayout()
         Me.TabMain.SuspendLayout()
         Me.MaterialCard4.SuspendLayout()
@@ -387,6 +389,7 @@ Partial Class frmMain
         'TabInstall
         '
         Me.TabInstall.BackColor = System.Drawing.Color.White
+        Me.TabInstall.Controls.Add(Me.btnDownloadKeys)
         Me.TabInstall.Controls.Add(Me.txtKeySelector)
         Me.TabInstall.Controls.Add(Me.btnPreviousStep)
         Me.TabInstall.Controls.Add(Me.btnNextStep)
@@ -616,6 +619,7 @@ Partial Class frmMain
         'MaterialCard7
         '
         Me.MaterialCard7.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.MaterialCard7.Controls.Add(Me.btnCheckUpdate)
         Me.MaterialCard7.Controls.Add(Me.cbColorScheme)
         Me.MaterialCard7.Controls.Add(Me.PictureBox3)
         Me.MaterialCard7.Controls.Add(Me.Label6)
@@ -1025,6 +1029,45 @@ Partial Class frmMain
         Me.Label9.TabIndex = 8
         Me.Label9.Text = "下载相关选项"
         '
+        'btnCheckUpdate
+        '
+        Me.btnCheckUpdate.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnCheckUpdate.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnCheckUpdate.Depth = 0
+        Me.btnCheckUpdate.HighEmphasis = True
+        Me.btnCheckUpdate.Icon = Nothing
+        Me.btnCheckUpdate.Location = New System.Drawing.Point(108, 286)
+        Me.btnCheckUpdate.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnCheckUpdate.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnCheckUpdate.Name = "btnCheckUpdate"
+        Me.btnCheckUpdate.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnCheckUpdate.Size = New System.Drawing.Size(79, 36)
+        Me.btnCheckUpdate.TabIndex = 7
+        Me.btnCheckUpdate.Text = "检查更新"
+        Me.btnCheckUpdate.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnCheckUpdate.UseAccentColor = False
+        Me.btnCheckUpdate.UseVisualStyleBackColor = True
+        '
+        'btnDownloadKeys
+        '
+        Me.btnDownloadKeys.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnDownloadKeys.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnDownloadKeys.Depth = 0
+        Me.btnDownloadKeys.HighEmphasis = True
+        Me.btnDownloadKeys.Icon = Nothing
+        Me.btnDownloadKeys.Location = New System.Drawing.Point(471, 322)
+        Me.btnDownloadKeys.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnDownloadKeys.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnDownloadKeys.Name = "btnDownloadKeys"
+        Me.btnDownloadKeys.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnDownloadKeys.Size = New System.Drawing.Size(108, 36)
+        Me.btnDownloadKeys.TabIndex = 11
+        Me.btnDownloadKeys.Text = "下载密钥文件"
+        Me.btnDownloadKeys.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnDownloadKeys.UseAccentColor = False
+        Me.btnDownloadKeys.UseVisualStyleBackColor = True
+        Me.btnDownloadKeys.Visible = False
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
@@ -1140,4 +1183,6 @@ Partial Class frmMain
     Friend WithEvents txtKeySelector As MaterialSkin.Controls.MaterialTextBox2
     Friend WithEvents Label9 As Label
     Friend WithEvents checkProxyGitHubAPI As MaterialSkin.Controls.MaterialCheckbox
+    Friend WithEvents btnCheckUpdate As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents btnDownloadKeys As MaterialSkin.Controls.MaterialButton
 End Class

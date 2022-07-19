@@ -308,6 +308,7 @@ Public Class frmMain
     Private Async Sub YuzuInstallStep2()
         btnPreviousStep.Enabled = True
         txtKeySelector.Show()
+        btnDownloadKeys.Show()
         InstallTitle.Text = "步骤 2 - 选择密钥 (Keys) 文件"
         InstallMessage.Text = "NS 模拟器需要密钥才能运行游戏。" & vbCrLf & "你可以在贴吧或相关的交流群获取密钥文件。"
 
@@ -372,5 +373,10 @@ Public Class frmMain
     Private Sub checkProxyGitHubAPI_CheckedChanged(sender As Object, e As EventArgs) Handles checkProxyGitHubAPI.CheckedChanged
         Config.GitHubAPIProxy = checkProxyGitHubAPI.Checked
         WriteConfig()
+    End Sub
+
+    Private Sub btnDownloadKeys_Click(sender As Object, e As EventArgs) Handles btnDownloadKeys.Click
+        MsgBox("文件提取码：1034" & vbCrLf & "本资源转载自吾爱模拟论坛，不属于 NS 模拟器助手", vbInformation)
+        Process.Start("https://url30.ctfile.com/d/32848130-44496748-b13e91")
     End Sub
 End Class
