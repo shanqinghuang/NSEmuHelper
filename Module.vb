@@ -1,5 +1,6 @@
 ﻿Imports System.Net
 Imports System.Net.Http
+Imports System.Xml
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
 Module NSEmuHelperModule
@@ -67,7 +68,45 @@ Module NSEmuHelperModule
         Return 0
     End Function
 
+    Public Async Function GetMirrorFirmwareList() As Task(Of ArrayList)
+        Dim FirmwareList As New ArrayList, FirmwareJSON As JObject, FirmwareAPIURL As String
+        If Config.DownloadSource = "US3" Then
+            FirmwareAPIURL = DownloadSources("US3")("url").ToString
+        Else
+            FirmwareAPIURL = DownloadSources("OneDrive")("url").ToString
+        End If
+        FirmwareAPIURL &= "NSFirmware/?json"
+        FirmwareJSON = JObject.Parse(Await HTTPGetAsync(FirmwareAPIURL))
+        For Each VersionObject As JProperty In FirmwareJSON.Item("list")
+            VersionObject.CreateReader()
+            FirmwareList.Add(VersionObject.Value("name").ToString.Replace(".zip", "").Replace("Firmware_", ""))
+        Next
+        FirmwareList.Sort()
+        FirmwareList.Reverse()
+        Return FirmwareList
+    End Function
+
+    Public Async Function GetFullFirmwareList() As Task(Of ArrayList)
+        Dim FirmwareList As New ArrayList, tmpFirmwareVersion As String
+        Dim FirmwareXML As New XmlDocument
+        FirmwareXML.LoadXml(Await HTTPGetAsync("https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"))
+        Dim FirmwareNodeList As XmlNodeList = FirmwareXML.SelectNodes("/files/file")
+        For Each FirmwareNode As XmlNode In FirmwareNodeList
+            tmpFirmwareVersion = FirmwareNode.Attributes("name").Value
+            If tmpFirmwareVersion.Contains(".zip") Then
+                tmpFirmwareVersion = tmpFirmwareVersion.Replace("Firmware ", "").Replace(".zip", "")
+                If CInt(tmpFirmwareVersion.Split(".")(0)) >= 10 Then
+                    FirmwareList.Add(tmpFirmwareVersion)
+                End If
+            End If
+        Next
+        FirmwareList.Sort()
+        FirmwareList.Reverse()
+        Return FirmwareList
+    End Function
+
 End Module
+
 
 Module LatestVersion
     Async Function YuzuEarlyAccess() As Task(Of String)
@@ -142,4 +181,5 @@ Module LatestVersion
                 End
         End Select
     End Function
+
 End Module

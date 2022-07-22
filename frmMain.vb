@@ -9,6 +9,9 @@ Public Class frmMain
     Dim InstallStep As Integer = 0
     Dim InstallProperties As Dictionary(Of String, Object)
     Dim InstallingEmulator As String
+
+    '安装时候用的临时变量
+    '还没有qwq
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         '样式
         For Each Control In {lblYuzu, lblYuzu2, lblYuzuFirmware, lblRyujinx, lblRyujinx2, lblRyujinxFirmware, lblYuzuConfig}
@@ -258,15 +261,40 @@ Public Class frmMain
     End Sub
 
     Private Sub YuzuRefreshInstall(Optional Previous As Boolean = False)
-        Select Case InstallStep
-            Case 0
-                InstallStep = 1
-                YuzuInstallStep1()
-            Case 1
-                YuzuPostInstallStep1()
-                InstallStep = 2
-                YuzuInstallStep2()
-        End Select
+        If Previous = True Then
+            '上一步
+            Select Case InstallStep
+                Case 2
+                    Call YuzuPostInstallStep2(True)
+                    InstallStep = 1
+                    YuzuInstallStep1()
+                Case 3
+                    Call YuzuPostInstallStep3(True)
+                    InstallStep = 2
+                    YuzuInstallStep2()
+            End Select
+        Else
+            '下一步
+            Select Case InstallStep
+                Case 0
+                    InstallStep = 1
+                    YuzuInstallStep1()
+                Case 1
+                    YuzuPostInstallStep1()
+                    InstallStep = 2
+                    YuzuInstallStep2()
+                Case 2
+                    If YuzuPostInstallStep2() Then
+                        InstallStep = 3
+                        YuzuInstallStep3()
+                    End If
+                Case 3
+                    If YuzuPostInstallStep3() Then
+                        InstallStep = 4
+                        'YuzuInstallStep4()
+                    End If
+            End Select
+        End If
     End Sub
     Private Sub YuzuPrepareInstall()
         If Config.YuzuPath = "D:\Yuzu" Then
@@ -305,15 +333,61 @@ Public Class frmMain
         txtVersion.Hide()
     End Sub
 
-    Private Async Sub YuzuInstallStep2()
+    Private Sub YuzuInstallStep2()
         btnPreviousStep.Enabled = True
         txtKeySelector.Show()
         btnDownloadKeys.Show()
         InstallTitle.Text = "步骤 2 - 选择密钥 (Keys) 文件"
         InstallMessage.Text = "NS 模拟器需要密钥才能运行游戏。" & vbCrLf & "你可以在贴吧或相关的交流群获取密钥文件。"
-
     End Sub
 
+    Private Function YuzuPostInstallStep2(Optional ForceTrue As Boolean = False) As Boolean
+        If (txtKeySelector.Text <> "双击选择密钥文件 ..." And txtKeySelector.Text <> "") Or ForceTrue Then
+            txtKeySelector.Hide()
+            btnDownloadKeys.Hide()
+            SetProperty("Keys", txtKeySelector.Text)
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+    Private Sub YuzuInstallStep3()
+        btnFirmwareOnline.Show()
+        btnFirmwareLocal.Show()
+        txtFirmware.Show()
+        comboFirmware.Show()
+        lblFirmwareTip.Show()
+        InstallTitle.Text = "步骤 3 - 安装固件"
+        InstallMessage.Text = "在 Yuzu 中，虽然不安装固件就可以运行游戏，" & vbCrLf & "但游戏内会无法显示文字，局域网联机等功能也无法使用，" & vbCrLf & "所以需要安装固件。"
+        btnFirmwareOnline.Select()
+    End Sub
+    Private Function YuzuPostInstallStep3(Optional ForceTrue As Boolean = False) As Boolean
+        Select Case btnFirmwareOnline.Checked
+            Case True
+                btnFirmwareOnline.Hide()
+                btnFirmwareLocal.Hide()
+                txtFirmware.Hide()
+                comboFirmware.Hide()
+                lblFirmwareTip.Hide()
+                SetProperty("FirmwareMode", "Online")
+                SetProperty("FirmwareVersion", comboFirmware.Text)
+                Return True
+            Case False
+                If (txtFirmware.Text <> "双击选择固件包 ..." And txtFirmware.Text <> "") Or ForceTrue Then
+                    btnFirmwareOnline.Hide()
+                    btnFirmwareLocal.Hide()
+                    txtFirmware.Hide()
+                    comboFirmware.Hide()
+                    lblFirmwareTip.Hide()
+                    SetProperty("FirmwareMode", "Local")
+                    SetProperty("FirmwareVersion", comboFirmware.Text)
+                    SetProperty("FirmwarePath", txtFirmware.Text)
+                    Return True
+                Else
+                    Return False
+                End If
+        End Select
+    End Function
     Private Async Sub comboBranch_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboBranch.SelectedIndexChanged
         txtVersion.Enabled = False
         btnNextStep.Enabled = False '加载时暂时禁用按钮
@@ -333,7 +407,7 @@ Public Class frmMain
     End Sub
 
     Private Sub btnNextStep_Click(sender As Object, e As EventArgs) Handles btnNextStep.Click
-        '上一步
+        '下一步
         Select Case InstallingEmulator
             Case "Yuzu"
                 YuzuRefreshInstall()
@@ -341,7 +415,7 @@ Public Class frmMain
     End Sub
 
     Private Sub btnPreviousStep_Click(sender As Object, e As EventArgs) Handles btnPreviousStep.Click
-        '下一步
+        '上一步
         Select Case InstallingEmulator
             Case "Yuzu"
                 YuzuRefreshInstall(True)
@@ -378,5 +452,75 @@ Public Class frmMain
     Private Sub btnDownloadKeys_Click(sender As Object, e As EventArgs) Handles btnDownloadKeys.Click
         MsgBox("文件提取码：1034" & vbCrLf & "本资源转载自吾爱模拟论坛，不属于 NS 模拟器助手", vbInformation)
         Process.Start("https://url30.ctfile.com/d/32848130-44496748-b13e91")
+    End Sub
+
+    Private Sub txtFirmware_Click(sender As Object, e As EventArgs) Handles txtFirmware.Click
+        '弹出固件选择框
+        With New OpenFileDialog
+            .InitialDirectory = AppPath
+            .Title = "选择固件压缩包"
+            .DefaultExt = "zip"
+            .Filter = "ZIP 固件包|*.zip|7Z 固件包|*.7z"
+            .CheckFileExists = True
+            .CheckPathExists = True
+            .ShowDialog()
+            txtFirmware.Text = .FileName
+            '判断固件包版本
+            If .FileName.Contains("Firmware ") Then
+                comboFirmware.Text = System.IO.Path.GetFileName(.FileName).Replace("Firmware ", "").Replace(".7z", "").Replace(".zip", "")
+            ElseIf .FileName.Contains("Firmware_") Then
+                comboFirmware.Text = System.IO.Path.GetFileName(.FileName).Replace("Firmware_", "").Replace(".7z", "").Replace(".zip", "")
+            ElseIf .FileName.Contains("registered-") Then
+                comboFirmware.Text = System.IO.Path.GetFileName(.FileName).Replace("registered-", "").Replace(".7z", "").Replace(".zip", "")
+            End If
+        End With
+    End Sub
+
+    Private Async Sub btnFirmwareOnline_CheckedChanged(sender As Object, e As EventArgs) Handles btnFirmwareOnline.CheckedChanged
+        If btnFirmwareOnline.Checked Then
+            lblFirmwareTip.Text = "选择要安装的固件版本"
+            comboFirmware.Text = "加载中 ..."
+            comboFirmware.Enabled = False
+            txtFirmware.Enabled = False
+            btnFirmwareLocal.Enabled = False
+            btnFirmwareOnline.Enabled = False
+            btnNextStep.Enabled = False
+            btnPreviousStep.Enabled = False
+            comboFirmware.Items.Clear()
+            For Each VersionItem As String In Await GetMirrorFirmwareList()
+                comboFirmware.Items.Add(VersionItem)
+            Next
+            comboFirmware.Text = comboFirmware.Items(0).ToString
+            comboFirmware.Enabled = True
+            txtFirmware.Enabled = True
+            btnFirmwareLocal.Enabled = True
+            btnFirmwareOnline.Enabled = True
+            btnNextStep.Enabled = True
+            btnPreviousStep.Enabled = True
+        End If
+    End Sub
+
+    Private Async Sub btnFirmwareLocal_CheckedChanged(sender As Object, e As EventArgs) Handles btnFirmwareLocal.CheckedChanged
+        If btnFirmwareLocal.Checked Then
+            lblFirmwareTip.Text = "选择压缩包内的固件版本"
+            comboFirmware.Text = "加载中 ..."
+            comboFirmware.Enabled = False
+            txtFirmware.Enabled = False
+            btnFirmwareLocal.Enabled = False
+            btnFirmwareOnline.Enabled = False
+            btnNextStep.Enabled = False
+            btnPreviousStep.Enabled = False
+            comboFirmware.Items.Clear()
+            For Each VersionItem As String In Await GetFullFirmwareList()
+                comboFirmware.Items.Add(VersionItem)
+            Next
+            comboFirmware.Text = comboFirmware.Items(0).ToString
+            comboFirmware.Enabled = True
+            txtFirmware.Enabled = True
+            btnFirmwareLocal.Enabled = True
+            btnFirmwareOnline.Enabled = True
+            btnNextStep.Enabled = True
+            btnPreviousStep.Enabled = True
+        End If
     End Sub
 End Class

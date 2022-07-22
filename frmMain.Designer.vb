@@ -47,6 +47,12 @@ Partial Class frmMain
         Me.lblYuzuVersion = New MaterialSkin.Controls.MaterialLabel()
         Me.TabRyujinx = New System.Windows.Forms.TabPage()
         Me.TabInstall = New System.Windows.Forms.TabPage()
+        Me.txtFirmware = New MaterialSkin.Controls.MaterialTextBox2()
+        Me.lblFirmwareTip = New System.Windows.Forms.Label()
+        Me.btnFirmwareLocal = New MaterialSkin.Controls.MaterialRadioButton()
+        Me.btnFirmwareOnline = New MaterialSkin.Controls.MaterialRadioButton()
+        Me.comboFirmware = New MaterialSkin.Controls.MaterialComboBox()
+        Me.btnDownloadKeys = New MaterialSkin.Controls.MaterialButton()
         Me.txtKeySelector = New MaterialSkin.Controls.MaterialTextBox2()
         Me.btnPreviousStep = New MaterialSkin.Controls.MaterialButton()
         Me.btnNextStep = New MaterialSkin.Controls.MaterialButton()
@@ -60,11 +66,14 @@ Partial Class frmMain
         Me.TabMods = New System.Windows.Forms.TabPage()
         Me.TabConfig = New System.Windows.Forms.TabPage()
         Me.MaterialCard7 = New MaterialSkin.Controls.MaterialCard()
+        Me.btnCheckUpdate = New MaterialSkin.Controls.MaterialButton()
         Me.cbColorScheme = New MaterialSkin.Controls.MaterialComboBox()
         Me.PictureBox3 = New System.Windows.Forms.PictureBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.MaterialCard6 = New MaterialSkin.Controls.MaterialCard()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.checkProxyGitHubAPI = New MaterialSkin.Controls.MaterialCheckbox()
         Me.cbDownloadSource = New MaterialSkin.Controls.MaterialComboBox()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -85,10 +94,6 @@ Partial Class frmMain
         Me.MaterialCard2 = New MaterialSkin.Controls.MaterialCard()
         Me.lblAbout = New System.Windows.Forms.Label()
         Me.imgTabs = New System.Windows.Forms.ImageList(Me.components)
-        Me.checkProxyGitHubAPI = New MaterialSkin.Controls.MaterialCheckbox()
-        Me.Label9 = New System.Windows.Forms.Label()
-        Me.btnCheckUpdate = New MaterialSkin.Controls.MaterialButton()
-        Me.btnDownloadKeys = New MaterialSkin.Controls.MaterialButton()
         Me.Tabs.SuspendLayout()
         Me.TabMain.SuspendLayout()
         Me.MaterialCard4.SuspendLayout()
@@ -389,6 +394,11 @@ Partial Class frmMain
         'TabInstall
         '
         Me.TabInstall.BackColor = System.Drawing.Color.White
+        Me.TabInstall.Controls.Add(Me.txtFirmware)
+        Me.TabInstall.Controls.Add(Me.lblFirmwareTip)
+        Me.TabInstall.Controls.Add(Me.btnFirmwareLocal)
+        Me.TabInstall.Controls.Add(Me.btnFirmwareOnline)
+        Me.TabInstall.Controls.Add(Me.comboFirmware)
         Me.TabInstall.Controls.Add(Me.btnDownloadKeys)
         Me.TabInstall.Controls.Add(Me.txtKeySelector)
         Me.TabInstall.Controls.Add(Me.btnPreviousStep)
@@ -405,6 +415,125 @@ Partial Class frmMain
         Me.TabInstall.Size = New System.Drawing.Size(778, 354)
         Me.TabInstall.TabIndex = 5
         Me.TabInstall.Text = "安装"
+        '
+        'txtFirmware
+        '
+        Me.txtFirmware.AnimateReadOnly = False
+        Me.txtFirmware.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None
+        Me.txtFirmware.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None
+        Me.txtFirmware.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.txtFirmware.CharacterCasing = System.Windows.Forms.CharacterCasing.Normal
+        Me.txtFirmware.Depth = 0
+        Me.txtFirmware.Font = New System.Drawing.Font("Microsoft YaHei UI", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel)
+        Me.txtFirmware.HideSelection = True
+        Me.txtFirmware.LeadingIcon = Nothing
+        Me.txtFirmware.Location = New System.Drawing.Point(205, 201)
+        Me.txtFirmware.MaxLength = 32767
+        Me.txtFirmware.MouseState = MaterialSkin.MouseState.OUT
+        Me.txtFirmware.Name = "txtFirmware"
+        Me.txtFirmware.PasswordChar = Global.Microsoft.VisualBasic.ChrW(0)
+        Me.txtFirmware.PrefixSuffixText = Nothing
+        Me.txtFirmware.ReadOnly = False
+        Me.txtFirmware.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.txtFirmware.SelectedText = ""
+        Me.txtFirmware.SelectionLength = 0
+        Me.txtFirmware.SelectionStart = 0
+        Me.txtFirmware.ShortcutsEnabled = True
+        Me.txtFirmware.Size = New System.Drawing.Size(390, 48)
+        Me.txtFirmware.TabIndex = 16
+        Me.txtFirmware.TabStop = False
+        Me.txtFirmware.Text = "双击选择固件包 ..."
+        Me.txtFirmware.TextAlign = System.Windows.Forms.HorizontalAlignment.Left
+        Me.txtFirmware.TrailingIcon = Nothing
+        Me.txtFirmware.UseSystemPasswordChar = False
+        Me.txtFirmware.Visible = False
+        '
+        'lblFirmwareTip
+        '
+        Me.lblFirmwareTip.AutoSize = True
+        Me.lblFirmwareTip.Location = New System.Drawing.Point(406, 149)
+        Me.lblFirmwareTip.Name = "lblFirmwareTip"
+        Me.lblFirmwareTip.Size = New System.Drawing.Size(67, 15)
+        Me.lblFirmwareTip.TabIndex = 15
+        Me.lblFirmwareTip.Text = "固件提示捏"
+        Me.lblFirmwareTip.Visible = False
+        '
+        'btnFirmwareLocal
+        '
+        Me.btnFirmwareLocal.AutoSize = True
+        Me.btnFirmwareLocal.Depth = 0
+        Me.btnFirmwareLocal.Location = New System.Drawing.Point(80, 206)
+        Me.btnFirmwareLocal.Margin = New System.Windows.Forms.Padding(0)
+        Me.btnFirmwareLocal.MouseLocation = New System.Drawing.Point(-1, -1)
+        Me.btnFirmwareLocal.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnFirmwareLocal.Name = "btnFirmwareLocal"
+        Me.btnFirmwareLocal.Ripple = True
+        Me.btnFirmwareLocal.Size = New System.Drawing.Size(99, 37)
+        Me.btnFirmwareLocal.TabIndex = 14
+        Me.btnFirmwareLocal.TabStop = True
+        Me.btnFirmwareLocal.Text = "本地安装"
+        Me.btnFirmwareLocal.UseVisualStyleBackColor = True
+        Me.btnFirmwareLocal.Visible = False
+        '
+        'btnFirmwareOnline
+        '
+        Me.btnFirmwareOnline.AutoSize = True
+        Me.btnFirmwareOnline.Depth = 0
+        Me.btnFirmwareOnline.Location = New System.Drawing.Point(80, 140)
+        Me.btnFirmwareOnline.Margin = New System.Windows.Forms.Padding(0)
+        Me.btnFirmwareOnline.MouseLocation = New System.Drawing.Point(-1, -1)
+        Me.btnFirmwareOnline.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnFirmwareOnline.Name = "btnFirmwareOnline"
+        Me.btnFirmwareOnline.Ripple = True
+        Me.btnFirmwareOnline.Size = New System.Drawing.Size(99, 37)
+        Me.btnFirmwareOnline.TabIndex = 13
+        Me.btnFirmwareOnline.TabStop = True
+        Me.btnFirmwareOnline.Text = "在线安装"
+        Me.btnFirmwareOnline.UseVisualStyleBackColor = True
+        Me.btnFirmwareOnline.Visible = False
+        '
+        'comboFirmware
+        '
+        Me.comboFirmware.AutoResize = False
+        Me.comboFirmware.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.comboFirmware.Depth = 0
+        Me.comboFirmware.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable
+        Me.comboFirmware.DropDownHeight = 174
+        Me.comboFirmware.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.comboFirmware.DropDownWidth = 121
+        Me.comboFirmware.Font = New System.Drawing.Font("Microsoft YaHei UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel)
+        Me.comboFirmware.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.comboFirmware.FormattingEnabled = True
+        Me.comboFirmware.IntegralHeight = False
+        Me.comboFirmware.ItemHeight = 43
+        Me.comboFirmware.Location = New System.Drawing.Point(205, 134)
+        Me.comboFirmware.MaxDropDownItems = 4
+        Me.comboFirmware.MouseState = MaterialSkin.MouseState.OUT
+        Me.comboFirmware.Name = "comboFirmware"
+        Me.comboFirmware.Size = New System.Drawing.Size(181, 49)
+        Me.comboFirmware.StartIndex = 0
+        Me.comboFirmware.TabIndex = 12
+        Me.comboFirmware.Visible = False
+        '
+        'btnDownloadKeys
+        '
+        Me.btnDownloadKeys.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnDownloadKeys.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnDownloadKeys.Depth = 0
+        Me.btnDownloadKeys.HighEmphasis = True
+        Me.btnDownloadKeys.Icon = Nothing
+        Me.btnDownloadKeys.Location = New System.Drawing.Point(471, 322)
+        Me.btnDownloadKeys.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnDownloadKeys.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnDownloadKeys.Name = "btnDownloadKeys"
+        Me.btnDownloadKeys.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnDownloadKeys.Size = New System.Drawing.Size(108, 36)
+        Me.btnDownloadKeys.TabIndex = 11
+        Me.btnDownloadKeys.Text = "下载密钥文件"
+        Me.btnDownloadKeys.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnDownloadKeys.UseAccentColor = False
+        Me.btnDownloadKeys.UseVisualStyleBackColor = True
+        Me.btnDownloadKeys.Visible = False
         '
         'txtKeySelector
         '
@@ -579,7 +708,7 @@ Partial Class frmMain
         Me.InstallMessage.Name = "InstallMessage"
         Me.InstallMessage.Size = New System.Drawing.Size(518, 126)
         Me.InstallMessage.TabIndex = 3
-        Me.InstallMessage.Text = "Label9"
+        Me.InstallMessage.Text = "火星文"
         '
         'InstallTitle
         '
@@ -633,6 +762,25 @@ Partial Class frmMain
         Me.MaterialCard7.Padding = New System.Windows.Forms.Padding(14)
         Me.MaterialCard7.Size = New System.Drawing.Size(205, 342)
         Me.MaterialCard7.TabIndex = 5
+        '
+        'btnCheckUpdate
+        '
+        Me.btnCheckUpdate.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnCheckUpdate.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnCheckUpdate.Depth = 0
+        Me.btnCheckUpdate.HighEmphasis = True
+        Me.btnCheckUpdate.Icon = Nothing
+        Me.btnCheckUpdate.Location = New System.Drawing.Point(108, 286)
+        Me.btnCheckUpdate.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnCheckUpdate.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnCheckUpdate.Name = "btnCheckUpdate"
+        Me.btnCheckUpdate.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnCheckUpdate.Size = New System.Drawing.Size(79, 36)
+        Me.btnCheckUpdate.TabIndex = 7
+        Me.btnCheckUpdate.Text = "检查更新"
+        Me.btnCheckUpdate.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnCheckUpdate.UseAccentColor = False
+        Me.btnCheckUpdate.UseVisualStyleBackColor = True
         '
         'cbColorScheme
         '
@@ -703,6 +851,31 @@ Partial Class frmMain
         Me.MaterialCard6.Padding = New System.Windows.Forms.Padding(14)
         Me.MaterialCard6.Size = New System.Drawing.Size(205, 342)
         Me.MaterialCard6.TabIndex = 5
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(17, 158)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(79, 15)
+        Me.Label9.TabIndex = 8
+        Me.Label9.Text = "下载相关选项"
+        '
+        'checkProxyGitHubAPI
+        '
+        Me.checkProxyGitHubAPI.AutoSize = True
+        Me.checkProxyGitHubAPI.Depth = 0
+        Me.checkProxyGitHubAPI.Location = New System.Drawing.Point(12, 185)
+        Me.checkProxyGitHubAPI.Margin = New System.Windows.Forms.Padding(0)
+        Me.checkProxyGitHubAPI.MouseLocation = New System.Drawing.Point(-1, -1)
+        Me.checkProxyGitHubAPI.MouseState = MaterialSkin.MouseState.HOVER
+        Me.checkProxyGitHubAPI.Name = "checkProxyGitHubAPI"
+        Me.checkProxyGitHubAPI.ReadOnly = False
+        Me.checkProxyGitHubAPI.Ripple = True
+        Me.checkProxyGitHubAPI.Size = New System.Drawing.Size(179, 37)
+        Me.checkProxyGitHubAPI.TabIndex = 7
+        Me.checkProxyGitHubAPI.Text = "始终代理 GitHub API"
+        Me.checkProxyGitHubAPI.UseVisualStyleBackColor = True
         '
         'cbDownloadSource
         '
@@ -1004,70 +1177,6 @@ Partial Class frmMain
         Me.imgTabs.Images.SetKeyName(5, "briefcase-download.png")
         Me.imgTabs.Images.SetKeyName(6, "puzzle.png")
         '
-        'checkProxyGitHubAPI
-        '
-        Me.checkProxyGitHubAPI.AutoSize = True
-        Me.checkProxyGitHubAPI.Depth = 0
-        Me.checkProxyGitHubAPI.Location = New System.Drawing.Point(12, 185)
-        Me.checkProxyGitHubAPI.Margin = New System.Windows.Forms.Padding(0)
-        Me.checkProxyGitHubAPI.MouseLocation = New System.Drawing.Point(-1, -1)
-        Me.checkProxyGitHubAPI.MouseState = MaterialSkin.MouseState.HOVER
-        Me.checkProxyGitHubAPI.Name = "checkProxyGitHubAPI"
-        Me.checkProxyGitHubAPI.ReadOnly = False
-        Me.checkProxyGitHubAPI.Ripple = True
-        Me.checkProxyGitHubAPI.Size = New System.Drawing.Size(179, 37)
-        Me.checkProxyGitHubAPI.TabIndex = 7
-        Me.checkProxyGitHubAPI.Text = "始终代理 GitHub API"
-        Me.checkProxyGitHubAPI.UseVisualStyleBackColor = True
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(17, 158)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(79, 15)
-        Me.Label9.TabIndex = 8
-        Me.Label9.Text = "下载相关选项"
-        '
-        'btnCheckUpdate
-        '
-        Me.btnCheckUpdate.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.btnCheckUpdate.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
-        Me.btnCheckUpdate.Depth = 0
-        Me.btnCheckUpdate.HighEmphasis = True
-        Me.btnCheckUpdate.Icon = Nothing
-        Me.btnCheckUpdate.Location = New System.Drawing.Point(108, 286)
-        Me.btnCheckUpdate.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
-        Me.btnCheckUpdate.MouseState = MaterialSkin.MouseState.HOVER
-        Me.btnCheckUpdate.Name = "btnCheckUpdate"
-        Me.btnCheckUpdate.NoAccentTextColor = System.Drawing.Color.Empty
-        Me.btnCheckUpdate.Size = New System.Drawing.Size(79, 36)
-        Me.btnCheckUpdate.TabIndex = 7
-        Me.btnCheckUpdate.Text = "检查更新"
-        Me.btnCheckUpdate.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
-        Me.btnCheckUpdate.UseAccentColor = False
-        Me.btnCheckUpdate.UseVisualStyleBackColor = True
-        '
-        'btnDownloadKeys
-        '
-        Me.btnDownloadKeys.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.btnDownloadKeys.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
-        Me.btnDownloadKeys.Depth = 0
-        Me.btnDownloadKeys.HighEmphasis = True
-        Me.btnDownloadKeys.Icon = Nothing
-        Me.btnDownloadKeys.Location = New System.Drawing.Point(471, 322)
-        Me.btnDownloadKeys.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
-        Me.btnDownloadKeys.MouseState = MaterialSkin.MouseState.HOVER
-        Me.btnDownloadKeys.Name = "btnDownloadKeys"
-        Me.btnDownloadKeys.NoAccentTextColor = System.Drawing.Color.Empty
-        Me.btnDownloadKeys.Size = New System.Drawing.Size(108, 36)
-        Me.btnDownloadKeys.TabIndex = 11
-        Me.btnDownloadKeys.Text = "下载密钥文件"
-        Me.btnDownloadKeys.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
-        Me.btnDownloadKeys.UseAccentColor = False
-        Me.btnDownloadKeys.UseVisualStyleBackColor = True
-        Me.btnDownloadKeys.Visible = False
-        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
@@ -1185,4 +1294,9 @@ Partial Class frmMain
     Friend WithEvents checkProxyGitHubAPI As MaterialSkin.Controls.MaterialCheckbox
     Friend WithEvents btnCheckUpdate As MaterialSkin.Controls.MaterialButton
     Friend WithEvents btnDownloadKeys As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents comboFirmware As MaterialSkin.Controls.MaterialComboBox
+    Friend WithEvents btnFirmwareOnline As MaterialSkin.Controls.MaterialRadioButton
+    Friend WithEvents txtFirmware As MaterialSkin.Controls.MaterialTextBox2
+    Friend WithEvents lblFirmwareTip As Label
+    Friend WithEvents btnFirmwareLocal As MaterialSkin.Controls.MaterialRadioButton
 End Class
