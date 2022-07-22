@@ -89,7 +89,7 @@ Module NSEmuHelperModule
     Public Async Function GetFullFirmwareList() As Task(Of ArrayList)
         Dim FirmwareList As New ArrayList, tmpFirmwareVersion As String
         Dim FirmwareXML As New XmlDocument
-        FirmwareXML.LoadXml(Await HTTPGetAsync("https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"))
+        FirmwareXML.LoadXml(Await HTTPGetAsync(Config.CloudflareProxyPrefix & "https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"))
         Dim FirmwareNodeList As XmlNodeList = FirmwareXML.SelectNodes("/files/file")
         For Each FirmwareNode As XmlNode In FirmwareNodeList
             tmpFirmwareVersion = FirmwareNode.Attributes("name").Value

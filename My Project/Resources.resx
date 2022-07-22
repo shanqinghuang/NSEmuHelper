@@ -118,58 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DownloadSources" xml:space="preserve">
-    <value>{
-	"OneDrive": {
-		"name": "OneDrive | 助手自建",
-		"type": "onemanager",
-		"url": "https://pan.yidaozhan.top/ns_emu_helper/"
-	},
-	"Direct": {
-		"name": "GitHub 直连",
-		"type": "github",
-		"url": "https://github.com"
-	},
-	"US1": {
-		"name": "美国 1 | CDN",
-		"type": "github",
-		"url": "https://gh.ddlc.top/https://github.com"
-	},
-	"US2": {
-		"name": "美国 2 | 圣何塞",
-		"type": "github",
-		"url": "https://download.xn--p8jhe.tw"
-	},
-	"US3": {
-		"name": "美国 3 | CDN | 助手自建",
-		"type": "onemanager",
-		"url": "https://pan.yidaozhan.top/ns_emu_helper_cdn/"
-	},
-	"US4": {
-		"name": "美国 5 | CDN | 助手自建",
-		"type": "github",
-		"url": "https://rp.ydz1.gq/https://github.com"
-	},
-	"HK1": {
-		"name": "香港 1",
-		"type": "github",
-		"url": "https://ghproxy.futils.com/https://github.com"
-	},
-	"JP1": {
-		"name": "日本 1 | 东京",
-		"type": "github",
-		"url": "https://download.fastgit.org"
-	},
-	"KR1": {
-		"name": "韩国 1 | 首尔",
-		"type": "github",
-		"url": "https://ghproxy.com/https://github.com"
-	},
-	"KR2": {
-		"name": "韩国 2 | 首尔",
-		"type": "github",
-		"url": "https://hub.xn--gzu630h.xn--kpry57d"
-	}
-}</value>
+    <value>{"OneDrive":{"name":"OneDrive | 助手自建","type":"onemanager","url":"https://pan.yidaozhan.top/ns_emu_helper/"},"Direct":{"name":"GitHub 直连","type":"github","url":"https://github.com"},"US1":{"name":"美国 1 | CDN","type":"github","url":"https://gh.ddlc.top/https://github.com"},"US2":{"name":"美国 2 | 圣何塞","type":"github","url":"https://download.xn--p8jhe.tw"},"US3":{"name":"美国 3 | CDN | 助手自建","type":"onemanager","url":"https://pan.yidaozhan.top/ns_emu_helper_cdn/"},"US4":{"name":"美国 5 | CDN | 助手自建","type":"github","url":"https://rp.ydz1.gq/https://github.com"},"HK1":{"name":"香港 1","type":"github","url":"https://ghproxy.futils.com/https://github.com"},"JP1":{"name":"日本 1 | 东京","type":"github","url":"https://download.fastgit.org"},"KR1":{"name":"韩国 1 | 首尔","type":"github","url":"https://ghproxy.com/https://github.com"},"KR2":{"name":"韩国 2 | 首尔","type":"github","url":"https://hub.xn--gzu630h.xn--kpry57d"}}</value>
     <comment>NSEmuHelper 下载镜像源</comment>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

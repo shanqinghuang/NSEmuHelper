@@ -570,4 +570,17 @@ Public Class frmMain
         End If
     End Sub
 
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        With New Aria2
+            .Url = "https://ia801909.us.archive.org/4/items/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"
+            .SaveFolder = AppPath
+            .SaveFileName = "1test.xml"
+            .StartDownload()
+            Do
+                Threading.Thread.Sleep(100)
+                Button1.Text = .DownloadSpeed
+                Application.DoEvents()
+            Loop
+        End With
+    End Sub
 End Class

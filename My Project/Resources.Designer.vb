@@ -71,31 +71,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  查找类似 {
-        '''	&quot;OneDrive&quot;: {
-        '''		&quot;name&quot;: &quot;OneDrive | 助手自建&quot;,
-        '''		&quot;type&quot;: &quot;onemanager&quot;,
-        '''		&quot;url&quot;: &quot;https://pan.yidaozhan.top/ns_emu_helper/&quot;
-        '''	},
-        '''	&quot;Direct&quot;: {
-        '''		&quot;name&quot;: &quot;GitHub 直连&quot;,
-        '''		&quot;type&quot;: &quot;github&quot;,
-        '''		&quot;url&quot;: &quot;https://github.com&quot;
-        '''	},
-        '''	&quot;US1&quot;: {
-        '''		&quot;name&quot;: &quot;美国 1 | CDN&quot;,
-        '''		&quot;type&quot;: &quot;github&quot;,
-        '''		&quot;url&quot;: &quot;https://gh.ddlc.top/https://github.com&quot;
-        '''	},
-        '''	&quot;US2&quot;: {
-        '''		&quot;name&quot;: &quot;美国 2 | 圣何塞&quot;,
-        '''		&quot;type&quot;: &quot;github&quot;,
-        '''		&quot;url&quot;: &quot;https://download.xn--p8jhe.tw&quot;
-        '''	},
-        '''	&quot;US3&quot;: {
-        '''		&quot;name&quot;: &quot;美国 3 | CDN | 助手自建&quot;,
-        '''		&quot;type&quot;: &quot;onemanager&quot;,
-        ''' [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        '''  查找类似 {&quot;OneDrive&quot;:{&quot;name&quot;:&quot;OneDrive | 助手自建&quot;,&quot;type&quot;:&quot;onemanager&quot;,&quot;url&quot;:&quot;https://pan.yidaozhan.top/ns_emu_helper/&quot;},&quot;Direct&quot;:{&quot;name&quot;:&quot;GitHub 直连&quot;,&quot;type&quot;:&quot;github&quot;,&quot;url&quot;:&quot;https://github.com&quot;},&quot;US1&quot;:{&quot;name&quot;:&quot;美国 1 | CDN&quot;,&quot;type&quot;:&quot;github&quot;,&quot;url&quot;:&quot;https://gh.ddlc.top/https://github.com&quot;},&quot;US2&quot;:{&quot;name&quot;:&quot;美国 2 | 圣何塞&quot;,&quot;type&quot;:&quot;github&quot;,&quot;url&quot;:&quot;https://download.xn--p8jhe.tw&quot;},&quot;US3&quot;:{&quot;name&quot;:&quot;美国 3 | CDN | 助手自建&quot;,&quot;type&quot;:&quot;onemanager&quot;,&quot;url&quot;:&quot;https://pan.yidaozhan.top/ns_emu_helper_cdn/&quot;},&quot;US4&quot;:{&quot;name&quot;:&quot;美国 5 | CDN | 助手自建&quot;,&quot;type&quot;:&quot;github&quot;, [字符串的其余部分被截断]&quot;; 的本地化字符串。
         '''</summary>
         Friend ReadOnly Property DownloadSources() As String
             Get

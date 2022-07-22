@@ -102,6 +102,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aria2Wrapper.vb" />
     <Compile Include="ConfigFile.vb" />
     <Compile Include="frmExpection.Designer.vb">
       <DependentUpon>frmExpection.vb</DependentUpon>
