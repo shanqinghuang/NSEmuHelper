@@ -14,12 +14,11 @@ Public Class Aria2
     Public Property Finished As Boolean = False
     Public Property DownloadPercentage As Integer = 0
     Public Property DownloadSpeed As String = "0KiB/s"
-    Public Property ETA As String
+    Public Property ETA As String = ""
     Public Sub StartDownload()
         With Aria2Process
             .StartInfo.FileName = AppPath & "\Modules\aria2c.exe"
             .StartInfo.Arguments = "--split=" & Splits & " --max-connection-per-server=" & Connections & " --dir=""" & SaveFolder & """ --out=""" & SaveFileName & """ --continue=true " & OtherFlags & " """ & Url & """"
-            '.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
             .StartInfo.UseShellExecute = False
             .StartInfo.RedirectStandardOutput = True
             .StartInfo.RedirectStandardError = True

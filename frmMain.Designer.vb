@@ -47,6 +47,9 @@ Partial Class frmMain
         Me.lblYuzuVersion = New MaterialSkin.Controls.MaterialLabel()
         Me.TabRyujinx = New System.Windows.Forms.TabPage()
         Me.TabInstall = New System.Windows.Forms.TabPage()
+        Me.lblInstallProgress = New System.Windows.Forms.Label()
+        Me.ProgressMinor = New MaterialSkin.Controls.MaterialProgressBar()
+        Me.ProgressMajor = New MaterialSkin.Controls.MaterialProgressBar()
         Me.txtFirmware = New MaterialSkin.Controls.MaterialTextBox2()
         Me.lblFirmwareTip = New System.Windows.Forms.Label()
         Me.btnFirmwareLocal = New MaterialSkin.Controls.MaterialRadioButton()
@@ -94,9 +97,6 @@ Partial Class frmMain
         Me.MaterialCard2 = New MaterialSkin.Controls.MaterialCard()
         Me.lblAbout = New System.Windows.Forms.Label()
         Me.imgTabs = New System.Windows.Forms.ImageList(Me.components)
-        Me.ProgressMajor = New MaterialSkin.Controls.MaterialProgressBar()
-        Me.ProgressMinor = New MaterialSkin.Controls.MaterialProgressBar()
-        Me.lblInstallProgress = New System.Windows.Forms.Label()
         Me.Tabs.SuspendLayout()
         Me.TabMain.SuspendLayout()
         Me.MaterialCard4.SuspendLayout()
@@ -161,11 +161,11 @@ Partial Class frmMain
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(254, 173)
+        Me.Button1.Location = New System.Drawing.Point(675, 288)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(79, 48)
         Me.Button1.TabIndex = 7
-        Me.Button1.Text = "Button1"
+        Me.Button1.Text = "测试用" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "请勿点击"
         Me.Button1.UseVisualStyleBackColor = True
         '
         'MaterialLabel1
@@ -421,6 +421,36 @@ Partial Class frmMain
         Me.TabInstall.Size = New System.Drawing.Size(778, 354)
         Me.TabInstall.TabIndex = 5
         Me.TabInstall.Text = "安装"
+        '
+        'lblInstallProgress
+        '
+        Me.lblInstallProgress.AutoSize = True
+        Me.lblInstallProgress.Location = New System.Drawing.Point(84, 186)
+        Me.lblInstallProgress.Name = "lblInstallProgress"
+        Me.lblInstallProgress.Size = New System.Drawing.Size(67, 15)
+        Me.lblInstallProgress.TabIndex = 19
+        Me.lblInstallProgress.Text = "安装提示捏"
+        Me.lblInstallProgress.Visible = False
+        '
+        'ProgressMinor
+        '
+        Me.ProgressMinor.Depth = 0
+        Me.ProgressMinor.Location = New System.Drawing.Point(87, 167)
+        Me.ProgressMinor.MouseState = MaterialSkin.MouseState.HOVER
+        Me.ProgressMinor.Name = "ProgressMinor"
+        Me.ProgressMinor.Size = New System.Drawing.Size(508, 5)
+        Me.ProgressMinor.TabIndex = 18
+        Me.ProgressMinor.Visible = False
+        '
+        'ProgressMajor
+        '
+        Me.ProgressMajor.Depth = 0
+        Me.ProgressMajor.Location = New System.Drawing.Point(87, 141)
+        Me.ProgressMajor.MouseState = MaterialSkin.MouseState.HOVER
+        Me.ProgressMajor.Name = "ProgressMajor"
+        Me.ProgressMajor.Size = New System.Drawing.Size(508, 5)
+        Me.ProgressMajor.TabIndex = 17
+        Me.ProgressMajor.Visible = False
         '
         'txtFirmware
         '
@@ -1182,36 +1212,6 @@ Partial Class frmMain
         Me.imgTabs.Images.SetKeyName(4, "about.png")
         Me.imgTabs.Images.SetKeyName(5, "briefcase-download.png")
         Me.imgTabs.Images.SetKeyName(6, "puzzle.png")
-        '
-        'ProgressMajor
-        '
-        Me.ProgressMajor.Depth = 0
-        Me.ProgressMajor.Location = New System.Drawing.Point(87, 141)
-        Me.ProgressMajor.MouseState = MaterialSkin.MouseState.HOVER
-        Me.ProgressMajor.Name = "ProgressMajor"
-        Me.ProgressMajor.Size = New System.Drawing.Size(508, 5)
-        Me.ProgressMajor.TabIndex = 17
-        Me.ProgressMajor.Visible = False
-        '
-        'ProgressMinor
-        '
-        Me.ProgressMinor.Depth = 0
-        Me.ProgressMinor.Location = New System.Drawing.Point(87, 167)
-        Me.ProgressMinor.MouseState = MaterialSkin.MouseState.HOVER
-        Me.ProgressMinor.Name = "ProgressMinor"
-        Me.ProgressMinor.Size = New System.Drawing.Size(508, 5)
-        Me.ProgressMinor.TabIndex = 18
-        Me.ProgressMinor.Visible = False
-        '
-        'lblInstallProgress
-        '
-        Me.lblInstallProgress.AutoSize = True
-        Me.lblInstallProgress.Location = New System.Drawing.Point(84, 186)
-        Me.lblInstallProgress.Name = "lblInstallProgress"
-        Me.lblInstallProgress.Size = New System.Drawing.Size(67, 15)
-        Me.lblInstallProgress.TabIndex = 19
-        Me.lblInstallProgress.Text = "安装提示捏"
-        Me.lblInstallProgress.Visible = False
         '
         'frmMain
         '

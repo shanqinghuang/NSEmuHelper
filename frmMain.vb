@@ -295,7 +295,7 @@ Public Class frmMain
                 Case 3
                     If YuzuPostInstallStep3() Then
                         InstallStep = 4
-                        'YuzuInstallStep4()
+                        YuzuInstallProgress()
                     End If
             End Select
         End If
@@ -404,8 +404,55 @@ Public Class frmMain
         ProgressMajor.Maximum = 100
         ProgressMinor.Show()
         ProgressMinor.Maximum = 100
-        lblInstallProgress.Text = "[1/4] 正在下载模拟器 ... "
+        lblInstallProgress.Text = "[1/3] 正在下载模拟器 ... "
         lblInstallProgress.Show()
+        '创建 URL
+        Dim YuzuDownloadUrl As String
+        Select Case DownloadSources(Config.DownloadSource)("type").ToString
+            Case "github"
+                Select Case InstallProperties("Branch")
+                    Case "EarlyAccess"
+                        YuzuDownloadUrl = DownloadSources(Config.DownloadSource)("url").ToString &
+                                          "/pineappleEA/pineapple-src/releases/download/EA-" & InstallProperties("Version") &
+                                          "/Windows-Yuzu-EA-" & InstallProperties("Version") & ".7z"
+                    Case "Mainline"
+                        '从github api获取具体文件url
+                        Dim ghapi As JObject = JObject.Parse(Await GitHubAPI("https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases/tags/mainline-0-1100"))
+                        For Each ReleaseAsset As JObject In ghapi.Item("assets")
+                            ReleaseAsset.CreateReader()
+                            If ReleaseAsset.Item("browser_download_url").Contains("windows-msvc") And ReleaseAsset.Item("browser_download_url").Contains("7z") Then
+                                YuzuDownloadUrl = ReleaseAsset.Item("browser_download_url").ToString.Replace("https://github.com", DownloadSources(Config.DownloadSource)("url").ToString)
+                                Exit For
+                            End If
+                        Next
+                End Select
+            Case "onemanager"
+                '云盘
+                Select Case InstallProperties("Branch")
+                    Case "EarlyAccess"
+                        YuzuDownloadUrl = DownloadSources(Config.DownloadSource)("url").ToString & "YuzuEarlyAccess/Windows-Yuzu-EA-" & InstallProperties("Version") & ".7z"
+                    Case "Mainline"
+                        YuzuDownloadUrl = DownloadSources(Config.DownloadSource)("url").ToString & "YuzuMainline/yuzu-windows-msvc-" & InstallProperties("Version") & ".7z"
+                End Select
+        End Select
+        '创建临时文件夹
+        If Not My.Computer.FileSystem.DirectoryExists(Config.YuzuPath & "/tmp") Then My.Computer.FileSystem.CreateDirectory(Config.YuzuPath & "/tmp")
+        '创建aria2下载对象并且下载模拟器
+        With New Aria2
+            .Url = YuzuDownloadUrl
+            .SaveFolder = Config.YuzuPath & "/tmp"
+            .SaveFileName = "Yuzu.7z"
+            .StartDownload()
+            Do Until .Finished
+                Threading.Thread.Sleep(100)
+                lblInstallProgress.Text = "[1/3] 正在下载模拟器 ... (" & .DownloadSpeed & "/s " & .DownloadPercentage & "% 剩余" & .ETA & ")"
+                ProgressMajor.Value = Int(.DownloadPercentage / 3)
+                ProgressMinor.Value = .DownloadPercentage
+                Application.DoEvents()
+            Loop
+        End With
+        ProgressMajor.Value = 33
+        lblInstallProgress.Text = "[1/3] 模拟器下载完成！"
     End Sub
 
     Private Async Sub comboBranch_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboBranch.SelectedIndexChanged
@@ -570,17 +617,15 @@ Public Class frmMain
         End If
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        With New Aria2
-            .Url = "https://ia801909.us.archive.org/4/items/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"
-            .SaveFolder = AppPath
-            .SaveFileName = "1test.xml"
-            .StartDownload()
-            Do
-                Threading.Thread.Sleep(100)
-                Button1.Text = .DownloadSpeed
-                Application.DoEvents()
-            Loop
-        End With
+    Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim ghapi As JObject = JObject.Parse(Await GitHubAPI("https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases/tags/mainline-0-1100"))
+        For Each ReleaseAsset As JObject In ghapi.Item("assets")
+            ReleaseAsset.CreateReader()
+            MsgBox(ReleaseAsset.Item("browser_download_url"))
+        Next
+    End Sub
+
+    Private Sub frmMain_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        End
     End Sub
 End Class

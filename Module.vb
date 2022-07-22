@@ -58,7 +58,7 @@ Module NSEmuHelperModule
                 Return (Await Response.Content.ReadAsStringAsync)
             Case 404
                 frmExpection.ShowMessage("HTTP 错误：404 Not Found")
-                End
+                MsgBox("发生错误")
             Case 503
                 '留待备用
             Case Else
