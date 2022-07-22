@@ -4,6 +4,8 @@ Imports Newtonsoft.Json.Linq
 
 Public Class frmMain
 
+    Private Declare Function GetWineVersion Lib "ntdll.dll" Alias "wine_get_version" () As String
+
     Public LockTab As Boolean = False
     Dim IgnoreLockTab As Boolean = False
     Dim InstallStep As Integer = 0
@@ -13,6 +15,8 @@ Public Class frmMain
     '安装时候用的临时变量
     '还没有qwq
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        SystemCheck()
+        IntegrityCheck()
         '样式
         For Each Control In {lblYuzu, lblYuzu2, lblYuzuFirmware, lblRyujinx, lblRyujinx2, lblRyujinxFirmware, lblYuzuConfig}
             Control.Font = SkinManager.getFontByType(MaterialSkinManager.fontType.Subtitle1)
@@ -388,6 +392,22 @@ Public Class frmMain
                 End If
         End Select
     End Function
+    Private Async Sub YuzuInstallProgress()
+        Select Case InstallProperties("Branch")
+            Case "EarlyAccess"
+                InstallTitle.Text = "正在安装 Yuzu 预先测试版 " & InstallProperties("Version")
+            Case "Mainline"
+                InstallTitle.Text = "正在安装 Yuzu 主线版 " & InstallProperties("Version")
+        End Select
+        InstallMessage.Text = "安装可能需要几分钟，请喝杯茶并耐心等待。" & vbCrLf & "根据您的网络质量，安装速度会有所不同。"
+        ProgressMajor.Show()
+        ProgressMajor.Maximum = 100
+        ProgressMinor.Show()
+        ProgressMinor.Maximum = 100
+        lblInstallProgress.Text = "[1/4] 正在下载模拟器 ... "
+        lblInstallProgress.Show()
+    End Sub
+
     Private Async Sub comboBranch_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboBranch.SelectedIndexChanged
         txtVersion.Enabled = False
         btnNextStep.Enabled = False '加载时暂时禁用按钮
@@ -523,4 +543,31 @@ Public Class frmMain
             btnPreviousStep.Enabled = True
         End If
     End Sub
+
+    Private Sub IntegrityCheck()
+        If Not My.Computer.FileSystem.FileExists(AppPath & "\Modules\aria2c.exe") Then
+            MsgBox("未找到多线程下载管理器模块 (aria2c.exe)，程序无法启动。" & vbCrLf & "重新安装 NS 模拟器助手，" &
+                vbCrLf & "或手动将 aria2c.exe 放入 Modules 文件夹可以解决问题。" & vbCrLf & vbCrLf & "请不要把这个问题反馈给作者。", vbCritical)
+            End
+        End If
+    End Sub
+
+    Private Sub SystemCheck()
+        Try
+            MsgBox("检测到 Wine " & GetWineVersion & "。" & vbCrLf & "Wine 运行模拟器的效率很低，会闪退，且对 .NET Framework 不完美支持，会导致本软件崩溃。" & vbCrLf & "如要安装 NS 模拟器，请使用 Linux / UNIX 发行版自带的软件包管理器。", vbCritical)
+            End
+        Catch ex As Exception
+            'Just run normally!
+        End Try
+        If Not Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion").GetValue("ProductName").ToString.StartsWith("Windows 1") Then
+            MsgBox("Yuzu 和 Ryujinx 的最新版本都已不支持 Windows 7 及更低版本的操作系统，" & vbCrLf & "所以不建议在此操作系统中安装。" & vbCrLf & vbCrLf & "请升级您的系统版本。", vbCritical)
+            End
+        End If
+        If Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion").GetValue("ProductName").ToString.StartsWith("Windows 10") _
+            And CInt(Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion").GetValue("ReleaseId")) < 1809 Then
+            MsgBox("Yuzu 和 Ryujinx 的最新版本都已不支持 Windows 10 1809 以下版本，" & vbCrLf & "所以不建议在此操作系统中安装。" & vbCrLf & vbCrLf & "请升级您的系统版本。", vbCritical)
+            End
+        End If
+    End Sub
+
 End Class
