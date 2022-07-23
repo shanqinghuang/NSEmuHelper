@@ -404,7 +404,7 @@ Public Class frmMain
         ProgressMajor.Maximum = 100
         ProgressMinor.Show()
         ProgressMinor.Maximum = 100
-        lblInstallProgress.Text = "[1/3] 正在下载模拟器 ... "
+        lblInstallProgress.Text = "正在下载模拟器 ... "
         lblInstallProgress.Show()
         '创建 URL
         Dim YuzuDownloadUrl As String
@@ -445,14 +445,40 @@ Public Class frmMain
             .StartDownload()
             Do Until .Finished
                 Threading.Thread.Sleep(100)
-                lblInstallProgress.Text = "[1/3] 正在下载模拟器 ... (" & .DownloadSpeed & "/s " & .DownloadPercentage & "% 剩余" & .ETA & ")"
+                lblInstallProgress.Text = "正在下载模拟器 ... (" & .DownloadSpeed & "/s " & .DownloadPercentage & "% 剩余" & .ETA & ")"
                 ProgressMajor.Value = Int(.DownloadPercentage / 3)
                 ProgressMinor.Value = .DownloadPercentage
                 Application.DoEvents()
             Loop
         End With
         ProgressMajor.Value = 33
-        lblInstallProgress.Text = "[1/3] 模拟器下载完成！"
+        lblInstallProgress.Text = "模拟器下载完成！"
+        '安装固件
+        Select Case InstallProperties("FirmwareMode")
+            Case "Local"
+                '本地
+                'skip
+            Case "Online"
+                '创建aria2下载对象并且下载固件
+                With New Aria2
+                    If Config.DownloadSource = "US3" Then
+                        .Url = DownloadSources("US3")("url").ToString & "NSFirmware/Firmware_" & InstallProperties("FirmwareVersion") & ".zip"
+                    Else
+                        .Url = DownloadSources("OneDrive")("url").ToString
+                    End If
+                    .SaveFolder = Config.YuzuPath & "/tmp"
+                    .SaveFileName = "Firmware.zip"
+                    .StartDownload()
+                    Do Until .Finished
+                        Threading.Thread.Sleep(100)
+                        lblInstallProgress.Text = "正在下载固件 ... (" & .DownloadSpeed & "/s " & .DownloadPercentage & "% 剩余" & .ETA & ")"
+                        ProgressMajor.Value = Int(.DownloadPercentage / 3) + 33
+                        ProgressMinor.Value = .DownloadPercentage
+                        Application.DoEvents()
+                    Loop
+                End With
+        End Select
+        ProgressMajor.Value = 66
     End Sub
 
     Private Async Sub comboBranch_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboBranch.SelectedIndexChanged
