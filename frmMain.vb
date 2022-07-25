@@ -1,11 +1,12 @@
-﻿Imports MaterialSkin, Newtonsoft.Json '第三方库
+﻿Imports System.IO
+Imports MaterialSkin, Newtonsoft.Json '第三方库
 Imports Newtonsoft.Json.Linq
+Imports IWshRuntimeLibrary
 
 
 Public Class frmMain
 
     Private Declare Function GetWineVersion Lib "ntdll.dll" Alias "wine_get_version" () As String
-
     Public LockTab As Boolean = False
     Dim IgnoreLockTab As Boolean = False
     Dim InstallStep As Integer = 0
@@ -308,7 +309,7 @@ Public Class frmMain
                 InstallStep = 0
             End If
         End If
-        If Not My.Computer.FileSystem.DirectoryExists(Config.YuzuPath) Then My.Computer.FileSystem.CreateDirectory(Config.YuzuPath)
+        CreateDirectory(Config.YuzuPath)
     End Sub
     Private Async Sub YuzuInstallStep1()
         InstallProperties = New Dictionary(Of String, Object)
@@ -342,7 +343,7 @@ Public Class frmMain
         txtKeySelector.Show()
         btnDownloadKeys.Show()
         InstallTitle.Text = "步骤 2 - 选择密钥 (Keys) 文件"
-        InstallMessage.Text = "NS 模拟器需要密钥才能运行游戏。" & vbCrLf & "你可以在贴吧或相关的交流群获取密钥文件。"
+        InstallMessage.Text = "NS 模拟器需要密钥才能运行游戏。" & vbCrLf & "你可以在贴吧或相关的交流群获取密钥文件，" & vbCrLf & "或点击下面的链接以下载。"
     End Sub
 
     Private Function YuzuPostInstallStep2(Optional ForceTrue As Boolean = False) As Boolean
@@ -362,7 +363,7 @@ Public Class frmMain
         comboFirmware.Show()
         lblFirmwareTip.Show()
         InstallTitle.Text = "步骤 3 - 安装固件"
-        InstallMessage.Text = "在 Yuzu 中，虽然不安装固件就可以运行游戏，" & vbCrLf & "但游戏内会无法显示文字，局域网联机等功能也无法使用，" & vbCrLf & "所以需要安装固件。"
+        InstallMessage.Text = "在 Yuzu 中，虽然不安装固件就可以运行游戏，" & vbCrLf & "但游戏内会无法显示文字，在游玩过程中也可能崩溃，" & vbCrLf & "所以需要安装固件。"
         btnFirmwareOnline.Select()
     End Sub
     Private Function YuzuPostInstallStep3(Optional ForceTrue As Boolean = False) As Boolean
@@ -373,6 +374,8 @@ Public Class frmMain
                 txtFirmware.Hide()
                 comboFirmware.Hide()
                 lblFirmwareTip.Hide()
+                btnNextStep.Hide()
+                btnPreviousStep.Hide()
                 SetProperty("FirmwareMode", "Online")
                 SetProperty("FirmwareVersion", comboFirmware.Text)
                 Return True
@@ -383,6 +386,8 @@ Public Class frmMain
                     txtFirmware.Hide()
                     comboFirmware.Hide()
                     lblFirmwareTip.Hide()
+                    btnNextStep.Hide()
+                    btnPreviousStep.Hide()
                     SetProperty("FirmwareMode", "Local")
                     SetProperty("FirmwareVersion", comboFirmware.Text)
                     SetProperty("FirmwarePath", txtFirmware.Text)
@@ -404,18 +409,26 @@ Public Class frmMain
         ProgressMajor.Maximum = 100
         ProgressMinor.Show()
         ProgressMinor.Maximum = 100
-        lblInstallProgress.Text = "正在下载模拟器 ... "
+        '创建临时文件夹
+        CreateDirectory(Config.YuzuPath & "\tmp")
+        CreateDirectory(Config.YuzuPath & "\tmp\fw")
+        lblInstallProgress.Text = "正在准备安装 ... "
         lblInstallProgress.Show()
+
+        lblInstallProgress.Text = "正在下载模拟器 ... "
+
         '创建 URL
-        Dim YuzuDownloadUrl As String
+        Dim YuzuDownloadUrl As String, YuzuFolderName As String
         Select Case DownloadSources(Config.DownloadSource)("type").ToString
             Case "github"
                 Select Case InstallProperties("Branch")
                     Case "EarlyAccess"
+                        YuzuFolderName = "yuzu-windows-msvc-early-access"
                         YuzuDownloadUrl = DownloadSources(Config.DownloadSource)("url").ToString &
                                           "/pineappleEA/pineapple-src/releases/download/EA-" & InstallProperties("Version") &
                                           "/Windows-Yuzu-EA-" & InstallProperties("Version") & ".7z"
                     Case "Mainline"
+                        YuzuFolderName = "yuzu-windows-msvc"
                         '从github api获取具体文件url
                         Dim ghapi As JObject = JObject.Parse(Await GitHubAPI("https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases/tags/mainline-0-1100"))
                         For Each ReleaseAsset As JObject In ghapi.Item("assets")
@@ -430,30 +443,34 @@ Public Class frmMain
                 '云盘
                 Select Case InstallProperties("Branch")
                     Case "EarlyAccess"
+                        YuzuFolderName = "yuzu-windows-msvc-early-access"
                         YuzuDownloadUrl = DownloadSources(Config.DownloadSource)("url").ToString & "YuzuEarlyAccess/Windows-Yuzu-EA-" & InstallProperties("Version") & ".7z"
                     Case "Mainline"
+                        YuzuFolderName = "yuzu-windows-msvc"
                         YuzuDownloadUrl = DownloadSources(Config.DownloadSource)("url").ToString & "YuzuMainline/yuzu-windows-msvc-" & InstallProperties("Version") & ".7z"
                 End Select
         End Select
-        '创建临时文件夹
-        If Not My.Computer.FileSystem.DirectoryExists(Config.YuzuPath & "/tmp") Then My.Computer.FileSystem.CreateDirectory(Config.YuzuPath & "/tmp")
+
         '创建aria2下载对象并且下载模拟器
         With New Aria2
             .Url = YuzuDownloadUrl
-            .SaveFolder = Config.YuzuPath & "/tmp"
+            .SaveFolder = Config.YuzuPath & "\tmp"
             .SaveFileName = "Yuzu.7z"
             .StartDownload()
             Do Until .Finished
-                Threading.Thread.Sleep(100)
+                Threading.Thread.Sleep(50)
                 lblInstallProgress.Text = "正在下载模拟器 ... (" & .DownloadSpeed & "/s " & .DownloadPercentage & "% 剩余" & .ETA & ")"
                 ProgressMajor.Value = Int(.DownloadPercentage / 3)
                 ProgressMinor.Value = .DownloadPercentage
                 Application.DoEvents()
             Loop
         End With
-        ProgressMajor.Value = 33
+
         lblInstallProgress.Text = "模拟器下载完成！"
-        '安装固件
+        ProgressMajor.Value = 33
+
+
+        '固件
         Select Case InstallProperties("FirmwareMode")
             Case "Local"
                 '本地
@@ -466,21 +483,144 @@ Public Class frmMain
                     Else
                         .Url = DownloadSources("OneDrive")("url").ToString
                     End If
-                    .SaveFolder = Config.YuzuPath & "/tmp"
+                    .SaveFolder = Config.YuzuPath & "\tmp"
                     .SaveFileName = "Firmware.zip"
                     .StartDownload()
                     Do Until .Finished
-                        Threading.Thread.Sleep(100)
+                        Threading.Thread.Sleep(50)
                         lblInstallProgress.Text = "正在下载固件 ... (" & .DownloadSpeed & "/s " & .DownloadPercentage & "% 剩余" & .ETA & ")"
                         ProgressMajor.Value = Int(.DownloadPercentage / 3) + 33
                         ProgressMinor.Value = .DownloadPercentage
                         Application.DoEvents()
                     Loop
                 End With
-        End Select
-        ProgressMajor.Value = 66
-    End Sub
+                While My.Computer.FileSystem.FileExists(Config.YuzuPath & "\tmp\Firmware.zip.aria2")
+                    Threading.Thread.Sleep(100)
+                    Application.DoEvents()
+                End While
+                lblInstallProgress.Text = "正在比对固件 MD5 校验码 ..."
+                If MD5Sums(Config.YuzuPath & "\tmp\Firmware.zip") <> Await GetFirmwareMD5(InstallProperties("FirmwareVersion")) Then
+                    MsgBox("固件包 MD5 校验码错误，请尝试重新安装模拟器！", vbCritical + vbOKOnly)
+                    End
+                End If
 
+        End Select
+
+        lblInstallProgress.Text = "固件下载完成！"
+        ProgressMajor.Value = 66
+
+        '解压缩
+        lblInstallProgress.Text = "正在解压模拟器 ..."
+        With New SevenZipWrapper
+            .Extract(Config.YuzuPath & "\tmp\Yuzu.7z", Config.YuzuPath & "\tmp")
+            While .Finished = False
+                Threading.Thread.Sleep(50)
+                lblInstallProgress.Text = "正在解压缩模拟器 ... (" & .PercentDone & "%)"
+                ProgressMinor.Value = .PercentDone
+                ProgressMajor.Value = Int(.PercentDone / 6) + 66
+                Application.DoEvents()
+            End While
+            ProgressMinor.Value = 100
+            ProgressMajor.Value = 83
+        End With
+
+        lblInstallProgress.Text = "正在安装模拟器 ..."
+        FileIO.FileSystem.MoveDirectory(Config.YuzuPath & "\tmp\" & YuzuFolderName, Config.YuzuPath, True)
+        For Each TarballFile In Directory.GetFiles(Config.YuzuPath, "*.xz")
+            System.IO.File.Delete(TarballFile)
+        Next
+
+        Select Case InstallProperties("FirmwareMode")
+            Case "Online"
+                '解压缩
+                lblInstallProgress.Text = "正在解压固件 ..."
+                With New SevenZipWrapper
+                    .Extract(Config.YuzuPath & "\tmp\Firmware.zip", Config.YuzuPath & "\tmp")
+                    While .Finished = False
+                        Threading.Thread.Sleep(50)
+                        lblInstallProgress.Text = "正在解压固件 ... (" & .PercentDone & "%)"
+                        ProgressMinor.Value = .PercentDone
+                        ProgressMajor.Value = Int(.PercentDone / 6) + 66
+                        Application.DoEvents()
+                    End While
+                    ProgressMinor.Value = 100
+                    ProgressMajor.Value = 100
+                End With
+
+                ProgressMinor.Value = 0
+                lblInstallProgress.Text = "正在安装固件 ..."
+                CreateDirectory(Config.YuzuPath & "\user")
+                CreateDirectory(Config.YuzuPath & "\user\nand")
+                CreateDirectory(Config.YuzuPath & "\user\nand\system")
+                CreateDirectory(Config.YuzuPath & "\user\nand\system\Contents")
+                CreateDirectory(Config.YuzuPath & "\user\nand\system\Contents\registered")
+                FileIO.FileSystem.MoveDirectory(Config.YuzuPath & "\tmp\fw", Config.YuzuPath & "\user\nand\system\Contents\registered", True)
+            Case "Local"
+                '解压缩
+                lblInstallProgress.Text = "正在解压并安装固件 ..."
+                CreateDirectory(Config.YuzuPath & "\user")
+                CreateDirectory(Config.YuzuPath & "\user\nand")
+                CreateDirectory(Config.YuzuPath & "\user\nand\system")
+                CreateDirectory(Config.YuzuPath & "\user\nand\system\Contents")
+                CreateDirectory(Config.YuzuPath & "\user\nand\system\Contents\registered")
+                With New SevenZipWrapper
+                    .Extract(InstallProperties("FirmwarePath"), Config.YuzuPath & "\user\nand\system\Contents\registered")
+                    While .Finished = False
+                        Threading.Thread.Sleep(50)
+                        lblInstallProgress.Text = "正在解压并安装固件 ... (" & .PercentDone & "%)"
+                        ProgressMinor.Value = .PercentDone
+                        ProgressMajor.Value = Int(.PercentDone / 6) + 66
+                        Application.DoEvents()
+                    End While
+                    ProgressMinor.Value = 100
+                    ProgressMajor.Value = 100
+                End With
+        End Select
+        CreateDirectory(Config.YuzuPath & "\user\keys")
+        FileSystem.FileCopy(InstallProperties("Keys"), Config.YuzuPath & "\user\keys\prod.keys")
+
+        If Not My.Computer.FileSystem.FileExists(Environment.GetEnvironmentVariable("WinDir") & "\System32\msvcp140_atomic_wait.dll") Then
+            lblInstallProgress.Text = "系统中缺少 MSVC 2019 运行库，正在补全 ..."
+            With New Aria2
+                .Url = "https://aka.ms/vs/17/release/VC_redist.x64.exe"
+                .SaveFolder = Config.YuzuPath & "\tmp"
+                .SaveFileName = "vcruntime.exe"
+                .StartDownload()
+                Do Until .Finished
+                    Threading.Thread.Sleep(50)
+                    lblInstallProgress.Text = "正在下载 MSVC 2019 运行库 ... (" & .DownloadSpeed & "/s " & .DownloadPercentage & "% 剩余" & .ETA & ")"
+                    ProgressMinor.Value = .DownloadPercentage
+                    Application.DoEvents()
+                Loop
+            End With
+            With New Process
+                .StartInfo.FileName = Config.YuzuPath & "\tmp\vcruntime.exe"
+                .StartInfo.Arguments = "/quiet"
+                .Start()
+                .WaitForExit()
+            End With
+        End If
+
+        ProgressMajor.Hide()
+        ProgressMinor.Hide()
+        lblInstallProgress.Hide()
+
+        Select Case InstallProperties("Branch")
+            Case "EarlyAccess"
+                InstallTitle.Text = "Yuzu 预先测试版 " & InstallProperties("Version") & " 安装完成!"
+            Case "Mainline"
+                InstallTitle.Text = "Yuzu 主线版 " & InstallProperties("Version") & " 安装完成!"
+        End Select
+        InstallMessage.Text = "现在可以启动模拟器享受游戏了！" & vbCrLf & vbCrLf & "也可以创建桌面快捷方式，以便下次游玩。"
+        btnInstallLaunchYuzu.Show()
+        btnInstallShortcutYuzu.Show()
+        btnInstallComplete.Show()
+        btnExitInstall.Hide()
+
+        Config.YuzuBranch = InstallProperties("Branch")
+        Config.YuzuFirmwareVersion = InstallProperties("FirmwareVersion")
+        WriteConfig()
+    End Sub
     Private Async Sub comboBranch_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboBranch.SelectedIndexChanged
         txtVersion.Enabled = False
         btnNextStep.Enabled = False '加载时暂时禁用按钮
@@ -619,15 +759,20 @@ Public Class frmMain
 
     Private Sub IntegrityCheck()
         If Not My.Computer.FileSystem.FileExists(AppPath & "\Modules\aria2c.exe") Then
-            MsgBox("未找到多线程下载管理器模块 (aria2c.exe)，程序无法启动。" & vbCrLf & "重新安装 NS 模拟器助手，" &
+            MsgBox("未找到多线程下载器模块 (aria2c.exe)，程序无法启动。" & vbCrLf & "重新安装 NS 模拟器助手，" &
                 vbCrLf & "或手动将 aria2c.exe 放入 Modules 文件夹可以解决问题。" & vbCrLf & vbCrLf & "请不要把这个问题反馈给作者。", vbCritical)
+            End
+        End If
+        If Not My.Computer.FileSystem.FileExists(AppPath & "\Modules\aria2c.exe") Then
+            MsgBox("未找到解压缩模块 (7z.dll)，程序无法启动。" & vbCrLf & "重新安装 NS 模拟器助手，" &
+                vbCrLf & "或手动将 64 位的 7z.dll 放入 Modules 文件夹可以解决问题。" & vbCrLf & vbCrLf & "请不要把这个问题反馈给作者。", vbCritical)
             End
         End If
     End Sub
 
     Private Sub SystemCheck()
         Try
-            MsgBox("检测到 Wine " & GetWineVersion & "。" & vbCrLf & "Wine 运行模拟器的效率很低，会闪退，且对 .NET Framework 不完美支持，会导致本软件崩溃。" & vbCrLf & "如要安装 NS 模拟器，请使用 Linux / UNIX 发行版自带的软件包管理器。", vbCritical)
+            MsgBox("检测到 Wine " & GetWineVersion & "。" & vbCrLf & "Wine 运行模拟器的效率很低，会闪退，且对 .NET Framework 不完美支持，会导致本软件崩溃。" & vbCrLf & "如要安装 NS 模拟器，请使用发行版自带的包管理器，或下载 Flatpak / AppImage 版模拟器。", vbCritical)
             End
         Catch ex As Exception
             'Just run normally!
@@ -643,15 +788,33 @@ Public Class frmMain
         End If
     End Sub
 
-    Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        Dim ghapi As JObject = JObject.Parse(Await GitHubAPI("https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases/tags/mainline-0-1100"))
-        For Each ReleaseAsset As JObject In ghapi.Item("assets")
-            ReleaseAsset.CreateReader()
-            MsgBox(ReleaseAsset.Item("browser_download_url"))
-        Next
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        MsgBox("测试版本不代表最终品质")
     End Sub
 
     Private Sub frmMain_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        Shell("cmd /c taskkill /f /im aria2.exe", vbHide)
         End
+    End Sub
+
+    Private Sub btnInstallComplete_Click(sender As Object, e As EventArgs) Handles btnInstallComplete.Click
+        FileIO.FileSystem.DeleteDirectory(Config.YuzuPath & "\tmp", FileIO.DeleteDirectoryOption.DeleteAllContents)
+        LockTab = False
+        Tabs.SelectedTab = Tabs.TabPages(0)
+        InstallStep = 0
+    End Sub
+
+    Private Sub btnInstallLaunch_Click(sender As Object, e As EventArgs) Handles btnInstallLaunchYuzu.Click
+        Shell(Config.YuzuPath & "\yuzu.exe")
+    End Sub
+
+    Private Sub btnInstallShortcut_Click(sender As Object, e As EventArgs) Handles btnInstallShortcutYuzu.Click
+        Dim WshShell As WshShell = New WshShell()
+        Dim ShortcutPath As String = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+        Dim Shortcut As IWshShortcut = CType(WshShell.CreateShortcut(ShortcutPath & "Yuzu.lnk"), IWshShortcut)
+        Shortcut.TargetPath = Config.YuzuPath & "\yuzu.exe"
+        Shortcut.WorkingDirectory = Config.YuzuPath
+        Shortcut.Description = "Yuzu 模拟器"
+        Shortcut.Save()
     End Sub
 End Class

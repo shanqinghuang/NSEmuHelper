@@ -1,4 +1,5 @@
-﻿Imports System.Net
+﻿Imports System.IO
+Imports System.Net
 Imports System.Net.Http
 Imports System.Xml
 Imports Newtonsoft.Json
@@ -105,6 +106,28 @@ Module NSEmuHelperModule
         Return FirmwareList
     End Function
 
+    Public Async Function GetFirmwareMD5(FirmwareVersion As String) As Task(Of String)
+        Dim MD5Text As String = Await HTTPGetAsync("https://archive.org/download/nintendo-switch-global-firmwares/Official%20Global%20Firmware%20MD5%20Hashs.txt")
+        For Each Line As String In MD5Text.Replace(Chr(9), "/").Replace("Firmware ", "").Split(vbCrLf)
+            If Line.Split("/")(0).Replace(vbLf, "") = FirmwareVersion Then Return Line.Split("/").Last
+        Next
+        Return 0
+    End Function
+
+    Public Function MD5Sums(FilePath As String)
+        With System.Security.Cryptography.MD5.Create()
+            Return BitConverter.ToString(.ComputeHash(File.OpenRead(FilePath))).Replace("-", "").ToLower
+        End With
+    End Function
+
+    Public Sub CreateDirectory(FolderPath As String)
+        Try
+            If Not My.Computer.FileSystem.DirectoryExists(FolderPath) Then My.Computer.FileSystem.CreateDirectory(FolderPath)
+        Catch ex As Exception
+            frmExpection.ShowMessage(ex.Message)
+            MsgBox("文件系统访问错误") '仅用于暂停程序
+        End Try
+    End Sub
 End Module
 
 

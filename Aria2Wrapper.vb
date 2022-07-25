@@ -31,7 +31,10 @@ Public Class Aria2
     End Sub
     Private Sub Aria2Timer_Tick(sender As Object, e As EventArgs) Handles Aria2Timer.Tick '刷新
         Try
-            Dim OutputLine As String = Aria2Process.StandardOutput.ReadLine
+            Dim OutputLine As String
+            OutputLine = Aria2Process.StandardOutput.ReadLine
+            Debug.Print(OutputLine)
+            If OutputLine = Nothing Then Exit Sub
             If OutputLine.Contains("%") Then DownloadPercentage = CInt(New Regex("\(.*?\%\)").Match(OutputLine).ToString.Replace("(", "").Replace("%)", "").Trim)
             If OutputLine.Contains("DL:") Then DownloadSpeed = New Regex("DL\:.*? ").Match(OutputLine).ToString.Replace("DL:", "").Trim
             If OutputLine.Contains("ETA:") Then ETA = New Regex("ETA\:.*?\]").Match(OutputLine).ToString.Replace("ETA:", "").Replace("]", "").Trim

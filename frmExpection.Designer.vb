@@ -61,7 +61,7 @@ Partial Class frmExpection
         Me.MaterialMultiLineTextBox21.Size = New System.Drawing.Size(624, 313)
         Me.MaterialMultiLineTextBox21.TabIndex = 0
         Me.MaterialMultiLineTextBox21.TabStop = False
-        Me.MaterialMultiLineTextBox21.Text = "MaterialMultiLineTextBox21"
+        Me.MaterialMultiLineTextBox21.Text = "dotnet炸妈现场.jpg"
         Me.MaterialMultiLineTextBox21.TextAlign = System.Windows.Forms.HorizontalAlignment.Left
         Me.MaterialMultiLineTextBox21.UseSystemPasswordChar = False
         '
