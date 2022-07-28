@@ -13,8 +13,6 @@ Public Class frmMain
     Dim InstallProperties As Dictionary(Of String, Object)
     Dim InstallingEmulator As EmulatorType
 
-    '安装时候用的临时变量
-    '还没有qwq
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         SystemCheck()
         IntegrityCheck()
@@ -42,6 +40,7 @@ Public Class frmMain
         MainUILoaded = True
     End Sub
     Private Sub Tabs_Selected(sender As Object, e As TabControlEventArgs) Handles Tabs.Selected
+        Me.Icon = My.Resources.yuzu_icon
         Select Case e.TabPage.Name
             Case "TabMain"
                 Me.Text = "NS 模拟器助手"
@@ -51,8 +50,10 @@ Public Class frmMain
                 RefreshYuzu()
             Case "TabRyujinx"
                 Me.Text = "NS 模拟器助手 - Ryujinx 管理"
+                Me.Icon = My.Resources.ryujinx_icon
+                RefreshRyujinx()
             Case "TabInstall"
-                Me.Text = "NS 模拟器助手 - 安装模拟器"
+                Me.Text = "NS 模拟器助手 - 安装 / 更新"
             Case "TabMods"
                 Me.Text = "NS 模拟器助手 - Yuzu 模组管理"
             Case "TabConfig"
@@ -95,8 +96,13 @@ Public Class frmMain
             lblRyujinx.Text = "尚未安装"
             lblRyujinxFirmware.Text = ""
         Else
-            lblRyujinx.Text = Config.RyujinxVersion
-            lblRyujinxFirmware.Text = Config.RyujinxFirmwareVersion
+            Select Case Config.RyujinxBranch
+                Case "Avalonia"
+                    lblRyujinx.Text = "Ava " & Config.RyujinxVersion
+                Case "Mainline"
+                    lblRyujinx.Text = "主线版 " & Config.RyujinxVersion
+            End Select
+            lblRyujinxFirmware.Text = "固件 " & Config.RyujinxFirmwareVersion
         End If
     End Sub
     Private Sub RefreshYuzu()
@@ -148,7 +154,10 @@ Public Class frmMain
             lblYuzuInfo.Text = "点击右下角的安装按钮，现在安装吧！"
             btnInstallYuzu.Show()
             btnLaunchYuzu.Hide()
-            btnCheckUpdate.Hide()
+            btnYuzuCheckUpdate.Hide()
+            btnYuzuChangeKey.Hide()
+            btnUpdateYuzu.Hide()
+            btnYuzuUpdateFirmware.Hide()
         Else
             Select Case Config.YuzuBranch
                 Case "EarlyAccess"
@@ -163,7 +172,62 @@ Public Class frmMain
                 lblYuzuInfo.Text &= vbCrLf & "数据文件夹: " & Config.YuzuDataFolder
             End If
         End If
-    End Sub
+    End Sub 'yuzu窗体
+    Private Sub RefreshRyujinx()
+        '处理旧版配置文件
+        If Config.RyujinxVersion = "" Then
+            If My.Computer.FileSystem.FileExists(Config.RyujinxPath & "\RyujinxConfig.ini") Then
+                Dim OldRyujinxConfig As IniParser.Model.IniData
+                With New IniParser.FileIniDataParser
+                    OldRyujinxConfig = .ReadFile(Config.RyujinxPath & "\RyujinxConfig.ini")
+                End With
+                Config.RyujinxVersion = OldRyujinxConfig.Item("Ryujinx").Item("Version")
+                Config.RyujinxFirmwareVersion = OldRyujinxConfig.Item("Ryujinx").Item("Firmware")
+                If OldRyujinxConfig.Item("Ryujinx").Item("CustomDataFolder") = "False" Then
+                    Config.RyujinxDataFolder = ""
+                Else
+                    Config.RyujinxDataFolder = OldRyujinxConfig.Item("Ryujinx").Item("CustomDataFolder")
+                End If
+                Config.RyujinxBranch = "Mainline"
+                WriteConfig()
+                My.Computer.FileSystem.DeleteFile(Config.RyujinxPath & "\RyujinxConfig.ini")
+            ElseIf My.Computer.FileSystem.FileExists(Config.RyujinxPath & "\Ryujinx.exe") Then
+                Shell(Config.RyujinxPath & "\Ryujinx.exe", vbHidden)
+                Threading.Thread.Sleep(500)
+                For Each OpenedProcess As Process In Process.GetProcesses()
+                    If InStr(OpenedProcess.MainWindowTitle, "Ryujinx Console") Then
+                        OpenedProcess.Kill()
+                        Config.RyujinxVersion = OpenedProcess.MainWindowTitle.Replace("Ryujinx Console ", "")
+                        Config.RyujinxFirmwareVersion = "未知"
+                        Config.RyujinxBranch = "Mainline"
+                        WriteConfig()
+                        Exit For
+                    End If
+                Next
+            End If
+        End If
+        If Config.RyujinxVersion = "" Or (My.Computer.FileSystem.FileExists(Config.RyujinxPath & "\Ryujinx.exe") = False And My.Computer.FileSystem.FileExists(Config.RyujinxPath & "\Ryujinx.Ava.exe") = False) Then
+            lblRyujinxVersion.Text = "Ryujinx 模拟器尚未安装"
+            lblRyujinxInfo.Text = "点击右下角的安装按钮，现在安装吧！"
+            btnInstallRyujinx.Show()
+            btnLaunchRyujinx.Hide()
+            btnRyujinxCheckUpdate.Hide()
+            btnRyujinxChangeKey.Hide()
+            btnUpdateRyujinx.Hide()
+            btnRyujinxUpdateFirmware.Hide()
+        Else
+            Select Case Config.RyujinxBranch
+                Case "Avalonia"
+                    lblRyujinxVersion.Text = "Ryujinx AvaloniaUI " & Config.RyujinxVersion
+                Case "Mainline"
+                    lblRyujinxVersion.Text = "Ryujinx 主线版 (Mainline) " & Config.RyujinxVersion
+            End Select
+            lblRyujinxInfo.Text = "固件 " & Config.RyujinxFirmwareVersion
+            If Config.RyujinxDataFolder <> "" Then
+                lblRyujinxInfo.Text &= vbCrLf & "数据文件夹: " & Config.RyujinxDataFolder
+            End If
+        End If
+    End Sub 'yuzu窗体
     Private Sub RefreshConfig()
         ConfigUILoaded = False
         txtYuzuPath.Text = Config.YuzuPath
@@ -319,7 +383,11 @@ Public Class frmMain
         End If
         CreateDirectory(Config.YuzuPath)
     End Sub
-    Private Async Sub YuzuInstallStep1()
+    Private Sub YuzuInstallStep1()
+        comboBranch.Items.Clear()
+        comboBranch.Items.Add("预先测试版")
+        comboBranch.Items.Add("主线版")
+        comboBranch.Text = "预先测试版"
         picInstall.Image = My.Resources.yuzu
         ProgressMajor.Hide()
         ProgressMinor.Hide()
@@ -330,19 +398,13 @@ Public Class frmMain
         btnDownloadKeys.Hide()
         btnInstallShortcut.Hide()
         InstallProperties = New Dictionary(Of String, Object)
-        btnPreviousStep.Show()
+        btnPreviousStep.Hide()
         btnNextStep.Show()
         comboBranch.Show()
         txtVersion.Show()
-        comboBranch.Enabled = False
-        btnNextStep.Enabled = False '加载时暂时禁用按钮
-        btnPreviousStep.Enabled = False
         InstallTitle.Text = "步骤 1 - 选择模拟器版本"
         InstallMessage.Text = "Yuzu 模拟器分两个分支：预先测试版和主线版。" & vbCrLf & "使用预先测试版可以体验到更多新功能，" & vbCrLf & "主线版比预先测试版落后几个版本，版本号也不同，" & vbCrLf & "比预先测试版更稳定。"
         Application.DoEvents()
-        txtVersion.Text = Await LatestVersion.YuzuEarlyAccess
-        comboBranch.Enabled = True
-        btnNextStep.Enabled = True
     End Sub
     Private Sub YuzuPostInstallStep1()
         Select Case comboBranch.SelectedItem
@@ -358,6 +420,8 @@ Public Class frmMain
     Private Sub YuzuInstallStep2()
         btnPreviousStep.Enabled = True
         txtKeySelector.Show()
+        btnPreviousStep.Show()
+        btnNextStep.Show()
         btnDownloadKeys.Show()
         InstallTitle.Text = "步骤 2 - 选择密钥 (Keys) 文件"
         InstallMessage.Text = "NS 模拟器需要密钥才能运行游戏。" & vbCrLf & "你可以在贴吧或相关的交流群获取密钥文件，" & vbCrLf & "或点击下面的链接以下载。"
@@ -500,7 +564,7 @@ Public Class frmMain
                     If Config.DownloadSource = "US3" Then
                         .Url = DownloadSources("US3")("url").ToString & "NSFirmware/Firmware_" & InstallProperties("FirmwareVersion") & ".zip"
                     Else
-                        .Url = DownloadSources("OneDrive")("url").ToString
+                        .Url = DownloadSources("OneDrive")("url").ToString & "NSFirmware/Firmware_" & InstallProperties("FirmwareVersion") & ".zip"
                     End If
                     .SaveFolder = Config.YuzuPath & "\tmp"
                     .SaveFileName = "Firmware.zip"
@@ -517,12 +581,13 @@ Public Class frmMain
                     Threading.Thread.Sleep(100)
                     Application.DoEvents()
                 End While
-                lblInstallProgress.Text = "正在比对固件 MD5 校验码 ..."
-                If MD5Sums(Config.YuzuPath & "\tmp\Firmware.zip") <> Await GetFirmwareMD5(InstallProperties("FirmwareVersion")) Then
-                    MsgBox("固件包 MD5 校验码错误，请尝试重新安装模拟器！", vbCritical + vbOKOnly)
-                    End
+                If Config.SkipCheckMD5 = False Then
+                    lblInstallProgress.Text = "正在比对固件 MD5 校验码 ..."
+                    If MD5Sums(Config.YuzuPath & "\tmp\Firmware.zip") <> Await GetFirmwareMD5(InstallProperties("FirmwareVersion")) Then
+                        MsgBox("固件包 MD5 校验码错误，请尝试重新安装模拟器！", vbCritical + vbOKOnly)
+                        End
+                    End If
                 End If
-
         End Select
 
         lblInstallProgress.Text = "固件下载完成！"
@@ -534,7 +599,7 @@ Public Class frmMain
             .Extract(Config.YuzuPath & "\tmp\Yuzu.7z", Config.YuzuPath & "\tmp")
             While .Finished = False
                 Threading.Thread.Sleep(50)
-                lblInstallProgress.Text = "正在解压缩模拟器 ... (" & .PercentDone & "%)"
+                lblInstallProgress.Text = "正在解压模拟器 ... (" & .PercentDone & "%)"
                 ProgressMinor.Value = .PercentDone
                 ProgressMajor.Value = Int(.PercentDone / 6) + 66
                 Application.DoEvents()
@@ -678,6 +743,12 @@ Public Class frmMain
                 YuzuRefreshUpdate()
             Case EmulatorType.YuzuFirmware
                 YuzuRefreshFirmware()
+            Case EmulatorType.Ryujinx
+                RyujinxRefreshInstall()
+            Case EmulatorType.RyujinxUpdate
+                RyujinxRefreshUpdate()
+            Case EmulatorType.RyujinxFirmware
+                RyujinxRefreshFirmware()
         End Select
     End Sub '下一步
     Private Sub btnPreviousStep_Click(sender As Object, e As EventArgs) Handles btnPreviousStep.Click
@@ -685,6 +756,8 @@ Public Class frmMain
         Select Case InstallingEmulator
             Case EmulatorType.Yuzu
                 YuzuRefreshInstall(True)
+            Case EmulatorType.Ryujinx
+                RyujinxRefreshInstall(True)
         End Select
     End Sub '上一步
 
@@ -816,7 +889,15 @@ Public Class frmMain
         End
     End Sub '窗口关闭时终止
     Private Sub btnInstallComplete_Click(sender As Object, e As EventArgs) Handles btnInstallComplete.Click
-        FileIO.FileSystem.DeleteDirectory(Config.YuzuPath & "\tmp", FileIO.DeleteDirectoryOption.DeleteAllContents)
+        Select Case InstallingEmulator
+            Case EmulatorType.Yuzu : FileIO.FileSystem.DeleteDirectory(Config.YuzuPath & "\tmp", FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Case EmulatorType.YuzuUpdate : FileIO.FileSystem.DeleteDirectory(Config.YuzuPath & "\tmp", FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Case EmulatorType.YuzuFirmware : FileIO.FileSystem.DeleteDirectory(Config.YuzuPath & "\tmp", FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Case EmulatorType.Ryujinx : FileIO.FileSystem.DeleteDirectory(Config.RyujinxPath & "\tmp", FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Case EmulatorType.RyujinxFirmware : FileIO.FileSystem.DeleteDirectory(Config.RyujinxPath & "\tmp", FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Case EmulatorType.RyujinxUpdate : FileIO.FileSystem.DeleteDirectory(Config.RyujinxPath & "\tmp", FileIO.DeleteDirectoryOption.DeleteAllContents)
+        End Select
+
         LockTab = False
         Tabs.SelectedTab = Tabs.TabPages(0)
         InstallStep = 0
@@ -825,6 +906,16 @@ Public Class frmMain
         Select Case InstallingEmulator
             Case EmulatorType.Yuzu : Shell(Config.YuzuPath & "\yuzu.exe", vbNormalFocus)
             Case EmulatorType.YuzuUpdate : Shell(Config.YuzuPath & "\yuzu.exe", vbNormalFocus)
+            Case EmulatorType.Ryujinx
+                Select Case InstallProperties("Branch")
+                    Case "Mainline" : Shell(Config.RyujinxPath & "\Ryujinx.exe", vbNormalFocus)
+                    Case "Avalonia" : Shell(Config.RyujinxPath & "\Ryujinx.Ava.exe", vbNormalFocus)
+                End Select
+            Case EmulatorType.RyujinxUpdate
+                Select Case InstallProperties("Branch")
+                    Case "Mainline" : Shell(Config.RyujinxPath & "\Ryujinx.exe", vbNormalFocus)
+                    Case "Avalonia" : Shell(Config.RyujinxPath & "\Ryujinx.Ava.exe", vbNormalFocus)
+                End Select
         End Select
     End Sub '安装界面启动按钮
     Private Sub btnInstallShortcut_Click(sender As Object, e As EventArgs) Handles btnInstallShortcut.Click
@@ -837,12 +928,50 @@ Public Class frmMain
                 Shortcut.WorkingDirectory = Config.YuzuPath
                 Shortcut.Description = "Yuzu 模拟器"
                 Shortcut.Save()
+            Case EmulatorType.Ryujinx
+                Select Case InstallProperties("Branch")
+                    Case "Mainline"
+                        Dim WshShell As WshShell = New WshShell()
+                        Dim ShortcutPath As String = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+                        Dim Shortcut As IWshShortcut = CType(WshShell.CreateShortcut(ShortcutPath & "\Ryujinx.lnk"), IWshShortcut)
+                        Shortcut.TargetPath = Config.RyujinxPath & "\Ryujinx.exe"
+                        Shortcut.WorkingDirectory = Config.RyujinxPath
+                        Shortcut.Description = "Ryujinx 模拟器"
+                        Shortcut.Save()
+                    Case "Avalonia"
+                        Dim WshShell As WshShell = New WshShell()
+                        Dim ShortcutPath As String = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+                        Dim Shortcut As IWshShortcut = CType(WshShell.CreateShortcut(ShortcutPath & "\Ryujinx Ava.lnk"), IWshShortcut)
+                        Shortcut.TargetPath = Config.RyujinxPath & "\Ryujinx.Ava.exe"
+                        Shortcut.WorkingDirectory = Config.RyujinxPath
+                        Shortcut.Description = "Ryujinx 模拟器"
+                        Shortcut.Save()
+                End Select
+            Case EmulatorType.RyujinxUpdate
+                Select Case InstallProperties("Branch")
+                    Case "Mainline"
+                        Dim WshShell As WshShell = New WshShell()
+                        Dim ShortcutPath As String = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+                        Dim Shortcut As IWshShortcut = CType(WshShell.CreateShortcut(ShortcutPath & "\Ryujinx.lnk"), IWshShortcut)
+                        Shortcut.TargetPath = Config.RyujinxPath & "\Ryujinx.exe"
+                        Shortcut.WorkingDirectory = Config.RyujinxPath
+                        Shortcut.Description = "Ryujinx 模拟器"
+                        Shortcut.Save()
+                    Case "Avalonia"
+                        Dim WshShell As WshShell = New WshShell()
+                        Dim ShortcutPath As String = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+                        Dim Shortcut As IWshShortcut = CType(WshShell.CreateShortcut(ShortcutPath & "\Ryujinx Ava.lnk"), IWshShortcut)
+                        Shortcut.TargetPath = Config.RyujinxPath & "\Ryujinx.Ava.exe"
+                        Shortcut.WorkingDirectory = Config.RyujinxPath
+                        Shortcut.Description = "Ryujinx 模拟器"
+                        Shortcut.Save()
+                End Select
         End Select
     End Sub '安装界面创建快捷方式按钮
     Private Sub btnLaunchYuzu_Click(sender As Object, e As EventArgs) Handles btnLaunchYuzu.Click
         Shell(Config.YuzuPath & "\yuzu.exe", vbNormalFocus)
     End Sub '详情界面启动yuzu按钮
-    Private Async Sub btnChekUpdateYuzu_Click(sender As Object, e As EventArgs) Handles btnChekUpdateYuzu.Click
+    Private Async Sub btnYuzuCheckUpdate_Click(sender As Object, e As EventArgs) Handles btnYuzuCheckUpdate.Click
         Dim NewVersion As String
         Select Case Config.YuzuBranch
             Case "EarlyAccess" : NewVersion = Await LatestVersion.YuzuEarlyAccess()
@@ -878,11 +1007,15 @@ Public Class frmMain
             Case 1
                 YuzuPostUpdateStep1()
                 InstallStep = 2
-                yuzuUpdateProgress()
+                YuzuUpdateProgress()
         End Select
     End Sub
     Private Async Sub YuzuUpdateStep1()
         picInstall.Image = My.Resources.yuzu
+        comboBranch.Items.Clear()
+        comboBranch.Items.Add("预先测试版")
+        comboBranch.Items.Add("主线版")
+        comboBranch.Text = "预先测试版"
         ProgressMajor.Hide()
         ProgressMinor.Hide()
         lblInstallProgress.Hide()
@@ -897,14 +1030,9 @@ Public Class frmMain
         txtVersion.Show()
         btnPreviousStep.Hide()
         btnNextStep.Show()
-        comboBranch.Enabled = False
-        btnNextStep.Enabled = False '加载时暂时禁用按钮
         InstallTitle.Text = "更新 Yuzu - 选择模拟器版本"
         InstallMessage.Text = "Yuzu 模拟器分两个分支：预先测试版和主线版。" & vbCrLf & "使用预先测试版可以体验到更多新功能，" & vbCrLf & "主线版比预先测试版落后几个版本，版本号也不同，" & vbCrLf & "比预先测试版更稳定。"
         Application.DoEvents()
-        txtVersion.Text = Await LatestVersion.YuzuEarlyAccess
-        comboBranch.Enabled = True
-        btnNextStep.Enabled = True
     End Sub
     Private Sub YuzuPostUpdateStep1()
         Select Case comboBranch.SelectedItem
@@ -995,13 +1123,11 @@ Public Class frmMain
             .Extract(Config.YuzuPath & "\tmp\Yuzu.7z", Config.YuzuPath & "\tmp")
             While .Finished = False
                 Threading.Thread.Sleep(50)
-                lblInstallProgress.Text = "正在解压缩模拟器 ... (" & .PercentDone & "%)"
-                ProgressMinor.Value = .PercentDone
-                ProgressMajor.Value = Int(.PercentDone / 6) + 66
+                lblInstallProgress.Text = "正在解压模拟器 ... (" & .PercentDone & "%)"
+                ProgressMajor.Value = .PercentDone
                 Application.DoEvents()
             End While
-            ProgressMinor.Value = 100
-            ProgressMajor.Value = 83
+            ProgressMajor.Value = 100
         End With
 
         lblInstallProgress.Text = "正在安装模拟器 ..."
@@ -1046,9 +1172,10 @@ Public Class frmMain
                 InstallStep = 1
                 YuzuFirmwareStep1()
             Case 1
-                YuzuPostFirmwareStep1()
-                InstallStep = 2
-                YuzuFirmwareProgress()
+                If YuzuPostFirmwareStep1() Then
+                    InstallStep = 2
+                    YuzuFirmwareProgress()
+                End If
         End Select
     End Sub
     Private Sub YuzuFirmwareStep1()
@@ -1134,8 +1261,9 @@ Public Class frmMain
                     If Config.DownloadSource = "US3" Then
                         .Url = DownloadSources("US3")("url").ToString & "NSFirmware/Firmware_" & InstallProperties("FirmwareVersion") & ".zip"
                     Else
-                        .Url = DownloadSources("OneDrive")("url").ToString
+                        .Url = DownloadSources("OneDrive")("url").ToString & "NSFirmware/Firmware_" & InstallProperties("FirmwareVersion") & ".zip"
                     End If
+                    'MsgBox(.Url)
                     .SaveFolder = Config.YuzuPath & "\tmp"
                     .SaveFileName = "Firmware.zip"
                     .StartDownload()
@@ -1150,12 +1278,13 @@ Public Class frmMain
                     Threading.Thread.Sleep(100)
                     Application.DoEvents()
                 End While
-                lblInstallProgress.Text = "正在比对固件 MD5 校验码 ..."
-                If MD5Sums(Config.YuzuPath & "\tmp\Firmware.zip") <> Await GetFirmwareMD5(InstallProperties("FirmwareVersion")) Then
-                    MsgBox("固件包 MD5 校验码错误，请尝试重新安装！", vbCritical + vbOKOnly)
-                    End
+                If Config.SkipCheckMD5 = False Then
+                    lblInstallProgress.Text = "正在比对固件 MD5 校验码 ..."
+                    If MD5Sums(Config.YuzuPath & "\tmp\Firmware.zip") <> Await GetFirmwareMD5(InstallProperties("FirmwareVersion")) Then
+                        MsgBox("固件包 MD5 校验码错误，请尝试重新安装！", vbCritical + vbOKOnly)
+                        End
+                    End If
                 End If
-
         End Select
 
         lblInstallProgress.Text = "固件下载完成！"
@@ -1170,15 +1299,12 @@ Public Class frmMain
                     While .Finished = False
                         Threading.Thread.Sleep(50)
                         lblInstallProgress.Text = "正在解压固件 ... (" & .PercentDone & "%)"
-                        ProgressMinor.Value = .PercentDone
-                        ProgressMajor.Value = Int(.PercentDone / 6) + 66
+                        ProgressMajor.Value = .PercentDone
                         Application.DoEvents()
                     End While
-                    ProgressMinor.Value = 100
                     ProgressMajor.Value = 100
                 End With
 
-                ProgressMinor.Value = 0
                 lblInstallProgress.Text = "正在安装固件 ..."
                 CreateDirectory(Config.YuzuPath & "\user")
                 CreateDirectory(Config.YuzuPath & "\user\nand")
@@ -1199,11 +1325,9 @@ Public Class frmMain
                     While .Finished = False
                         Threading.Thread.Sleep(50)
                         lblInstallProgress.Text = "正在解压并安装固件 ... (" & .PercentDone & "%)"
-                        ProgressMinor.Value = .PercentDone
-                        ProgressMajor.Value = Int(.PercentDone / 6) + 66
+                        ProgressMajor.Value = .PercentDone
                         Application.DoEvents()
                     End While
-                    ProgressMinor.Value = 100
                     ProgressMajor.Value = 100
                 End With
         End Select
@@ -1219,6 +1343,758 @@ Public Class frmMain
         btnExitInstall.Hide()
 
         Config.YuzuFirmwareVersion = InstallProperties("FirmwareVersion")
+        WriteConfig()
+    End Sub
+
+    Private Sub btnYuzuChangeKey_Click(sender As Object, e As EventArgs) Handles btnYuzuChangeKey.Click
+        MsgBox("文件提取码：1034" & vbCrLf & "本资源转载自吾爱模拟论坛，不属于 NS 模拟器助手。" & vbCrLf & "请将新密钥覆盖到此文件夹内，密钥版本需要大于等于固件版本。", vbInformation)
+        Process.Start("https://url30.ctfile.com/d/32848130-44496748-b13e91")
+        Process.Start(Config.YuzuPath & "\user\keys")
+    End Sub '更换密钥
+
+    Private Sub btnLaunchRyujinx_Click(sender As Object, e As EventArgs) Handles btnLaunchRyujinx.Click
+        Select Case Config.RyujinxBranch
+            Case "Mainline" : Shell(Config.RyujinxPath & "\Ryujinx.exe", vbNormalFocus)
+            Case "Avalonia" : Shell(Config.RyujinxPath & "\Ryujinx.Ava.exe", vbNormalFocus)
+        End Select
+    End Sub '详情界面启动Ryujinx按钮
+
+
+    Private Sub btnInstallRyujinx_Click(sender As Object, e As EventArgs) Handles btnInstallRyujinx.Click
+        InstallStep = 0
+        IgnoreLockTab = True
+        Tabs.SelectedTab = Tabs.TabPages(3)
+        LockTab = True
+        IgnoreLockTab = False
+        InstallingEmulator = EmulatorType.Ryujinx
+        RyujinxPrepareInstall()
+        RyujinxRefreshInstall()
+    End Sub '开始安装 ryujinx
+    Private Sub RyujinxPrepareInstall()
+        If Config.RyujinxPath = "D:\Ryujinx" Then
+            If frmMaterialMsgBox.YesNoBox("当前模拟器安装目录为默认的 D:\Ryujinx，请确认是否安装到此文件夹？") = vbNo Then
+                LockTab = False
+                Tabs.SelectedTab = Tabs.TabPages(0)
+                InstallStep = 0
+            End If
+        End If
+        CreateDirectory(Config.RyujinxPath)
+    End Sub
+    Private Sub RyujinxRefreshInstall(Optional Previous As Boolean = False)
+        If Previous = True Then
+            '上一步
+            Select Case InstallStep
+                Case 2
+                    Call RyujinxPostInstallStep2(True)
+                    InstallStep = 1
+                    RyujinxInstallStep1()
+                Case 3
+                    Call RyujinxPostInstallStep3(True)
+                    InstallStep = 2
+                    RyujinxInstallStep2()
+            End Select
+        Else
+            '下一步
+            Select Case InstallStep
+                Case 0
+                    InstallStep = 1
+                    RyujinxInstallStep1()
+                Case 1
+                    RyujinxPostInstallStep1()
+                    InstallStep = 2
+                    RyujinxInstallStep2()
+                Case 2
+                    If RyujinxPostInstallStep2() Then
+                        InstallStep = 3
+                        RyujinxInstallStep3()
+                    End If
+                Case 3
+                    If RyujinxPostInstallStep3() Then
+                        InstallStep = 4
+                        RyujinxInstallProgress()
+                    End If
+            End Select
+        End If
+    End Sub
+    Private Async Sub RyujinxInstallStep1()
+        Me.Icon = My.Resources.ryujinx_icon
+        comboBranch.Items.Clear()
+        comboBranch.Items.Add("主线版")
+        comboBranch.Items.Add("AvaloniaUI")
+        comboBranch.Text = "主线版"
+        picInstall.Image = My.Resources.ryujinx
+        ProgressMajor.Hide()
+        ProgressMinor.Hide()
+        lblInstallProgress.Hide()
+        btnInstallComplete.Hide()
+        btnInstallLaunch.Hide()
+        btnExitInstall.Show()
+        btnDownloadKeys.Hide()
+        btnInstallShortcut.Hide()
+        InstallProperties = New Dictionary(Of String, Object)
+        btnPreviousStep.Hide()
+        btnNextStep.Show()
+        comboBranch.Show()
+        txtVersion.Show()
+        InstallTitle.Text = "步骤 1 - 选择模拟器版本"
+        InstallMessage.Text = "Ryujinx 模拟器分主线版和 AvaloniaUI 版。" & vbCrLf & "主线版为目前通行的 Ryujinx 版本，" & vbCrLf & "AvaloniaUI 版为使用新界面的版本，" & vbCrLf & "支持中文和游戏本独显直连。"
+        Application.DoEvents()
+        btnExitInstall.Enabled = False
+        btnNextStep.Enabled = False
+        txtVersion.Enabled = False
+        txtVersion.Text = Await LatestVersion.Ryujinx
+        btnExitInstall.Enabled = True
+        btnNextStep.Enabled = True
+        txtVersion.Enabled = True
+    End Sub
+    Private Sub RyujinxPostInstallStep1()
+        Select Case comboBranch.SelectedItem
+            Case "主线版"
+                SetProperty("Branch", "Mainline")
+            Case "AvaloniaUI"
+                SetProperty("Branch", "Avalonia")
+        End Select
+        SetProperty("Version", txtVersion.Text.Replace(" ", ""))
+        comboBranch.Hide()
+        txtVersion.Hide()
+    End Sub
+    Private Sub RyujinxInstallStep2()
+        btnPreviousStep.Enabled = True
+        txtKeySelector.Show()
+        btnPreviousStep.Show()
+        btnDownloadKeys.Show()
+        InstallTitle.Text = "步骤 2 - 选择密钥 (Keys) 文件"
+        InstallMessage.Text = "NS 模拟器需要密钥才能运行游戏。" & vbCrLf & "你可以在贴吧或相关的交流群获取密钥文件，" & vbCrLf & "或点击下面的链接以下载。"
+    End Sub
+    Private Function RyujinxPostInstallStep2(Optional ForceTrue As Boolean = False) As Boolean
+        If (txtKeySelector.Text <> "双击选择密钥文件 ..." And txtKeySelector.Text <> "") Or ForceTrue Then
+            txtKeySelector.Hide()
+            btnDownloadKeys.Hide()
+            SetProperty("Keys", txtKeySelector.Text)
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+    Private Sub RyujinxInstallStep3()
+        btnFirmwareOnline.Show()
+        btnFirmwareLocal.Show()
+        txtFirmware.Show()
+        comboFirmware.Show()
+        lblFirmwareTip.Show()
+        InstallTitle.Text = "步骤 3 - 安装固件"
+        InstallMessage.Text = "在 Ryujinx 中，需要安装固件才可以启动游戏。"
+        btnFirmwareOnline.Select()
+    End Sub
+    Private Function RyujinxPostInstallStep3(Optional ForceTrue As Boolean = False) As Boolean
+        Select Case btnFirmwareOnline.Checked
+            Case True
+                btnFirmwareOnline.Hide()
+                btnFirmwareLocal.Hide()
+                txtFirmware.Hide()
+                comboFirmware.Hide()
+                lblFirmwareTip.Hide()
+                btnNextStep.Hide()
+                btnPreviousStep.Hide()
+                btnExitInstall.Enabled = False
+                SetProperty("FirmwareMode", "Online")
+                SetProperty("FirmwareVersion", comboFirmware.Text)
+                Return True
+            Case False
+                If (txtFirmware.Text <> "双击选择固件包 ..." And txtFirmware.Text <> "") Or ForceTrue Then
+                    btnFirmwareOnline.Hide()
+                    btnFirmwareLocal.Hide()
+                    txtFirmware.Hide()
+                    comboFirmware.Hide()
+                    lblFirmwareTip.Hide()
+                    btnNextStep.Hide()
+                    btnPreviousStep.Hide()
+                    btnExitInstall.Enabled = False
+                    SetProperty("FirmwareMode", "Local")
+                    SetProperty("FirmwareVersion", comboFirmware.Text)
+                    SetProperty("FirmwarePath", txtFirmware.Text)
+                    Return True
+                Else
+                    Return False
+                End If
+        End Select
+    End Function
+    Private Async Sub RyujinxInstallProgress()
+        Select Case InstallProperties("Branch")
+            Case "Mainline"
+                InstallTitle.Text = "正在安装 Ryujinx 主线版 " & InstallProperties("Version")
+            Case "Avalonia"
+                InstallTitle.Text = "正在安装 Ryujinx AvaloniaUI " & InstallProperties("Version")
+        End Select
+        InstallMessage.Text = "安装可能需要几分钟，请喝杯茶并耐心等待。" & vbCrLf & "根据您的网络质量，安装速度会有所不同。"
+        ProgressMajor.Show()
+        ProgressMajor.Maximum = 100
+        ProgressMinor.Show()
+        ProgressMinor.Maximum = 100
+        '创建临时文件夹
+        CreateDirectory(Config.RyujinxPath & "\tmp")
+        CreateDirectory(Config.RyujinxPath & "\tmp\fw")
+        lblInstallProgress.Text = "正在准备安装 ... "
+        lblInstallProgress.Show()
+
+        lblInstallProgress.Text = "正在下载模拟器 ... "
+
+        '创建 URL
+        Dim RyujinxDownloadUrl As String
+        Select Case DownloadSources(Config.DownloadSource)("type").ToString
+            Case "github"
+                Select Case InstallProperties("Branch")
+                    Case "Mainline"
+                        RyujinxDownloadUrl = DownloadSources(Config.DownloadSource)("url").ToString &
+                                          "/Ryujinx/release-channel-master/releases/download/" & InstallProperties("Version") &
+                                          "/ryujinx-" & InstallProperties("Version") & "-win_x64.zip"
+                    Case "Avalonia"
+                        RyujinxDownloadUrl = DownloadSources(Config.DownloadSource)("url").ToString &
+                                          "/Ryujinx/release-channel-master/releases/download/" & InstallProperties("Version") &
+                                          "/test-ava-ryujinx-" & InstallProperties("Version") & "-win_x64.zip"
+                End Select
+            Case "onemanager"
+                '云盘
+                Select Case InstallProperties("Branch")
+                    Case "Mainline"
+                        RyujinxDownloadUrl = DownloadSources(Config.DownloadSource)("url").ToString & "Ryujinx/ryujinx-" & InstallProperties("Version") & "-win_x64.zip"
+                    Case "Avalonia"
+                        RyujinxDownloadUrl = DownloadSources(Config.DownloadSource)("url").ToString & "RyujinxAva/ryujinx-ava-" & InstallProperties("Version") & "-win_x64.zip"
+                End Select
+        End Select
+
+        If My.Computer.FileSystem.FileExists(Config.RyujinxPath & "\tmp\Ryujinx.zip") Then FileSystem.Kill(Config.RyujinxPath & "\tmp\Ryujinx.zip")
+        '创建aria2下载对象并且下载模拟器
+        With New Aria2
+            .Url = RyujinxDownloadUrl
+            .SaveFolder = Config.RyujinxPath & "\tmp"
+            .SaveFileName = "Ryujinx.zip"
+            .StartDownload()
+            Do Until .Finished
+                Threading.Thread.Sleep(50)
+                lblInstallProgress.Text = "正在下载模拟器 ... (" & .DownloadSpeed & "/s " & .DownloadPercentage & "% 剩余" & .ETA & ")"
+                ProgressMajor.Value = Int(.DownloadPercentage / 3)
+                ProgressMinor.Value = .DownloadPercentage
+                Application.DoEvents()
+            Loop
+        End With
+
+        lblInstallProgress.Text = "模拟器下载完成！"
+        ProgressMajor.Value = 33
+
+
+        '固件
+        Select Case InstallProperties("FirmwareMode")
+            Case "Local"
+                '本地
+                'skip
+            Case "Online"
+                '创建aria2下载对象并且下载固件
+                With New Aria2
+                    If Config.DownloadSource = "US3" Then
+                        .Url = DownloadSources("US3")("url").ToString & "NSFirmware/Firmware_" & InstallProperties("FirmwareVersion") & ".zip"
+                    Else
+                        .Url = DownloadSources("OneDrive")("url").ToString & "NSFirmware/Firmware_" & InstallProperties("FirmwareVersion") & ".zip"
+                    End If
+                    .SaveFolder = Config.RyujinxPath & "\tmp"
+                    .SaveFileName = "Firmware.zip"
+                    .StartDownload()
+                    Do Until .Finished
+                        Threading.Thread.Sleep(50)
+                        lblInstallProgress.Text = "正在下载固件 ... (" & .DownloadSpeed & "/s " & .DownloadPercentage & "% 剩余" & .ETA & ")"
+                        ProgressMajor.Value = Int(.DownloadPercentage / 3) + 33
+                        ProgressMinor.Value = .DownloadPercentage
+                        Application.DoEvents()
+                    Loop
+                End With
+                While My.Computer.FileSystem.FileExists(Config.RyujinxPath & "\tmp\Firmware.zip.aria2")
+                    Threading.Thread.Sleep(100)
+                    Application.DoEvents()
+                End While
+                If Config.SkipCheckMD5 = False Then
+                    lblInstallProgress.Text = "正在比对固件 MD5 校验码 ..."
+                    If MD5Sums(Config.RyujinxPath & "\tmp\Firmware.zip") <> Await GetFirmwareMD5(InstallProperties("FirmwareVersion")) Then
+                        MsgBox("固件包 MD5 校验码错误，请尝试重新安装模拟器！", vbCritical + vbOKOnly)
+                        End
+                    End If
+                End If
+        End Select
+
+        lblInstallProgress.Text = "固件下载完成！"
+        ProgressMajor.Value = 66
+
+        '解压缩
+        lblInstallProgress.Text = "正在解压模拟器 ..."
+        With New SevenZipWrapper
+            .Extract(Config.RyujinxPath & "\tmp\Ryujinx.zip", Config.RyujinxPath & "\tmp")
+            While .Finished = False
+                Threading.Thread.Sleep(50)
+                lblInstallProgress.Text = "正在解压模拟器 ... (" & .PercentDone & "%)"
+                ProgressMinor.Value = .PercentDone
+                ProgressMajor.Value = Int(.PercentDone / 6) + 66
+                Application.DoEvents()
+            End While
+            ProgressMinor.Value = 100
+            ProgressMajor.Value = 83
+        End With
+
+        lblInstallProgress.Text = "正在安装模拟器 ..."
+        FileIO.FileSystem.MoveDirectory(Config.RyujinxPath & "\tmp\publish", Config.RyujinxPath, True)
+
+        Select Case InstallProperties("FirmwareMode")
+            Case "Online"
+                '解压缩
+                lblInstallProgress.Text = "正在解压固件 ..."
+                With New SevenZipWrapper
+                    .Extract(Config.RyujinxPath & "\tmp\Firmware.zip", Config.RyujinxPath & "\tmp\fw")
+                    While .Finished = False
+                        Threading.Thread.Sleep(50)
+                        lblInstallProgress.Text = "正在解压固件 ... (" & .PercentDone & "%)"
+                        ProgressMinor.Value = .PercentDone
+                        ProgressMajor.Value = Int(.PercentDone / 6) + 66
+                        Application.DoEvents()
+                    End While
+                    ProgressMinor.Value = 100
+                    ProgressMajor.Value = 100
+                End With
+
+                ProgressMinor.Value = 0
+                lblInstallProgress.Text = "正在安装固件 ..."
+                CreateDirectory(Config.RyujinxPath & "\portable")
+                CreateDirectory(Config.RyujinxPath & "\portable\bis")
+                CreateDirectory(Config.RyujinxPath & "\portable\bis\system")
+                CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents")
+                CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents\registered")
+                For Each FirmwareFile In Directory.GetFiles(Config.RyujinxPath & "\tmp\fw")
+                    CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", ""))
+                    FileIO.FileSystem.MoveFile(FirmwareFile, Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", "") & "\00")
+                Next
+            Case "Local"
+                '解压缩
+                lblInstallProgress.Text = "正在解压固件 ..."
+                With New SevenZipWrapper
+                    .Extract(InstallProperties("FirmwarePath"), Config.RyujinxPath & "\tmp\fw")
+                    While .Finished = False
+                        Threading.Thread.Sleep(50)
+                        lblInstallProgress.Text = "正在解压固件 ... (" & .PercentDone & "%)"
+                        ProgressMinor.Value = .PercentDone
+                        ProgressMajor.Value = Int(.PercentDone / 6) + 66
+                        Application.DoEvents()
+                    End While
+                    ProgressMinor.Value = 100
+                    ProgressMajor.Value = 100
+                End With
+
+                ProgressMinor.Value = 0
+                lblInstallProgress.Text = "正在安装固件 ..."
+                CreateDirectory(Config.RyujinxPath & "\portable")
+                CreateDirectory(Config.RyujinxPath & "\portable\bis")
+                CreateDirectory(Config.RyujinxPath & "\portable\bis\system")
+                CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents")
+                CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents\registered")
+                For Each FirmwareFile In Directory.GetFiles(Config.RyujinxPath & "\tmp\fw")
+                    CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", ""))
+                    FileIO.FileSystem.MoveFile(FirmwareFile, Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", "") & "\00")
+                Next
+        End Select
+        CreateDirectory(Config.RyujinxPath & "\portable")
+        CreateDirectory(Config.RyujinxPath & "\portable\system")
+        FileSystem.FileCopy(InstallProperties("Keys"), Config.RyujinxPath & "\portable\system\prod.keys")
+
+        ProgressMajor.Hide()
+        ProgressMinor.Hide()
+        lblInstallProgress.Hide()
+
+        Select Case InstallProperties("Branch")
+            Case "Avalonia"
+                InstallTitle.Text = "Ryujinx AvaloniaUI " & InstallProperties("Version") & " 安装完成!"
+            Case "Mainline"
+                InstallTitle.Text = "Ryujinx 主线版 " & InstallProperties("Version") & " 安装完成!"
+        End Select
+        InstallMessage.Text = "现在可以启动模拟器享受游戏了！" & vbCrLf & vbCrLf & "也可以创建桌面快捷方式，以便下次游玩。"
+        btnInstallLaunch.Show()
+        btnInstallShortcut.Show()
+        btnInstallComplete.Show()
+        btnExitInstall.Hide()
+
+        Config.RyujinxVersion = InstallProperties("Version")
+        Config.RyujinxBranch = InstallProperties("Branch")
+        Config.RyujinxFirmwareVersion = InstallProperties("FirmwareVersion")
+        WriteConfig()
+    End Sub
+
+    Private Async Sub btnRyujinxCheckUpdate_Click(sender As Object, e As EventArgs) Handles btnRyujinxCheckUpdate.Click
+        Dim NewVersion As String
+        NewVersion = Await LatestVersion.Ryujinx()
+        If NewVersion <> Config.RyujinxVersion Then
+            If MsgBox("发现新版本！" & vbCrLf & "当前版本：" & Config.RyujinxVersion & "，最新版本：" & NewVersion, vbYesNo + vbInformation) = vbYes Then
+                btnUpdateRyujinx.PerformClick()
+            End If
+        Else
+            Select Case Config.RyujinxBranch
+                Case "Mainline" : MsgBox("Ryujinx 主线版 " & Config.RyujinxVersion & " 已经是最新版本。", vbYesNo + vbInformation)
+                Case "Avalonia" : MsgBox("Ryujinx AvaloniaUI " & Config.YuzuVersion & " 已经是最新版本。", vbYesNo + vbInformation)
+            End Select
+        End If
+    End Sub '开始更新ryujinx
+
+    Private Sub btnUpdateRyujinx_Click(sender As Object, e As EventArgs) Handles btnUpdateRyujinx.Click
+        InstallStep = 0
+        IgnoreLockTab = True
+        Tabs.SelectedTab = Tabs.TabPages(3)
+        LockTab = True
+        IgnoreLockTab = False
+        InstallingEmulator = EmulatorType.RyujinxUpdate
+        RyujinxRefreshUpdate()
+    End Sub
+    Private Sub RyujinxRefreshUpdate()
+        '下一步
+        Select Case InstallStep
+            Case 0
+                InstallStep = 1
+                RyujinxUpdateStep1()
+            Case 1
+                RyujinxPostUpdateStep1()
+                InstallStep = 2
+                RyujinxUpdateProgress()
+        End Select
+    End Sub
+    Private Async Sub RyujinxUpdateStep1()
+        Me.Icon = My.Resources.ryujinx_icon
+        comboBranch.Items.Clear()
+        comboBranch.Items.Add("主线版")
+        comboBranch.Items.Add("AvaloniaUI")
+        comboBranch.Text = "主线版"
+        picInstall.Image = My.Resources.ryujinx
+        ProgressMajor.Hide()
+        ProgressMinor.Hide()
+        lblInstallProgress.Hide()
+        btnInstallComplete.Hide()
+        btnInstallLaunch.Hide()
+        btnExitInstall.Show()
+        btnDownloadKeys.Hide()
+        btnInstallShortcut.Hide()
+        InstallProperties = New Dictionary(Of String, Object)
+        btnPreviousStep.Hide()
+        btnNextStep.Show()
+        comboBranch.Show()
+        txtVersion.Show()
+        InstallTitle.Text = "更新 Ryujinx - 选择模拟器版本"
+        InstallMessage.Text = "Ryujinx 模拟器分主线版和 AvaloniaUI 版。" & vbCrLf & "主线版为目前通行的 Ryujinx 版本，" & vbCrLf & "AvaloniaUI 版为使用新界面的版本，" & vbCrLf & "支持中文和游戏本独显直连。"
+        Application.DoEvents()
+        btnExitInstall.Enabled = False
+        btnNextStep.Enabled = False
+        txtVersion.Enabled = False
+        txtVersion.Text = Await LatestVersion.Ryujinx
+        btnExitInstall.Enabled = True
+        btnNextStep.Enabled = True
+        txtVersion.Enabled = True
+    End Sub
+    Private Sub RyujinxPostUpdateStep1()
+        Select Case comboBranch.SelectedItem
+            Case "主线版"
+                SetProperty("Branch", "Mainline")
+            Case "AvaloniaUI"
+                SetProperty("Branch", "Avalonia")
+        End Select
+        SetProperty("Version", txtVersion.Text.Replace(" ", ""))
+        comboBranch.Hide()
+        txtVersion.Hide()
+        btnNextStep.Hide()
+        btnExitInstall.Enabled = False
+    End Sub
+    Private Sub RyujinxUpdateProgress()
+        Select Case InstallProperties("Branch")
+            Case "Mainline"
+                InstallTitle.Text = "正在更新到 Ryujinx 主线版 " & InstallProperties("Version")
+            Case "Avalonia"
+                InstallTitle.Text = "正在更新到 Ryujinx AvaloniaUI " & InstallProperties("Version")
+        End Select
+        InstallMessage.Text = "安装可能需要几分钟，请喝杯茶并耐心等待。" & vbCrLf & "根据您的网络质量，安装速度会有所不同。"
+        ProgressMajor.Show()
+        ProgressMajor.Maximum = 100
+        ProgressMinor.Hide()
+        '创建临时文件夹
+        CreateDirectory(Config.RyujinxPath & "\tmp")
+        lblInstallProgress.Text = "正在准备安装 ... "
+        lblInstallProgress.Show()
+
+        lblInstallProgress.Text = "正在下载模拟器 ... "
+
+        '创建 URL
+        Dim RyujinxDownloadUrl As String
+        Select Case DownloadSources(Config.DownloadSource)("type").ToString
+            Case "github"
+                Select Case InstallProperties("Branch")
+                    Case "Mainline"
+                        RyujinxDownloadUrl = DownloadSources(Config.DownloadSource)("url").ToString &
+                                          "/Ryujinx/release-channel-master/releases/download/" & InstallProperties("Version") &
+                                          "/ryujinx-" & InstallProperties("Version") & "-win_x64.zip"
+                    Case "Avalonia"
+                        RyujinxDownloadUrl = DownloadSources(Config.DownloadSource)("url").ToString &
+                                          "/Ryujinx/release-channel-master/releases/download/" & InstallProperties("Version") &
+                                          "/test-ava-ryujinx-" & InstallProperties("Version") & "-win_x64.zip"
+                End Select
+            Case "onemanager"
+                '云盘
+                Select Case InstallProperties("Branch")
+                    Case "Mainline"
+                        RyujinxDownloadUrl = DownloadSources(Config.DownloadSource)("url").ToString & "Ryujinx/ryujinx-" & InstallProperties("Version") & "-win_x64.zip"
+                    Case "Avalonia"
+                        RyujinxDownloadUrl = DownloadSources(Config.DownloadSource)("url").ToString & "RyujinxAva/ryujinx-ava-" & InstallProperties("Version") & "-win_x64.zip"
+                End Select
+        End Select
+
+        If My.Computer.FileSystem.FileExists(Config.RyujinxPath & "\tmp\Ryujinx.zip") Then FileSystem.Kill(Config.RyujinxPath & "\tmp\Ryujinx.zip")
+        '创建aria2下载对象并且下载模拟器
+        With New Aria2
+            .Url = RyujinxDownloadUrl
+            .SaveFolder = Config.RyujinxPath & "\tmp"
+            .SaveFileName = "Ryujinx.zip"
+            .StartDownload()
+            Do Until .Finished
+                Threading.Thread.Sleep(50)
+                lblInstallProgress.Text = "正在下载模拟器 ... (" & .DownloadSpeed & "/s " & .DownloadPercentage & "% 剩余" & .ETA & ")"
+                ProgressMajor.Value = .DownloadPercentage
+                Application.DoEvents()
+            Loop
+        End With
+
+        lblInstallProgress.Text = "模拟器下载完成！"
+
+
+        '解压缩
+        lblInstallProgress.Text = "正在解压模拟器 ..."
+        With New SevenZipWrapper
+            .Extract(Config.RyujinxPath & "\tmp\Ryujinx.zip", Config.RyujinxPath & "\tmp")
+            While .Finished = False
+                Threading.Thread.Sleep(50)
+                lblInstallProgress.Text = "正在解压模拟器 ... (" & .PercentDone & "%)"
+                ProgressMajor.Value = .PercentDone
+                Application.DoEvents()
+            End While
+            ProgressMajor.Value = 100
+        End With
+
+        lblInstallProgress.Text = "正在安装模拟器 ..."
+        FileIO.FileSystem.MoveDirectory(Config.RyujinxPath & "\tmp\publish", Config.RyujinxPath, True)
+
+        ProgressMajor.Hide()
+        ProgressMinor.Hide()
+        lblInstallProgress.Hide()
+
+        Select Case InstallProperties("Branch")
+            Case "Avalonia"
+                InstallTitle.Text = "Ryujinx AvaloniaUI " & InstallProperties("Version") & " 更新完成!"
+            Case "Mainline"
+                InstallTitle.Text = "Ryujinx 主线版 " & InstallProperties("Version") & " 更新完成!"
+        End Select
+        InstallMessage.Text = "现在可以启动模拟器享受游戏了！"
+        btnInstallLaunch.Show()
+        btnInstallShortcut.Show()
+        btnInstallComplete.Show()
+        btnExitInstall.Hide()
+
+        Config.RyujinxVersion = InstallProperties("Version")
+        Config.RyujinxBranch = InstallProperties("Branch")
+        WriteConfig()
+    End Sub
+
+    Private Sub btnRyujinxUpdateFirmware_Click(sender As Object, e As EventArgs) Handles btnRyujinxUpdateFirmware.Click
+        InstallStep = 0
+        IgnoreLockTab = True
+        Tabs.SelectedTab = Tabs.TabPages(3)
+        LockTab = True
+        IgnoreLockTab = False
+        InstallingEmulator = EmulatorType.RyujinxFirmware
+        RyujinxRefreshFirmware()
+    End Sub 'ryu固件
+
+    Private Sub RyujinxRefreshFirmware()
+        Select Case InstallStep
+            Case 0
+                InstallStep = 1
+                RyujinxFirmwareStep1()
+            Case 1
+                If RyujinxPostFirmwareStep1() Then
+                    InstallStep = 2
+                    RyujinxFirmwareProgress()
+                End If
+        End Select
+    End Sub
+    Private Sub RyujinxFirmwareStep1()
+        comboBranch.Hide()
+        txtVersion.Hide()
+        Me.Icon = My.Resources.ryujinx_icon
+        ProgressMajor.Hide()
+        ProgressMinor.Hide()
+        lblInstallProgress.Hide()
+        btnInstallComplete.Hide()
+        btnInstallLaunch.Hide()
+        btnExitInstall.Show()
+        btnDownloadKeys.Hide()
+        btnInstallShortcut.Hide()
+
+        btnFirmwareOnline.Show()
+        btnFirmwareLocal.Show()
+        txtFirmware.Show()
+        comboFirmware.Show()
+        lblFirmwareTip.Show()
+        btnNextStep.Show()
+
+        picInstall.Image = My.Resources.firmware
+        InstallTitle.Text = "更新固件 - 选择固件版本"
+        InstallMessage.Text = "固件更新不建议过于频繁，" & vbCrLf & "建议固件版本小于密钥版本。"
+        btnFirmwareOnline.Select()
+    End Sub
+    Private Function RyujinxPostFirmwareStep1(Optional ForceTrue As Boolean = False) As Boolean
+        Select Case btnFirmwareOnline.Checked
+            Case True
+                btnFirmwareOnline.Hide()
+                btnFirmwareLocal.Hide()
+                txtFirmware.Hide()
+                comboFirmware.Hide()
+                lblFirmwareTip.Hide()
+                btnNextStep.Hide()
+                btnPreviousStep.Hide()
+                btnExitInstall.Enabled = False
+                SetProperty("FirmwareMode", "Online")
+                SetProperty("FirmwareVersion", comboFirmware.Text)
+                Return True
+            Case False
+                If (txtFirmware.Text <> "双击选择固件包 ..." And txtFirmware.Text <> "") Or ForceTrue Then
+                    btnFirmwareOnline.Hide()
+                    btnFirmwareLocal.Hide()
+                    txtFirmware.Hide()
+                    comboFirmware.Hide()
+                    lblFirmwareTip.Hide()
+                    btnNextStep.Hide()
+                    btnPreviousStep.Hide()
+                    btnExitInstall.Enabled = False
+                    SetProperty("FirmwareMode", "Local")
+                    SetProperty("FirmwareVersion", comboFirmware.Text)
+                    SetProperty("FirmwarePath", txtFirmware.Text)
+                    Return True
+                Else
+                    Return False
+                End If
+        End Select
+    End Function
+    Private Async Sub RyujinxFirmwareProgress()
+        InstallTitle.Text = "正在更新固件到 " & InstallProperties("FirmwareVersion")
+        InstallMessage.Text = "安装可能需要几分钟，请喝杯茶并耐心等待。" & vbCrLf & "根据您的网络质量，安装速度会有所不同。"
+        ProgressMajor.Show()
+        ProgressMajor.Maximum = 100
+        ProgressMinor.Hide()
+        '创建临时文件夹
+        CreateDirectory(Config.RyujinxPath & "\tmp")
+        CreateDirectory(Config.RyujinxPath & "\tmp\fw")
+        lblInstallProgress.Text = "正在准备安装 ... "
+        lblInstallProgress.Show()
+
+        '固件
+        Select Case InstallProperties("FirmwareMode")
+            Case "Local"
+                '本地
+                'skip
+            Case "Online"
+                '创建aria2下载对象并且下载固件
+                With New Aria2
+                    If Config.DownloadSource = "US3" Then
+                        .Url = DownloadSources("US3")("url").ToString & "NSFirmware/Firmware_" & InstallProperties("FirmwareVersion") & ".zip"
+                    Else
+                        .Url = DownloadSources("OneDrive")("url").ToString & "NSFirmware/Firmware_" & InstallProperties("FirmwareVersion") & ".zip"
+                    End If
+                    .SaveFolder = Config.RyujinxPath & "\tmp"
+                    .SaveFileName = "Firmware.zip"
+                    .StartDownload()
+                    Do Until .Finished
+                        Threading.Thread.Sleep(50)
+                        lblInstallProgress.Text = "正在下载固件 ... (" & .DownloadSpeed & "/s " & .DownloadPercentage & "% 剩余" & .ETA & ")"
+                        ProgressMajor.Value = .DownloadPercentage
+                        Application.DoEvents()
+                    Loop
+                End With
+                While My.Computer.FileSystem.FileExists(Config.RyujinxPath & "\tmp\Firmware.zip.aria2")
+                    Threading.Thread.Sleep(100)
+                    Application.DoEvents()
+                End While
+                If Config.SkipCheckMD5 = False Then
+                    lblInstallProgress.Text = "正在比对固件 MD5 校验码 ..."
+                    If MD5Sums(Config.RyujinxPath & "\tmp\Firmware.zip") <> Await GetFirmwareMD5(InstallProperties("FirmwareVersion")) Then
+                        MsgBox("固件包 MD5 校验码错误，请尝试重新安装模拟器！", vbCritical + vbOKOnly)
+                        End
+                    End If
+                End If
+        End Select
+
+        lblInstallProgress.Text = "固件下载完成！"
+
+        Select Case InstallProperties("FirmwareMode")
+            Case "Online"
+                '解压缩
+                lblInstallProgress.Text = "正在解压固件 ..."
+                With New SevenZipWrapper
+                    .Extract(Config.RyujinxPath & "\tmp\Firmware.zip", Config.RyujinxPath & "\tmp\fw")
+                    While .Finished = False
+                        Threading.Thread.Sleep(50)
+                        lblInstallProgress.Text = "正在解压固件 ... (" & .PercentDone & "%)"
+                        ProgressMajor.Value = .PercentDone
+                        Application.DoEvents()
+                    End While
+                    ProgressMajor.Value = 100
+                End With
+
+                ProgressMinor.Value = 0
+                lblInstallProgress.Text = "正在安装固件 ..."
+                CreateDirectory(Config.RyujinxPath & "\portable")
+                CreateDirectory(Config.RyujinxPath & "\portable\bis")
+                CreateDirectory(Config.RyujinxPath & "\portable\bis\system")
+                CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents")
+                CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents\registered")
+                For Each FirmwareFile In Directory.GetFiles(Config.RyujinxPath & "\tmp\fw")
+                    CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", ""))
+                    FileIO.FileSystem.MoveFile(FirmwareFile, Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", "") & "\00")
+                Next
+            Case "Local"
+                '解压缩
+                lblInstallProgress.Text = "正在解压固件 ..."
+                With New SevenZipWrapper
+                    .Extract(InstallProperties("FirmwarePath"), Config.RyujinxPath & "\tmp\fw")
+                    While .Finished = False
+                        Threading.Thread.Sleep(50)
+                        lblInstallProgress.Text = "正在解压固件 ... (" & .PercentDone & "%)"
+                        ProgressMajor.Value = .PercentDone
+                        Application.DoEvents()
+                    End While
+                    ProgressMajor.Value = 100
+                End With
+
+                ProgressMinor.Value = 0
+                lblInstallProgress.Text = "正在安装固件 ..."
+                CreateDirectory(Config.RyujinxPath & "\portable")
+                CreateDirectory(Config.RyujinxPath & "\portable\bis")
+                CreateDirectory(Config.RyujinxPath & "\portable\bis\system")
+                CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents")
+                CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents\registered")
+                For Each FirmwareFile In Directory.GetFiles(Config.RyujinxPath & "\tmp\fw")
+                    CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", ""))
+                    FileIO.FileSystem.MoveFile(FirmwareFile, Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", "") & "\00")
+                Next
+        End Select
+
+        ProgressMajor.Hide()
+        ProgressMinor.Hide()
+        lblInstallProgress.Hide()
+
+        InstallTitle.Text = "固件" & InstallProperties("FirmwareVersion") & " 安装完成!"
+        InstallMessage.Text = "现在可以启动模拟器，体验更新的游戏了，" & vbCrLf & "同时也别忘记更新密钥哦！"
+        btnInstallLaunch.Show()
+        btnInstallShortcut.Hide()
+        btnInstallComplete.Show()
+        btnExitInstall.Hide()
+
+        Config.RyujinxFirmwareVersion = InstallProperties("FirmwareVersion")
         WriteConfig()
     End Sub
 

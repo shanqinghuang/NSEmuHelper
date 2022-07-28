@@ -107,7 +107,7 @@ Module NSEmuHelperModule
     End Function
 
     Public Async Function GetFirmwareMD5(FirmwareVersion As String) As Task(Of String)
-        Dim MD5Text As String = Await HTTPGetAsync("https://archive.org/download/nintendo-switch-global-firmwares/Official%20Global%20Firmware%20MD5%20Hashs.txt")
+        Dim MD5Text As String = Await HTTPGetAsync(Config.CloudflareProxyPrefix & "https://archive.org/download/nintendo-switch-global-firmwares/Official%20Global%20Firmware%20MD5%20Hashs.txt")
         For Each Line As String In MD5Text.Replace(Chr(9), "/").Replace("Firmware ", "").Split(vbCrLf)
             If Line.Split("/")(0).Replace(vbLf, "") = FirmwareVersion Then Return Line.Split("/").Last
         Next
@@ -202,7 +202,7 @@ Module LatestVersion
                 VersionList = JObject.Parse(Await HTTPGetAsync(DownloadSources(Config.DownloadSource)("url").ToString & "Ryujinx/?json"))
                 For Each VersionObject As JProperty In VersionList.Item("list")
                     VersionObject.CreateReader()
-                    VersionNumbers.Add(CInt(VersionObject.Value("name").ToString.Replace("ryujinx-", "").Replace("-win_x64.zip", "")))
+                    VersionNumbers.Add(VersionObject.Value("name").ToString.Replace("ryujinx-", "").Replace("-win_x64.zip", ""))
                 Next
                 VersionNumbers.Sort()
                 VersionNumbers.Reverse()

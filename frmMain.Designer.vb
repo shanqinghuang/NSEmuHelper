@@ -41,9 +41,10 @@ Partial Class frmMain
         Me.lblYuzu = New System.Windows.Forms.Label()
         Me.picYuzu = New System.Windows.Forms.PictureBox()
         Me.TabYuzu = New System.Windows.Forms.TabPage()
+        Me.btnYuzuChangeKey = New MaterialSkin.Controls.MaterialButton()
         Me.btnYuzuUpdateFirmware = New MaterialSkin.Controls.MaterialButton()
         Me.btnUpdateYuzu = New MaterialSkin.Controls.MaterialButton()
-        Me.btnChekUpdateYuzu = New MaterialSkin.Controls.MaterialButton()
+        Me.btnYuzuCheckUpdate = New MaterialSkin.Controls.MaterialButton()
         Me.btnLaunchYuzu = New MaterialSkin.Controls.MaterialButton()
         Me.btnInstallYuzu = New MaterialSkin.Controls.MaterialButton()
         Me.MaterialCard8 = New MaterialSkin.Controls.MaterialCard()
@@ -51,6 +52,16 @@ Partial Class frmMain
         Me.lblYuzuInfo = New System.Windows.Forms.Label()
         Me.lblYuzuVersion = New MaterialSkin.Controls.MaterialLabel()
         Me.TabRyujinx = New System.Windows.Forms.TabPage()
+        Me.btnRyujinxChangeKey = New MaterialSkin.Controls.MaterialButton()
+        Me.btnRyujinxUpdateFirmware = New MaterialSkin.Controls.MaterialButton()
+        Me.btnUpdateRyujinx = New MaterialSkin.Controls.MaterialButton()
+        Me.btnRyujinxCheckUpdate = New MaterialSkin.Controls.MaterialButton()
+        Me.btnLaunchRyujinx = New MaterialSkin.Controls.MaterialButton()
+        Me.btnInstallRyujinx = New MaterialSkin.Controls.MaterialButton()
+        Me.MaterialCard10 = New MaterialSkin.Controls.MaterialCard()
+        Me.PictureBox4 = New System.Windows.Forms.PictureBox()
+        Me.lblRyujinxInfo = New System.Windows.Forms.Label()
+        Me.lblRyujinxVersion = New MaterialSkin.Controls.MaterialLabel()
         Me.TabInstall = New System.Windows.Forms.TabPage()
         Me.btnInstallComplete = New MaterialSkin.Controls.MaterialButton()
         Me.btnInstallLaunch = New MaterialSkin.Controls.MaterialButton()
@@ -115,6 +126,9 @@ Partial Class frmMain
         Me.TabYuzu.SuspendLayout()
         Me.MaterialCard8.SuspendLayout()
         CType(Me.picYuzuBranch, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabRyujinx.SuspendLayout()
+        Me.MaterialCard10.SuspendLayout()
+        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabInstall.SuspendLayout()
         Me.MaterialCard9.SuspendLayout()
         CType(Me.picInstall, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -328,9 +342,10 @@ Partial Class frmMain
         'TabYuzu
         '
         Me.TabYuzu.BackColor = System.Drawing.Color.White
+        Me.TabYuzu.Controls.Add(Me.btnYuzuChangeKey)
         Me.TabYuzu.Controls.Add(Me.btnYuzuUpdateFirmware)
         Me.TabYuzu.Controls.Add(Me.btnUpdateYuzu)
-        Me.TabYuzu.Controls.Add(Me.btnChekUpdateYuzu)
+        Me.TabYuzu.Controls.Add(Me.btnYuzuCheckUpdate)
         Me.TabYuzu.Controls.Add(Me.btnLaunchYuzu)
         Me.TabYuzu.Controls.Add(Me.btnInstallYuzu)
         Me.TabYuzu.Controls.Add(Me.MaterialCard8)
@@ -344,6 +359,25 @@ Partial Class frmMain
         Me.TabYuzu.Size = New System.Drawing.Size(778, 354)
         Me.TabYuzu.TabIndex = 1
         Me.TabYuzu.Text = "Yuzu"
+        '
+        'btnYuzuChangeKey
+        '
+        Me.btnYuzuChangeKey.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnYuzuChangeKey.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnYuzuChangeKey.Depth = 0
+        Me.btnYuzuChangeKey.HighEmphasis = True
+        Me.btnYuzuChangeKey.Icon = Nothing
+        Me.btnYuzuChangeKey.Location = New System.Drawing.Point(271, 322)
+        Me.btnYuzuChangeKey.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnYuzuChangeKey.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnYuzuChangeKey.Name = "btnYuzuChangeKey"
+        Me.btnYuzuChangeKey.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnYuzuChangeKey.Size = New System.Drawing.Size(79, 36)
+        Me.btnYuzuChangeKey.TabIndex = 26
+        Me.btnYuzuChangeKey.Text = "更换密钥"
+        Me.btnYuzuChangeKey.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnYuzuChangeKey.UseAccentColor = False
+        Me.btnYuzuChangeKey.UseVisualStyleBackColor = True
         '
         'btnYuzuUpdateFirmware
         '
@@ -383,24 +417,24 @@ Partial Class frmMain
         Me.btnUpdateYuzu.UseAccentColor = False
         Me.btnUpdateYuzu.UseVisualStyleBackColor = True
         '
-        'btnChekUpdateYuzu
+        'btnYuzuCheckUpdate
         '
-        Me.btnChekUpdateYuzu.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.btnChekUpdateYuzu.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
-        Me.btnChekUpdateYuzu.Depth = 0
-        Me.btnChekUpdateYuzu.HighEmphasis = True
-        Me.btnChekUpdateYuzu.Icon = Nothing
-        Me.btnChekUpdateYuzu.Location = New System.Drawing.Point(592, 322)
-        Me.btnChekUpdateYuzu.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
-        Me.btnChekUpdateYuzu.MouseState = MaterialSkin.MouseState.HOVER
-        Me.btnChekUpdateYuzu.Name = "btnChekUpdateYuzu"
-        Me.btnChekUpdateYuzu.NoAccentTextColor = System.Drawing.Color.Empty
-        Me.btnChekUpdateYuzu.Size = New System.Drawing.Size(79, 36)
-        Me.btnChekUpdateYuzu.TabIndex = 23
-        Me.btnChekUpdateYuzu.Text = "检查更新"
-        Me.btnChekUpdateYuzu.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
-        Me.btnChekUpdateYuzu.UseAccentColor = False
-        Me.btnChekUpdateYuzu.UseVisualStyleBackColor = True
+        Me.btnYuzuCheckUpdate.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnYuzuCheckUpdate.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnYuzuCheckUpdate.Depth = 0
+        Me.btnYuzuCheckUpdate.HighEmphasis = True
+        Me.btnYuzuCheckUpdate.Icon = Nothing
+        Me.btnYuzuCheckUpdate.Location = New System.Drawing.Point(592, 322)
+        Me.btnYuzuCheckUpdate.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnYuzuCheckUpdate.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnYuzuCheckUpdate.Name = "btnYuzuCheckUpdate"
+        Me.btnYuzuCheckUpdate.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnYuzuCheckUpdate.Size = New System.Drawing.Size(79, 36)
+        Me.btnYuzuCheckUpdate.TabIndex = 23
+        Me.btnYuzuCheckUpdate.Text = "检查更新"
+        Me.btnYuzuCheckUpdate.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnYuzuCheckUpdate.UseAccentColor = False
+        Me.btnYuzuCheckUpdate.UseVisualStyleBackColor = True
         '
         'btnLaunchYuzu
         '
@@ -418,7 +452,7 @@ Partial Class frmMain
         Me.btnLaunchYuzu.TabIndex = 22
         Me.btnLaunchYuzu.Text = "启动"
         Me.btnLaunchYuzu.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
-        Me.btnLaunchYuzu.UseAccentColor = False
+        Me.btnLaunchYuzu.UseAccentColor = True
         Me.btnLaunchYuzu.UseVisualStyleBackColor = True
         '
         'btnInstallYuzu
@@ -470,9 +504,9 @@ Partial Class frmMain
         Me.lblYuzuInfo.AutoSize = True
         Me.lblYuzuInfo.Location = New System.Drawing.Point(78, 40)
         Me.lblYuzuInfo.Name = "lblYuzuInfo"
-        Me.lblYuzuInfo.Size = New System.Drawing.Size(67, 15)
+        Me.lblYuzuInfo.Size = New System.Drawing.Size(57, 15)
         Me.lblYuzuInfo.TabIndex = 2
-        Me.lblYuzuInfo.Text = "lblYuzuInfo"
+        Me.lblYuzuInfo.Text = "Yuzu Info"
         '
         'lblYuzuVersion
         '
@@ -489,12 +523,181 @@ Partial Class frmMain
         'TabRyujinx
         '
         Me.TabRyujinx.BackColor = System.Drawing.Color.White
+        Me.TabRyujinx.Controls.Add(Me.btnRyujinxChangeKey)
+        Me.TabRyujinx.Controls.Add(Me.btnRyujinxUpdateFirmware)
+        Me.TabRyujinx.Controls.Add(Me.btnUpdateRyujinx)
+        Me.TabRyujinx.Controls.Add(Me.btnRyujinxCheckUpdate)
+        Me.TabRyujinx.Controls.Add(Me.btnLaunchRyujinx)
+        Me.TabRyujinx.Controls.Add(Me.btnInstallRyujinx)
+        Me.TabRyujinx.Controls.Add(Me.MaterialCard10)
+        Me.TabRyujinx.Controls.Add(Me.lblRyujinxInfo)
+        Me.TabRyujinx.Controls.Add(Me.lblRyujinxVersion)
         Me.TabRyujinx.ImageKey = "ryujinx.png"
         Me.TabRyujinx.Location = New System.Drawing.Point(4, 24)
         Me.TabRyujinx.Name = "TabRyujinx"
         Me.TabRyujinx.Size = New System.Drawing.Size(778, 354)
         Me.TabRyujinx.TabIndex = 4
         Me.TabRyujinx.Text = "Ryujinx"
+        '
+        'btnRyujinxChangeKey
+        '
+        Me.btnRyujinxChangeKey.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnRyujinxChangeKey.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnRyujinxChangeKey.Depth = 0
+        Me.btnRyujinxChangeKey.HighEmphasis = True
+        Me.btnRyujinxChangeKey.Icon = Nothing
+        Me.btnRyujinxChangeKey.Location = New System.Drawing.Point(271, 322)
+        Me.btnRyujinxChangeKey.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnRyujinxChangeKey.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnRyujinxChangeKey.Name = "btnRyujinxChangeKey"
+        Me.btnRyujinxChangeKey.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnRyujinxChangeKey.Size = New System.Drawing.Size(79, 36)
+        Me.btnRyujinxChangeKey.TabIndex = 34
+        Me.btnRyujinxChangeKey.Text = "更换密钥"
+        Me.btnRyujinxChangeKey.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnRyujinxChangeKey.UseAccentColor = False
+        Me.btnRyujinxChangeKey.UseVisualStyleBackColor = True
+        '
+        'btnRyujinxUpdateFirmware
+        '
+        Me.btnRyujinxUpdateFirmware.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnRyujinxUpdateFirmware.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnRyujinxUpdateFirmware.Depth = 0
+        Me.btnRyujinxUpdateFirmware.HighEmphasis = True
+        Me.btnRyujinxUpdateFirmware.Icon = Nothing
+        Me.btnRyujinxUpdateFirmware.Location = New System.Drawing.Point(486, 322)
+        Me.btnRyujinxUpdateFirmware.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnRyujinxUpdateFirmware.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnRyujinxUpdateFirmware.Name = "btnRyujinxUpdateFirmware"
+        Me.btnRyujinxUpdateFirmware.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnRyujinxUpdateFirmware.Size = New System.Drawing.Size(79, 36)
+        Me.btnRyujinxUpdateFirmware.TabIndex = 33
+        Me.btnRyujinxUpdateFirmware.Text = "更新固件"
+        Me.btnRyujinxUpdateFirmware.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnRyujinxUpdateFirmware.UseAccentColor = False
+        Me.btnRyujinxUpdateFirmware.UseVisualStyleBackColor = True
+        '
+        'btnUpdateRyujinx
+        '
+        Me.btnUpdateRyujinx.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnUpdateRyujinx.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnUpdateRyujinx.Depth = 0
+        Me.btnUpdateRyujinx.HighEmphasis = True
+        Me.btnUpdateRyujinx.Icon = Nothing
+        Me.btnUpdateRyujinx.Location = New System.Drawing.Point(378, 322)
+        Me.btnUpdateRyujinx.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnUpdateRyujinx.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnUpdateRyujinx.Name = "btnUpdateRyujinx"
+        Me.btnUpdateRyujinx.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnUpdateRyujinx.Size = New System.Drawing.Size(79, 36)
+        Me.btnUpdateRyujinx.TabIndex = 32
+        Me.btnUpdateRyujinx.Text = "切换版本"
+        Me.btnUpdateRyujinx.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnUpdateRyujinx.UseAccentColor = False
+        Me.btnUpdateRyujinx.UseVisualStyleBackColor = True
+        '
+        'btnRyujinxCheckUpdate
+        '
+        Me.btnRyujinxCheckUpdate.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnRyujinxCheckUpdate.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnRyujinxCheckUpdate.Depth = 0
+        Me.btnRyujinxCheckUpdate.HighEmphasis = True
+        Me.btnRyujinxCheckUpdate.Icon = Nothing
+        Me.btnRyujinxCheckUpdate.Location = New System.Drawing.Point(592, 322)
+        Me.btnRyujinxCheckUpdate.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnRyujinxCheckUpdate.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnRyujinxCheckUpdate.Name = "btnRyujinxCheckUpdate"
+        Me.btnRyujinxCheckUpdate.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnRyujinxCheckUpdate.Size = New System.Drawing.Size(79, 36)
+        Me.btnRyujinxCheckUpdate.TabIndex = 31
+        Me.btnRyujinxCheckUpdate.Text = "检查更新"
+        Me.btnRyujinxCheckUpdate.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnRyujinxCheckUpdate.UseAccentColor = False
+        Me.btnRyujinxCheckUpdate.UseVisualStyleBackColor = True
+        '
+        'btnLaunchRyujinx
+        '
+        Me.btnLaunchRyujinx.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnLaunchRyujinx.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnLaunchRyujinx.Depth = 0
+        Me.btnLaunchRyujinx.HighEmphasis = True
+        Me.btnLaunchRyujinx.Icon = Nothing
+        Me.btnLaunchRyujinx.Location = New System.Drawing.Point(697, 322)
+        Me.btnLaunchRyujinx.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnLaunchRyujinx.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnLaunchRyujinx.Name = "btnLaunchRyujinx"
+        Me.btnLaunchRyujinx.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnLaunchRyujinx.Size = New System.Drawing.Size(64, 36)
+        Me.btnLaunchRyujinx.TabIndex = 30
+        Me.btnLaunchRyujinx.Text = "启动"
+        Me.btnLaunchRyujinx.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnLaunchRyujinx.UseAccentColor = True
+        Me.btnLaunchRyujinx.UseVisualStyleBackColor = True
+        '
+        'btnInstallRyujinx
+        '
+        Me.btnInstallRyujinx.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnInstallRyujinx.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnInstallRyujinx.Depth = 0
+        Me.btnInstallRyujinx.HighEmphasis = True
+        Me.btnInstallRyujinx.Icon = Nothing
+        Me.btnInstallRyujinx.Location = New System.Drawing.Point(697, 322)
+        Me.btnInstallRyujinx.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnInstallRyujinx.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnInstallRyujinx.Name = "btnInstallRyujinx"
+        Me.btnInstallRyujinx.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnInstallRyujinx.Size = New System.Drawing.Size(64, 36)
+        Me.btnInstallRyujinx.TabIndex = 29
+        Me.btnInstallRyujinx.Text = "安装"
+        Me.btnInstallRyujinx.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnInstallRyujinx.UseAccentColor = False
+        Me.btnInstallRyujinx.UseVisualStyleBackColor = True
+        Me.btnInstallRyujinx.Visible = False
+        '
+        'MaterialCard10
+        '
+        Me.MaterialCard10.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.MaterialCard10.Controls.Add(Me.PictureBox4)
+        Me.MaterialCard10.Depth = 0
+        Me.MaterialCard10.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.MaterialCard10.Location = New System.Drawing.Point(619, 18)
+        Me.MaterialCard10.Margin = New System.Windows.Forms.Padding(14)
+        Me.MaterialCard10.MouseState = MaterialSkin.MouseState.HOVER
+        Me.MaterialCard10.Name = "MaterialCard10"
+        Me.MaterialCard10.Padding = New System.Windows.Forms.Padding(14)
+        Me.MaterialCard10.Size = New System.Drawing.Size(142, 138)
+        Me.MaterialCard10.TabIndex = 28
+        '
+        'PictureBox4
+        '
+        Me.PictureBox4.Image = Global.NSEmuHelper.My.Resources.Resources.ryujinx
+        Me.PictureBox4.Location = New System.Drawing.Point(8, 8)
+        Me.PictureBox4.Name = "PictureBox4"
+        Me.PictureBox4.Size = New System.Drawing.Size(125, 122)
+        Me.PictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox4.TabIndex = 0
+        Me.PictureBox4.TabStop = False
+        '
+        'lblRyujinxInfo
+        '
+        Me.lblRyujinxInfo.AutoSize = True
+        Me.lblRyujinxInfo.Location = New System.Drawing.Point(78, 40)
+        Me.lblRyujinxInfo.Name = "lblRyujinxInfo"
+        Me.lblRyujinxInfo.Size = New System.Drawing.Size(69, 15)
+        Me.lblRyujinxInfo.TabIndex = 27
+        Me.lblRyujinxInfo.Text = "Ryujinx Info"
+        '
+        'lblRyujinxVersion
+        '
+        Me.lblRyujinxVersion.AutoSize = True
+        Me.lblRyujinxVersion.Depth = 0
+        Me.lblRyujinxVersion.Font = New System.Drawing.Font("Microsoft YaHei UI", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel)
+        Me.lblRyujinxVersion.Location = New System.Drawing.Point(83, 11)
+        Me.lblRyujinxVersion.MouseState = MaterialSkin.MouseState.HOVER
+        Me.lblRyujinxVersion.Name = "lblRyujinxVersion"
+        Me.lblRyujinxVersion.Size = New System.Drawing.Size(117, 21)
+        Me.lblRyujinxVersion.TabIndex = 26
+        Me.lblRyujinxVersion.Text = "Ryujinx 版本 xxx "
         '
         'TabInstall
         '
@@ -1363,9 +1566,9 @@ Partial Class frmMain
         Me.lblAbout.Name = "lblAbout"
         Me.lblAbout.Size = New System.Drawing.Size(280, 165)
         Me.lblAbout.TabIndex = 0
-        Me.lblAbout.Text = "NS 模拟器助手 —— 简单高效的 NS 模拟器管理工具" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "版本 2.0.0 Beta" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "© 2022 是一刀斩哒" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "本程序使用了以下开源项目" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- aria" &
-    "2" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Newtonsoft.Json" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- MaterialSkin" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Powered by Visual Basic .NET" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & ".NET Frame" &
-    "work 4.5"
+        Me.lblAbout.Text = "NS 模拟器助手 —— 简单高效的 NS 模拟器管理工具" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "版本 2.0.0 Beta 3" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "© 2022 是一刀斩哒" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "本程序使用了以下开源项目" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- ar" &
+    "ia2" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Newtonsoft.Json" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- MaterialSkin" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Powered by Visual Basic .NET" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & ".NET Fra" &
+    "mework 4.5"
         '
         'imgTabs
         '
@@ -1408,6 +1611,10 @@ Partial Class frmMain
         Me.TabYuzu.PerformLayout()
         Me.MaterialCard8.ResumeLayout(False)
         CType(Me.picYuzuBranch, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabRyujinx.ResumeLayout(False)
+        Me.TabRyujinx.PerformLayout()
+        Me.MaterialCard10.ResumeLayout(False)
+        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabInstall.ResumeLayout(False)
         Me.TabInstall.PerformLayout()
         Me.MaterialCard9.ResumeLayout(False)
@@ -1510,7 +1717,18 @@ Partial Class frmMain
     Friend WithEvents btnInstallComplete As MaterialSkin.Controls.MaterialButton
     Friend WithEvents Label10 As Label
     Friend WithEvents btnLaunchYuzu As MaterialSkin.Controls.MaterialButton
-    Friend WithEvents btnChekUpdateYuzu As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents btnYuzuCheckUpdate As MaterialSkin.Controls.MaterialButton
     Friend WithEvents btnUpdateYuzu As MaterialSkin.Controls.MaterialButton
     Friend WithEvents btnYuzuUpdateFirmware As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents btnRyujinxUpdateFirmware As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents btnUpdateRyujinx As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents btnRyujinxCheckUpdate As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents btnLaunchRyujinx As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents btnInstallRyujinx As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents MaterialCard10 As MaterialSkin.Controls.MaterialCard
+    Friend WithEvents PictureBox4 As PictureBox
+    Friend WithEvents lblRyujinxInfo As Label
+    Friend WithEvents btnYuzuChangeKey As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents btnRyujinxChangeKey As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents lblRyujinxVersion As MaterialSkin.Controls.MaterialLabel
 End Class
