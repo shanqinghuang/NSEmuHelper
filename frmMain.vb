@@ -11,7 +11,7 @@ Public Class frmMain
     Dim IgnoreLockTab As Boolean = False
     Dim InstallStep As Integer = 0
     Dim InstallProperties As Dictionary(Of String, Object)
-    Dim InstallingEmulator As String
+    Dim InstallingEmulator As EmulatorType
 
     '安装时候用的临时变量
     '还没有qwq
@@ -147,6 +147,8 @@ Public Class frmMain
             lblYuzuVersion.Text = "Yuzu 模拟器尚未安装"
             lblYuzuInfo.Text = "点击右下角的安装按钮，现在安装吧！"
             btnInstallYuzu.Show()
+            btnLaunchYuzu.Hide()
+            btnCheckUpdate.Hide()
         Else
             Select Case Config.YuzuBranch
                 Case "EarlyAccess"
@@ -206,7 +208,11 @@ Public Class frmMain
         WriteConfig()
         RefreshForm()
         Refresh()
-    End Sub
+    End Sub '设置界面更改色彩主题
+    Private Sub checkProxyGitHubAPI_CheckedChanged(sender As Object, e As EventArgs) Handles checkProxyGitHubAPI.CheckedChanged
+        Config.GitHubAPIProxy = checkProxyGitHubAPI.Checked
+        WriteConfig()
+    End Sub '设置界面 GitHub API
     Private Sub txtYuzuPath_Click(sender As Object, e As EventArgs) Handles txtYuzuPath.Click
         With New FolderBrowserDialog
             .Description = "选择 Yuzu 模拟器的安装文件夹"
@@ -217,7 +223,7 @@ Public Class frmMain
                 WriteConfig()
             End If
         End With
-    End Sub
+    End Sub '设置界面更改 yuzu 安装文件夹
     Private Sub txtRyujinxPath_Click(sender As Object, e As EventArgs) Handles txtRyujinxPath.Click
         With New FolderBrowserDialog
             .Description = "选择 Ryujinx 模拟器的安装文件夹"
@@ -228,13 +234,13 @@ Public Class frmMain
                 WriteConfig()
             End If
         End With
-    End Sub
+    End Sub '设置界面更改 ryujinx 安装文件夹
     Private Sub WriteConfig()
         My.Computer.FileSystem.WriteAllText(AppPath & "\Config.json", JsonConvert.SerializeObject(Config), False)
-    End Sub
+    End Sub '把当前配置写入文件
     Private Sub cbDownloadSource_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbDownloadSource.SelectedIndexChanged
         If Not ConfigUILoaded Then Exit Sub
-        MsgBox("下载源已更改为 " & cbDownloadSource.SelectedItem.ToString)
+        Debug.Print("下载源已更改为 " & cbDownloadSource.SelectedItem.ToString)
         For Each GitHubSource In DownloadSources
             Debug.Print(GitHubSource.Value("name"))
             If GitHubSource.Value("name") = cbDownloadSource.SelectedItem.ToString Then
@@ -243,20 +249,22 @@ Public Class frmMain
                 Exit For
             End If
         Next
-    End Sub
+    End Sub '设置界面下载源更改
     Private Sub Tabs_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles Tabs.Selecting
         If e.TabPageIndex = 3 And IgnoreLockTab = False Then e.Cancel = True
         If LockTab Then e.Cancel = True
     End Sub
+
     Private Sub btnInstallYuzu_Click(sender As Object, e As EventArgs) Handles btnInstallYuzu.Click
+        InstallStep = 0
         IgnoreLockTab = True
         Tabs.SelectedTab = Tabs.TabPages(3)
         LockTab = True
         IgnoreLockTab = False
-        InstallingEmulator = "Yuzu"
+        InstallingEmulator = EmulatorType.Yuzu
         YuzuPrepareInstall()
         YuzuRefreshInstall()
-    End Sub
+    End Sub '开始安装 Yuzu
     Private Sub btnExitInstall_Click(sender As Object, e As EventArgs) Handles btnExitInstall.Click
         If frmMaterialMsgBox.YesNoBox("是否要取消安装？") = vbYes Then
             LockTab = False
@@ -312,7 +320,17 @@ Public Class frmMain
         CreateDirectory(Config.YuzuPath)
     End Sub
     Private Async Sub YuzuInstallStep1()
+        ProgressMajor.Hide()
+        ProgressMinor.Hide()
+        lblInstallProgress.Hide()
+        btnInstallComplete.Hide()
+        btnInstallLaunch.Hide()
+        btnExitInstall.Show()
+        btnDownloadKeys.Hide()
+        btnInstallShortcut.Hide()
         InstallProperties = New Dictionary(Of String, Object)
+        btnPreviousStep.Show()
+        btnNextStep.Show()
         comboBranch.Show()
         txtVersion.Show()
         comboBranch.Enabled = False
@@ -325,7 +343,6 @@ Public Class frmMain
         comboBranch.Enabled = True
         btnNextStep.Enabled = True
     End Sub
-
     Private Sub YuzuPostInstallStep1()
         Select Case comboBranch.SelectedItem
             Case "预先测试版"
@@ -337,7 +354,6 @@ Public Class frmMain
         comboBranch.Hide()
         txtVersion.Hide()
     End Sub
-
     Private Sub YuzuInstallStep2()
         btnPreviousStep.Enabled = True
         txtKeySelector.Show()
@@ -345,7 +361,6 @@ Public Class frmMain
         InstallTitle.Text = "步骤 2 - 选择密钥 (Keys) 文件"
         InstallMessage.Text = "NS 模拟器需要密钥才能运行游戏。" & vbCrLf & "你可以在贴吧或相关的交流群获取密钥文件，" & vbCrLf & "或点击下面的链接以下载。"
     End Sub
-
     Private Function YuzuPostInstallStep2(Optional ForceTrue As Boolean = False) As Boolean
         If (txtKeySelector.Text <> "双击选择密钥文件 ..." And txtKeySelector.Text <> "") Or ForceTrue Then
             txtKeySelector.Hide()
@@ -376,6 +391,7 @@ Public Class frmMain
                 lblFirmwareTip.Hide()
                 btnNextStep.Hide()
                 btnPreviousStep.Hide()
+                btnExitInstall.Enabled = False
                 SetProperty("FirmwareMode", "Online")
                 SetProperty("FirmwareVersion", comboFirmware.Text)
                 Return True
@@ -388,6 +404,7 @@ Public Class frmMain
                     lblFirmwareTip.Hide()
                     btnNextStep.Hide()
                     btnPreviousStep.Hide()
+                    btnExitInstall.Enabled = False
                     SetProperty("FirmwareMode", "Local")
                     SetProperty("FirmwareVersion", comboFirmware.Text)
                     SetProperty("FirmwarePath", txtFirmware.Text)
@@ -451,6 +468,7 @@ Public Class frmMain
                 End Select
         End Select
 
+        If My.Computer.FileSystem.FileExists(Config.YuzuPath & "\tmp\Yuzu.7z") Then FileSystem.Kill(Config.YuzuPath & "\tmp\Yuzu.7z")
         '创建aria2下载对象并且下载模拟器
         With New Aria2
             .Url = YuzuDownloadUrl
@@ -535,7 +553,7 @@ Public Class frmMain
                 '解压缩
                 lblInstallProgress.Text = "正在解压固件 ..."
                 With New SevenZipWrapper
-                    .Extract(Config.YuzuPath & "\tmp\Firmware.zip", Config.YuzuPath & "\tmp")
+                    .Extract(Config.YuzuPath & "\tmp\Firmware.zip", Config.YuzuPath & "\tmp\fw")
                     While .Finished = False
                         Threading.Thread.Sleep(50)
                         lblInstallProgress.Text = "正在解压固件 ... (" & .PercentDone & "%)"
@@ -612,20 +630,22 @@ Public Class frmMain
                 InstallTitle.Text = "Yuzu 主线版 " & InstallProperties("Version") & " 安装完成!"
         End Select
         InstallMessage.Text = "现在可以启动模拟器享受游戏了！" & vbCrLf & vbCrLf & "也可以创建桌面快捷方式，以便下次游玩。"
-        btnInstallLaunchYuzu.Show()
-        btnInstallShortcutYuzu.Show()
+        btnInstallLaunch.Show()
+        btnInstallShortcut.Show()
         btnInstallComplete.Show()
         btnExitInstall.Hide()
 
+        Config.YuzuVersion = InstallProperties("Version")
         Config.YuzuBranch = InstallProperties("Branch")
         Config.YuzuFirmwareVersion = InstallProperties("FirmwareVersion")
         WriteConfig()
     End Sub
+
     Private Async Sub comboBranch_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comboBranch.SelectedIndexChanged
         txtVersion.Enabled = False
         btnNextStep.Enabled = False '加载时暂时禁用按钮
         Select Case InstallingEmulator
-            Case "Yuzu"
+            Case EmulatorType.Yuzu
                 Select Case comboBranch.SelectedItem
                     Case "预先测试版"
                         picInstall.Image = My.Resources.yuzu
@@ -637,23 +657,24 @@ Public Class frmMain
         End Select
         txtVersion.Enabled = True
         btnNextStep.Enabled = True
-    End Sub
+    End Sub '安装界面branch切换
 
     Private Sub btnNextStep_Click(sender As Object, e As EventArgs) Handles btnNextStep.Click
         '下一步
         Select Case InstallingEmulator
-            Case "Yuzu"
+            Case EmulatorType.Yuzu
                 YuzuRefreshInstall()
+            Case EmulatorType.YuzuUpdate
+                YuzuRefreshUpdate()
         End Select
-    End Sub
-
+    End Sub '下一步
     Private Sub btnPreviousStep_Click(sender As Object, e As EventArgs) Handles btnPreviousStep.Click
         '上一步
         Select Case InstallingEmulator
-            Case "Yuzu"
+            Case EmulatorType.Yuzu
                 YuzuRefreshInstall(True)
         End Select
-    End Sub
+    End Sub '上一步
 
     Private Sub txtKeySelector_DoubleClick(sender As Object, e As EventArgs) Handles txtKeySelector.DoubleClick
         '弹出密钥选择框
@@ -667,26 +688,18 @@ Public Class frmMain
             .ShowDialog()
             txtKeySelector.Text = .FileName
         End With
-    End Sub
-
+    End Sub '密钥选择器
     Private Sub SetProperty(ByVal Key As String, ByVal Value As Object)
         If InstallProperties.ContainsKey(Key) Then
             InstallProperties(Key) = Value
         Else
             InstallProperties.Add(Key, Value)
         End If
-    End Sub ' 懒人改字典
-
-    Private Sub checkProxyGitHubAPI_CheckedChanged(sender As Object, e As EventArgs) Handles checkProxyGitHubAPI.CheckedChanged
-        Config.GitHubAPIProxy = checkProxyGitHubAPI.Checked
-        WriteConfig()
-    End Sub
-
+    End Sub '懒人改字典
     Private Sub btnDownloadKeys_Click(sender As Object, e As EventArgs) Handles btnDownloadKeys.Click
         MsgBox("文件提取码：1034" & vbCrLf & "本资源转载自吾爱模拟论坛，不属于 NS 模拟器助手", vbInformation)
         Process.Start("https://url30.ctfile.com/d/32848130-44496748-b13e91")
-    End Sub
-
+    End Sub '下载密钥按钮
     Private Sub txtFirmware_Click(sender As Object, e As EventArgs) Handles txtFirmware.Click
         '弹出固件选择框
         With New OpenFileDialog
@@ -707,8 +720,7 @@ Public Class frmMain
                 comboFirmware.Text = System.IO.Path.GetFileName(.FileName).Replace("registered-", "").Replace(".7z", "").Replace(".zip", "")
             End If
         End With
-    End Sub
-
+    End Sub '固件选择器
     Private Async Sub btnFirmwareOnline_CheckedChanged(sender As Object, e As EventArgs) Handles btnFirmwareOnline.CheckedChanged
         If btnFirmwareOnline.Checked Then
             lblFirmwareTip.Text = "选择要安装的固件版本"
@@ -731,8 +743,7 @@ Public Class frmMain
             btnNextStep.Enabled = True
             btnPreviousStep.Enabled = True
         End If
-    End Sub
-
+    End Sub '固件模式改为在线
     Private Async Sub btnFirmwareLocal_CheckedChanged(sender As Object, e As EventArgs) Handles btnFirmwareLocal.CheckedChanged
         If btnFirmwareLocal.Checked Then
             lblFirmwareTip.Text = "选择压缩包内的固件版本"
@@ -755,8 +766,7 @@ Public Class frmMain
             btnNextStep.Enabled = True
             btnPreviousStep.Enabled = True
         End If
-    End Sub
-
+    End Sub '固件模式改为本地
     Private Sub IntegrityCheck()
         If Not My.Computer.FileSystem.FileExists(AppPath & "\Modules\aria2c.exe") Then
             MsgBox("未找到多线程下载器模块 (aria2c.exe)，程序无法启动。" & vbCrLf & "重新安装 NS 模拟器助手，" &
@@ -768,8 +778,7 @@ Public Class frmMain
                 vbCrLf & "或手动将 64 位的 7z.dll 放入 Modules 文件夹可以解决问题。" & vbCrLf & vbCrLf & "请不要把这个问题反馈给作者。", vbCritical)
             End
         End If
-    End Sub
-
+    End Sub '完整性检查
     Private Sub SystemCheck()
         Try
             MsgBox("检测到 Wine " & GetWineVersion & "。" & vbCrLf & "Wine 运行模拟器的效率很低，会闪退，且对 .NET Framework 不完美支持，会导致本软件崩溃。" & vbCrLf & "如要安装 NS 模拟器，请使用发行版自带的包管理器，或下载 Flatpak / AppImage 版模拟器。", vbCritical)
@@ -786,35 +795,225 @@ Public Class frmMain
             MsgBox("Yuzu 和 Ryujinx 的最新版本都已不支持 Windows 10 1809 以下版本，" & vbCrLf & "所以不建议在此操作系统中安装。" & vbCrLf & vbCrLf & "请升级您的系统版本。", vbCritical)
             End
         End If
-    End Sub
-
+    End Sub '操作系统检查
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         MsgBox("测试版本不代表最终品质")
-    End Sub
-
+    End Sub '测试用
     Private Sub frmMain_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         Shell("cmd /c taskkill /f /im aria2.exe", vbHide)
         End
-    End Sub
-
+    End Sub '窗口关闭时终止
     Private Sub btnInstallComplete_Click(sender As Object, e As EventArgs) Handles btnInstallComplete.Click
         FileIO.FileSystem.DeleteDirectory(Config.YuzuPath & "\tmp", FileIO.DeleteDirectoryOption.DeleteAllContents)
         LockTab = False
         Tabs.SelectedTab = Tabs.TabPages(0)
         InstallStep = 0
-    End Sub
+    End Sub '安装完成按钮
+    Private Sub btnInstallLaunch_Click(sender As Object, e As EventArgs) Handles btnInstallLaunch.Click
+        Select Case InstallingEmulator
+            Case EmulatorType.Yuzu : Shell(Config.YuzuPath & "\yuzu.exe", vbNormalFocus)
+        End Select
+    End Sub '安装界面启动按钮
+    Private Sub btnInstallShortcut_Click(sender As Object, e As EventArgs) Handles btnInstallShortcut.Click
+        Select Case InstallingEmulator
+            Case EmulatorType.Yuzu
+                Dim WshShell As WshShell = New WshShell()
+                Dim ShortcutPath As String = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+                Dim Shortcut As IWshShortcut = CType(WshShell.CreateShortcut(ShortcutPath & "\Yuzu.lnk"), IWshShortcut)
+                Shortcut.TargetPath = Config.YuzuPath & "\yuzu.exe"
+                Shortcut.WorkingDirectory = Config.YuzuPath
+                Shortcut.Description = "Yuzu 模拟器"
+                Shortcut.Save()
+        End Select
+    End Sub '安装界面创建快捷方式按钮
+    Private Sub btnLaunchYuzu_Click(sender As Object, e As EventArgs) Handles btnLaunchYuzu.Click
+        Shell(Config.YuzuPath & "\yuzu.exe", vbNormalFocus)
+    End Sub '详情界面启动yuzu按钮
+    Private Async Sub btnChekUpdateYuzu_Click(sender As Object, e As EventArgs) Handles btnChekUpdateYuzu.Click
+        Dim NewVersion As String
+        Select Case Config.YuzuBranch
+            Case "EarlyAccess" : NewVersion = Await LatestVersion.YuzuEarlyAccess()
+            Case "Mainline" : NewVersion = Await LatestVersion.YuzuMainline()
+        End Select
+        If NewVersion <> Config.YuzuVersion Then
+            If MsgBox("发现新版本！" & vbCrLf & "当前版本：" & Config.YuzuVersion & "，最新版本：" & NewVersion, vbYesNo + vbInformation) = vbYes Then
+                btnUpdateYuzu.PerformClick()
+            End If
+        Else
+            Select Case Config.YuzuBranch
+                Case "EarlyAccess" : MsgBox("Yuzu 预先测试版 " & Config.YuzuVersion & " 已经是最新版本。", vbYesNo + vbInformation)
+                Case "Mainline" : MsgBox("Yuzu 主线版 " & Config.YuzuVersion & " 已经是最新版本。", vbYesNo + vbInformation)
+            End Select
+        End If
+    End Sub '详情界面检查更新按钮
 
-    Private Sub btnInstallLaunch_Click(sender As Object, e As EventArgs) Handles btnInstallLaunchYuzu.Click
-        Shell(Config.YuzuPath & "\yuzu.exe")
-    End Sub
+    Private Sub btnUpdateYuzu_Click(sender As Object, e As EventArgs) Handles btnUpdateYuzu.Click
+        InstallStep = 0
+        IgnoreLockTab = True
+        Tabs.SelectedTab = Tabs.TabPages(3)
+        LockTab = True
+        IgnoreLockTab = False
+        InstallingEmulator = EmulatorType.YuzuUpdate
+        YuzuRefreshUpdate()
+    End Sub '开始更新
 
-    Private Sub btnInstallShortcut_Click(sender As Object, e As EventArgs) Handles btnInstallShortcutYuzu.Click
-        Dim WshShell As WshShell = New WshShell()
-        Dim ShortcutPath As String = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
-        Dim Shortcut As IWshShortcut = CType(WshShell.CreateShortcut(ShortcutPath & "Yuzu.lnk"), IWshShortcut)
-        Shortcut.TargetPath = Config.YuzuPath & "\yuzu.exe"
-        Shortcut.WorkingDirectory = Config.YuzuPath
-        Shortcut.Description = "Yuzu 模拟器"
-        Shortcut.Save()
+    Private Sub YuzuRefreshUpdate()
+        '下一步
+        Select Case InstallStep
+            Case 0
+                InstallStep = 1
+                YuzuUpdateStep1()
+            Case 1
+                YuzuPostUpdateStep1()
+                InstallStep = 2
+                yuzuUpdateProgress()
+        End Select
+    End Sub
+    Private Async Sub YuzuUpdateStep1()
+        ProgressMajor.Hide()
+        ProgressMinor.Hide()
+        lblInstallProgress.Hide()
+        btnInstallComplete.Hide()
+        btnInstallLaunch.Hide()
+        btnExitInstall.Show()
+        btnDownloadKeys.Hide()
+        btnInstallShortcut.Hide()
+        '收一收之前的控件
+        InstallProperties = New Dictionary(Of String, Object)
+        comboBranch.Show()
+        txtVersion.Show()
+        btnPreviousStep.Hide()
+        btnNextStep.Show()
+        comboBranch.Enabled = False
+        btnNextStep.Enabled = False '加载时暂时禁用按钮
+        InstallTitle.Text = "更新 Yuzu - 选择模拟器版本"
+        InstallMessage.Text = "Yuzu 模拟器分两个分支：预先测试版和主线版。" & vbCrLf & "使用预先测试版可以体验到更多新功能，" & vbCrLf & "主线版比预先测试版落后几个版本，版本号也不同，" & vbCrLf & "比预先测试版更稳定。"
+        Application.DoEvents()
+        txtVersion.Text = Await LatestVersion.YuzuEarlyAccess
+        comboBranch.Enabled = True
+        btnNextStep.Enabled = True
+    End Sub
+    Private Sub YuzuPostUpdateStep1()
+        Select Case comboBranch.SelectedItem
+            Case "预先测试版"
+                SetProperty("Branch", "EarlyAccess")
+            Case "主线版"
+                SetProperty("Branch", "Mainline")
+        End Select
+        SetProperty("Version", txtVersion.Text.Replace(" ", ""))
+        comboBranch.Hide()
+        txtVersion.Hide()
+        btnNextStep.Hide()
+        btnExitInstall.Enabled = False
+    End Sub
+    Private Async Sub YuzuUpdateProgress()
+        Select Case InstallProperties("Branch")
+            Case "EarlyAccess"
+                InstallTitle.Text = "正在更新到 Yuzu 预先测试版 " & InstallProperties("Version")
+            Case "Mainline"
+                InstallTitle.Text = "正在更新到 Yuzu 主线版 " & InstallProperties("Version")
+        End Select
+        InstallMessage.Text = "安装可能需要几分钟，请喝杯茶并耐心等待。" & vbCrLf & "根据您的网络质量，安装速度会有所不同。"
+        ProgressMajor.Show()
+        ProgressMajor.Maximum = 100
+        ProgressMinor.Hide()
+        ProgressMinor.Maximum = 100
+        '创建临时文件夹
+        CreateDirectory(Config.YuzuPath & "\tmp")
+        lblInstallProgress.Text = "正在准备安装 ... "
+        lblInstallProgress.Show()
+
+        lblInstallProgress.Text = "正在下载模拟器 ... "
+
+        '创建 URL
+        Dim YuzuDownloadUrl As String, YuzuFolderName As String
+        Select Case DownloadSources(Config.DownloadSource)("type").ToString
+            Case "github"
+                Select Case InstallProperties("Branch")
+                    Case "EarlyAccess"
+                        YuzuFolderName = "yuzu-windows-msvc-early-access"
+                        YuzuDownloadUrl = DownloadSources(Config.DownloadSource)("url").ToString &
+                                          "/pineappleEA/pineapple-src/releases/download/EA-" & InstallProperties("Version") &
+                                          "/Windows-Yuzu-EA-" & InstallProperties("Version") & ".7z"
+                    Case "Mainline"
+                        YuzuFolderName = "yuzu-windows-msvc"
+                        '从github api获取具体文件url
+                        Dim ghapi As JObject = JObject.Parse(Await GitHubAPI("https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases/tags/mainline-0-1100"))
+                        For Each ReleaseAsset As JObject In ghapi.Item("assets")
+                            ReleaseAsset.CreateReader()
+                            If ReleaseAsset.Item("browser_download_url").Contains("windows-msvc") And ReleaseAsset.Item("browser_download_url").Contains("7z") Then
+                                YuzuDownloadUrl = ReleaseAsset.Item("browser_download_url").ToString.Replace("https://github.com", DownloadSources(Config.DownloadSource)("url").ToString)
+                                Exit For
+                            End If
+                        Next
+                End Select
+            Case "onemanager"
+                '云盘
+                Select Case InstallProperties("Branch")
+                    Case "EarlyAccess"
+                        YuzuFolderName = "yuzu-windows-msvc-early-access"
+                        YuzuDownloadUrl = DownloadSources(Config.DownloadSource)("url").ToString & "YuzuEarlyAccess/Windows-Yuzu-EA-" & InstallProperties("Version") & ".7z"
+                    Case "Mainline"
+                        YuzuFolderName = "yuzu-windows-msvc"
+                        YuzuDownloadUrl = DownloadSources(Config.DownloadSource)("url").ToString & "YuzuMainline/yuzu-windows-msvc-" & InstallProperties("Version") & ".7z"
+                End Select
+        End Select
+
+        If My.Computer.FileSystem.FileExists(Config.YuzuPath & "\tmp\Yuzu.7z") Then FileSystem.Kill(Config.YuzuPath & "\tmp\Yuzu.7z")
+        '创建aria2下载对象并且下载模拟器
+        With New Aria2
+            .Url = YuzuDownloadUrl
+            .SaveFolder = Config.YuzuPath & "\tmp"
+            .SaveFileName = "Yuzu.7z"
+            .StartDownload()
+            Do Until .Finished
+                Threading.Thread.Sleep(50)
+                lblInstallProgress.Text = "正在下载模拟器 ... (" & .DownloadSpeed & "/s " & .DownloadPercentage & "% 剩余" & .ETA & ")"
+                ProgressMajor.Value = .DownloadPercentage
+                Application.DoEvents()
+            Loop
+        End With
+
+        lblInstallProgress.Text = "模拟器下载完成！"
+
+        '解压缩
+        lblInstallProgress.Text = "正在解压模拟器 ..."
+        With New SevenZipWrapper
+            .Extract(Config.YuzuPath & "\tmp\Yuzu.7z", Config.YuzuPath & "\tmp")
+            While .Finished = False
+                Threading.Thread.Sleep(50)
+                lblInstallProgress.Text = "正在解压缩模拟器 ... (" & .PercentDone & "%)"
+                ProgressMinor.Value = .PercentDone
+                ProgressMajor.Value = Int(.PercentDone / 6) + 66
+                Application.DoEvents()
+            End While
+            ProgressMinor.Value = 100
+            ProgressMajor.Value = 83
+        End With
+
+        lblInstallProgress.Text = "正在安装模拟器 ..."
+        FileIO.FileSystem.MoveDirectory(Config.YuzuPath & "\tmp\" & YuzuFolderName, Config.YuzuPath, True)
+        For Each TarballFile In Directory.GetFiles(Config.YuzuPath, "*.xz")
+            System.IO.File.Delete(TarballFile)
+        Next
+
+        ProgressMajor.Hide()
+        ProgressMinor.Hide()
+        lblInstallProgress.Hide()
+
+        Select Case InstallProperties("Branch")
+            Case "EarlyAccess"
+                InstallTitle.Text = "Yuzu 预先测试版 " & InstallProperties("Version") & " 更新完成!"
+            Case "Mainline"
+                InstallTitle.Text = "Yuzu 主线版 " & InstallProperties("Version") & " 更新完成!"
+        End Select
+        InstallMessage.Text = "现在可以启动模拟器享受游戏了！"
+        btnInstallLaunch.Show()
+        btnInstallComplete.Show()
+        btnExitInstall.Hide()
+
+        Config.YuzuVersion = InstallProperties("Version")
+        Config.YuzuBranch = InstallProperties("Branch")
+        WriteConfig()
     End Sub
 End Class

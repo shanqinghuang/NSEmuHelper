@@ -26,6 +26,7 @@ Partial Class frmMain
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
         Me.Tabs = New MaterialSkin.Controls.MaterialTabControl()
         Me.TabMain = New System.Windows.Forms.TabPage()
+        Me.Label10 = New System.Windows.Forms.Label()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.MaterialLabel1 = New MaterialSkin.Controls.MaterialLabel()
         Me.MaterialCard4 = New MaterialSkin.Controls.MaterialCard()
@@ -40,6 +41,9 @@ Partial Class frmMain
         Me.lblYuzu = New System.Windows.Forms.Label()
         Me.picYuzu = New System.Windows.Forms.PictureBox()
         Me.TabYuzu = New System.Windows.Forms.TabPage()
+        Me.btnUpdateYuzu = New MaterialSkin.Controls.MaterialButton()
+        Me.btnChekUpdateYuzu = New MaterialSkin.Controls.MaterialButton()
+        Me.btnLaunchYuzu = New MaterialSkin.Controls.MaterialButton()
         Me.btnInstallYuzu = New MaterialSkin.Controls.MaterialButton()
         Me.MaterialCard8 = New MaterialSkin.Controls.MaterialCard()
         Me.picYuzuBranch = New System.Windows.Forms.PictureBox()
@@ -47,6 +51,9 @@ Partial Class frmMain
         Me.lblYuzuVersion = New MaterialSkin.Controls.MaterialLabel()
         Me.TabRyujinx = New System.Windows.Forms.TabPage()
         Me.TabInstall = New System.Windows.Forms.TabPage()
+        Me.btnInstallComplete = New MaterialSkin.Controls.MaterialButton()
+        Me.btnInstallLaunch = New MaterialSkin.Controls.MaterialButton()
+        Me.btnInstallShortcut = New MaterialSkin.Controls.MaterialButton()
         Me.lblInstallProgress = New System.Windows.Forms.Label()
         Me.ProgressMinor = New MaterialSkin.Controls.MaterialProgressBar()
         Me.ProgressMajor = New MaterialSkin.Controls.MaterialProgressBar()
@@ -98,10 +105,6 @@ Partial Class frmMain
         Me.lblAbout = New System.Windows.Forms.Label()
         Me.imgTabs = New System.Windows.Forms.ImageList(Me.components)
         Me.FormToolTip = New System.Windows.Forms.ToolTip(Me.components)
-        Me.btnInstallShortcutYuzu = New MaterialSkin.Controls.MaterialButton()
-        Me.btnInstallLaunchYuzu = New MaterialSkin.Controls.MaterialButton()
-        Me.btnInstallComplete = New MaterialSkin.Controls.MaterialButton()
-        Me.Label10 = New System.Windows.Forms.Label()
         Me.Tabs.SuspendLayout()
         Me.TabMain.SuspendLayout()
         Me.MaterialCard4.SuspendLayout()
@@ -164,6 +167,16 @@ Partial Class frmMain
         Me.TabMain.Size = New System.Drawing.Size(778, 354)
         Me.TabMain.TabIndex = 0
         Me.TabMain.Text = "首页"
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.ForeColor = System.Drawing.Color.Red
+        Me.Label10.Location = New System.Drawing.Point(78, 321)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(139, 15)
+        Me.Label10.TabIndex = 8
+        Me.Label10.Text = "测试版本不代表最终品质"
         '
         'Button1
         '
@@ -314,6 +327,9 @@ Partial Class frmMain
         'TabYuzu
         '
         Me.TabYuzu.BackColor = System.Drawing.Color.White
+        Me.TabYuzu.Controls.Add(Me.btnUpdateYuzu)
+        Me.TabYuzu.Controls.Add(Me.btnChekUpdateYuzu)
+        Me.TabYuzu.Controls.Add(Me.btnLaunchYuzu)
         Me.TabYuzu.Controls.Add(Me.btnInstallYuzu)
         Me.TabYuzu.Controls.Add(Me.MaterialCard8)
         Me.TabYuzu.Controls.Add(Me.lblYuzuInfo)
@@ -326,6 +342,63 @@ Partial Class frmMain
         Me.TabYuzu.Size = New System.Drawing.Size(778, 354)
         Me.TabYuzu.TabIndex = 1
         Me.TabYuzu.Text = "Yuzu"
+        '
+        'btnUpdateYuzu
+        '
+        Me.btnUpdateYuzu.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnUpdateYuzu.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnUpdateYuzu.Depth = 0
+        Me.btnUpdateYuzu.HighEmphasis = True
+        Me.btnUpdateYuzu.Icon = Nothing
+        Me.btnUpdateYuzu.Location = New System.Drawing.Point(489, 322)
+        Me.btnUpdateYuzu.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnUpdateYuzu.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnUpdateYuzu.Name = "btnUpdateYuzu"
+        Me.btnUpdateYuzu.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnUpdateYuzu.Size = New System.Drawing.Size(79, 36)
+        Me.btnUpdateYuzu.TabIndex = 24
+        Me.btnUpdateYuzu.Text = "切换版本"
+        Me.btnUpdateYuzu.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnUpdateYuzu.UseAccentColor = False
+        Me.btnUpdateYuzu.UseVisualStyleBackColor = True
+        '
+        'btnChekUpdateYuzu
+        '
+        Me.btnChekUpdateYuzu.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnChekUpdateYuzu.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnChekUpdateYuzu.Depth = 0
+        Me.btnChekUpdateYuzu.HighEmphasis = True
+        Me.btnChekUpdateYuzu.Icon = Nothing
+        Me.btnChekUpdateYuzu.Location = New System.Drawing.Point(594, 322)
+        Me.btnChekUpdateYuzu.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnChekUpdateYuzu.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnChekUpdateYuzu.Name = "btnChekUpdateYuzu"
+        Me.btnChekUpdateYuzu.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnChekUpdateYuzu.Size = New System.Drawing.Size(79, 36)
+        Me.btnChekUpdateYuzu.TabIndex = 23
+        Me.btnChekUpdateYuzu.Text = "检查更新"
+        Me.btnChekUpdateYuzu.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnChekUpdateYuzu.UseAccentColor = False
+        Me.btnChekUpdateYuzu.UseVisualStyleBackColor = True
+        '
+        'btnLaunchYuzu
+        '
+        Me.btnLaunchYuzu.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnLaunchYuzu.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnLaunchYuzu.Depth = 0
+        Me.btnLaunchYuzu.HighEmphasis = True
+        Me.btnLaunchYuzu.Icon = Nothing
+        Me.btnLaunchYuzu.Location = New System.Drawing.Point(697, 322)
+        Me.btnLaunchYuzu.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnLaunchYuzu.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnLaunchYuzu.Name = "btnLaunchYuzu"
+        Me.btnLaunchYuzu.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnLaunchYuzu.Size = New System.Drawing.Size(64, 36)
+        Me.btnLaunchYuzu.TabIndex = 22
+        Me.btnLaunchYuzu.Text = "启动"
+        Me.btnLaunchYuzu.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnLaunchYuzu.UseAccentColor = False
+        Me.btnLaunchYuzu.UseVisualStyleBackColor = True
         '
         'btnInstallYuzu
         '
@@ -406,8 +479,8 @@ Partial Class frmMain
         '
         Me.TabInstall.BackColor = System.Drawing.Color.White
         Me.TabInstall.Controls.Add(Me.btnInstallComplete)
-        Me.TabInstall.Controls.Add(Me.btnInstallLaunchYuzu)
-        Me.TabInstall.Controls.Add(Me.btnInstallShortcutYuzu)
+        Me.TabInstall.Controls.Add(Me.btnInstallLaunch)
+        Me.TabInstall.Controls.Add(Me.btnInstallShortcut)
         Me.TabInstall.Controls.Add(Me.lblInstallProgress)
         Me.TabInstall.Controls.Add(Me.ProgressMinor)
         Me.TabInstall.Controls.Add(Me.ProgressMajor)
@@ -433,10 +506,70 @@ Partial Class frmMain
         Me.TabInstall.TabIndex = 5
         Me.TabInstall.Text = "安装"
         '
+        'btnInstallComplete
+        '
+        Me.btnInstallComplete.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnInstallComplete.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnInstallComplete.Depth = 0
+        Me.btnInstallComplete.HighEmphasis = True
+        Me.btnInstallComplete.Icon = Nothing
+        Me.btnInstallComplete.Location = New System.Drawing.Point(87, 322)
+        Me.btnInstallComplete.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnInstallComplete.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnInstallComplete.Name = "btnInstallComplete"
+        Me.btnInstallComplete.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnInstallComplete.Size = New System.Drawing.Size(64, 36)
+        Me.btnInstallComplete.TabIndex = 22
+        Me.btnInstallComplete.Text = "返回"
+        Me.btnInstallComplete.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnInstallComplete.UseAccentColor = False
+        Me.btnInstallComplete.UseVisualStyleBackColor = True
+        Me.btnInstallComplete.Visible = False
+        '
+        'btnInstallLaunch
+        '
+        Me.btnInstallLaunch.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnInstallLaunch.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnInstallLaunch.Depth = 0
+        Me.btnInstallLaunch.HighEmphasis = True
+        Me.btnInstallLaunch.Icon = Nothing
+        Me.btnInstallLaunch.Location = New System.Drawing.Point(682, 322)
+        Me.btnInstallLaunch.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnInstallLaunch.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnInstallLaunch.Name = "btnInstallLaunch"
+        Me.btnInstallLaunch.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnInstallLaunch.Size = New System.Drawing.Size(64, 36)
+        Me.btnInstallLaunch.TabIndex = 21
+        Me.btnInstallLaunch.Text = "启动"
+        Me.btnInstallLaunch.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnInstallLaunch.UseAccentColor = False
+        Me.btnInstallLaunch.UseVisualStyleBackColor = True
+        Me.btnInstallLaunch.Visible = False
+        '
+        'btnInstallShortcut
+        '
+        Me.btnInstallShortcut.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnInstallShortcut.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnInstallShortcut.Depth = 0
+        Me.btnInstallShortcut.HighEmphasis = True
+        Me.btnInstallShortcut.Icon = Nothing
+        Me.btnInstallShortcut.Location = New System.Drawing.Point(528, 322)
+        Me.btnInstallShortcut.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnInstallShortcut.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnInstallShortcut.Name = "btnInstallShortcut"
+        Me.btnInstallShortcut.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnInstallShortcut.Size = New System.Drawing.Size(136, 36)
+        Me.btnInstallShortcut.TabIndex = 20
+        Me.btnInstallShortcut.Text = "创建桌面快捷方式"
+        Me.btnInstallShortcut.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnInstallShortcut.UseAccentColor = False
+        Me.btnInstallShortcut.UseVisualStyleBackColor = True
+        Me.btnInstallShortcut.Visible = False
+        '
         'lblInstallProgress
         '
         Me.lblInstallProgress.AutoSize = True
-        Me.lblInstallProgress.Location = New System.Drawing.Point(84, 186)
+        Me.lblInstallProgress.Location = New System.Drawing.Point(84, 205)
         Me.lblInstallProgress.Name = "lblInstallProgress"
         Me.lblInstallProgress.Size = New System.Drawing.Size(67, 15)
         Me.lblInstallProgress.TabIndex = 19
@@ -446,7 +579,7 @@ Partial Class frmMain
         'ProgressMinor
         '
         Me.ProgressMinor.Depth = 0
-        Me.ProgressMinor.Location = New System.Drawing.Point(87, 167)
+        Me.ProgressMinor.Location = New System.Drawing.Point(87, 186)
         Me.ProgressMinor.MouseState = MaterialSkin.MouseState.HOVER
         Me.ProgressMinor.Name = "ProgressMinor"
         Me.ProgressMinor.Size = New System.Drawing.Size(508, 5)
@@ -456,7 +589,7 @@ Partial Class frmMain
         'ProgressMajor
         '
         Me.ProgressMajor.Depth = 0
-        Me.ProgressMajor.Location = New System.Drawing.Point(87, 141)
+        Me.ProgressMajor.Location = New System.Drawing.Point(87, 160)
         Me.ProgressMajor.MouseState = MaterialSkin.MouseState.HOVER
         Me.ProgressMajor.Name = "ProgressMajor"
         Me.ProgressMajor.Size = New System.Drawing.Size(508, 5)
@@ -1225,76 +1358,6 @@ Partial Class frmMain
         Me.imgTabs.Images.SetKeyName(5, "briefcase-download.png")
         Me.imgTabs.Images.SetKeyName(6, "puzzle.png")
         '
-        'btnInstallShortcutYuzu
-        '
-        Me.btnInstallShortcutYuzu.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.btnInstallShortcutYuzu.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
-        Me.btnInstallShortcutYuzu.Depth = 0
-        Me.btnInstallShortcutYuzu.HighEmphasis = True
-        Me.btnInstallShortcutYuzu.Icon = Nothing
-        Me.btnInstallShortcutYuzu.Location = New System.Drawing.Point(528, 322)
-        Me.btnInstallShortcutYuzu.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
-        Me.btnInstallShortcutYuzu.MouseState = MaterialSkin.MouseState.HOVER
-        Me.btnInstallShortcutYuzu.Name = "btnInstallShortcutYuzu"
-        Me.btnInstallShortcutYuzu.NoAccentTextColor = System.Drawing.Color.Empty
-        Me.btnInstallShortcutYuzu.Size = New System.Drawing.Size(136, 36)
-        Me.btnInstallShortcutYuzu.TabIndex = 20
-        Me.btnInstallShortcutYuzu.Text = "创建桌面快捷方式"
-        Me.btnInstallShortcutYuzu.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
-        Me.btnInstallShortcutYuzu.UseAccentColor = False
-        Me.btnInstallShortcutYuzu.UseVisualStyleBackColor = True
-        Me.btnInstallShortcutYuzu.Visible = False
-        '
-        'btnInstallLaunchYuzu
-        '
-        Me.btnInstallLaunchYuzu.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.btnInstallLaunchYuzu.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
-        Me.btnInstallLaunchYuzu.Depth = 0
-        Me.btnInstallLaunchYuzu.HighEmphasis = True
-        Me.btnInstallLaunchYuzu.Icon = Nothing
-        Me.btnInstallLaunchYuzu.Location = New System.Drawing.Point(682, 322)
-        Me.btnInstallLaunchYuzu.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
-        Me.btnInstallLaunchYuzu.MouseState = MaterialSkin.MouseState.HOVER
-        Me.btnInstallLaunchYuzu.Name = "btnInstallLaunchYuzu"
-        Me.btnInstallLaunchYuzu.NoAccentTextColor = System.Drawing.Color.Empty
-        Me.btnInstallLaunchYuzu.Size = New System.Drawing.Size(64, 36)
-        Me.btnInstallLaunchYuzu.TabIndex = 21
-        Me.btnInstallLaunchYuzu.Text = "启动"
-        Me.btnInstallLaunchYuzu.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
-        Me.btnInstallLaunchYuzu.UseAccentColor = False
-        Me.btnInstallLaunchYuzu.UseVisualStyleBackColor = True
-        Me.btnInstallLaunchYuzu.Visible = False
-        '
-        'btnInstallComplete
-        '
-        Me.btnInstallComplete.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.btnInstallComplete.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
-        Me.btnInstallComplete.Depth = 0
-        Me.btnInstallComplete.HighEmphasis = True
-        Me.btnInstallComplete.Icon = Nothing
-        Me.btnInstallComplete.Location = New System.Drawing.Point(87, 322)
-        Me.btnInstallComplete.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
-        Me.btnInstallComplete.MouseState = MaterialSkin.MouseState.HOVER
-        Me.btnInstallComplete.Name = "btnInstallComplete"
-        Me.btnInstallComplete.NoAccentTextColor = System.Drawing.Color.Empty
-        Me.btnInstallComplete.Size = New System.Drawing.Size(64, 36)
-        Me.btnInstallComplete.TabIndex = 22
-        Me.btnInstallComplete.Text = "返回"
-        Me.btnInstallComplete.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
-        Me.btnInstallComplete.UseAccentColor = False
-        Me.btnInstallComplete.UseVisualStyleBackColor = True
-        Me.btnInstallComplete.Visible = False
-        '
-        'Label10
-        '
-        Me.Label10.AutoSize = True
-        Me.Label10.ForeColor = System.Drawing.Color.Red
-        Me.Label10.Location = New System.Drawing.Point(78, 321)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(139, 15)
-        Me.Label10.TabIndex = 8
-        Me.Label10.Text = "测试版本不代表最终品质"
-        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
@@ -1421,8 +1484,11 @@ Partial Class frmMain
     Friend WithEvents ProgressMajor As MaterialSkin.Controls.MaterialProgressBar
     Friend WithEvents lblInstallProgress As Label
     Friend WithEvents FormToolTip As ToolTip
-    Friend WithEvents btnInstallLaunchYuzu As MaterialSkin.Controls.MaterialButton
-    Friend WithEvents btnInstallShortcutYuzu As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents btnInstallLaunch As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents btnInstallShortcut As MaterialSkin.Controls.MaterialButton
     Friend WithEvents btnInstallComplete As MaterialSkin.Controls.MaterialButton
     Friend WithEvents Label10 As Label
+    Friend WithEvents btnLaunchYuzu As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents btnChekUpdateYuzu As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents btnUpdateYuzu As MaterialSkin.Controls.MaterialButton
 End Class

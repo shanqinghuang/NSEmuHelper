@@ -118,8 +118,7 @@ Module NSEmuHelperModule
         With System.Security.Cryptography.MD5.Create()
             Return BitConverter.ToString(.ComputeHash(File.OpenRead(FilePath))).Replace("-", "").ToLower
         End With
-    End Function
-
+    End Function '算文件md5
     Public Sub CreateDirectory(FolderPath As String)
         Try
             If Not My.Computer.FileSystem.DirectoryExists(FolderPath) Then My.Computer.FileSystem.CreateDirectory(FolderPath)
@@ -127,7 +126,16 @@ Module NSEmuHelperModule
             frmExpection.ShowMessage(ex.Message)
             MsgBox("文件系统访问错误") '仅用于暂停程序
         End Try
-    End Sub
+    End Sub '懒人创建文件夹
+
+    Public Enum EmulatorType
+        Yuzu = 1
+        Ryujinx = 2
+        YuzuUpdate = 3
+        YuzuFirmware = 4
+        RyujinxUpdate = 5
+        RyujinxFirmware = 6
+    End Enum
 End Module
 
 
