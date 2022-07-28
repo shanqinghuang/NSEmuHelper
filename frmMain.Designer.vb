@@ -41,6 +41,7 @@ Partial Class frmMain
         Me.lblYuzu = New System.Windows.Forms.Label()
         Me.picYuzu = New System.Windows.Forms.PictureBox()
         Me.TabYuzu = New System.Windows.Forms.TabPage()
+        Me.btnYuzuUpdateFirmware = New MaterialSkin.Controls.MaterialButton()
         Me.btnUpdateYuzu = New MaterialSkin.Controls.MaterialButton()
         Me.btnChekUpdateYuzu = New MaterialSkin.Controls.MaterialButton()
         Me.btnLaunchYuzu = New MaterialSkin.Controls.MaterialButton()
@@ -327,6 +328,7 @@ Partial Class frmMain
         'TabYuzu
         '
         Me.TabYuzu.BackColor = System.Drawing.Color.White
+        Me.TabYuzu.Controls.Add(Me.btnYuzuUpdateFirmware)
         Me.TabYuzu.Controls.Add(Me.btnUpdateYuzu)
         Me.TabYuzu.Controls.Add(Me.btnChekUpdateYuzu)
         Me.TabYuzu.Controls.Add(Me.btnLaunchYuzu)
@@ -343,6 +345,25 @@ Partial Class frmMain
         Me.TabYuzu.TabIndex = 1
         Me.TabYuzu.Text = "Yuzu"
         '
+        'btnYuzuUpdateFirmware
+        '
+        Me.btnYuzuUpdateFirmware.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnYuzuUpdateFirmware.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.[Default]
+        Me.btnYuzuUpdateFirmware.Depth = 0
+        Me.btnYuzuUpdateFirmware.HighEmphasis = True
+        Me.btnYuzuUpdateFirmware.Icon = Nothing
+        Me.btnYuzuUpdateFirmware.Location = New System.Drawing.Point(486, 322)
+        Me.btnYuzuUpdateFirmware.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
+        Me.btnYuzuUpdateFirmware.MouseState = MaterialSkin.MouseState.HOVER
+        Me.btnYuzuUpdateFirmware.Name = "btnYuzuUpdateFirmware"
+        Me.btnYuzuUpdateFirmware.NoAccentTextColor = System.Drawing.Color.Empty
+        Me.btnYuzuUpdateFirmware.Size = New System.Drawing.Size(79, 36)
+        Me.btnYuzuUpdateFirmware.TabIndex = 25
+        Me.btnYuzuUpdateFirmware.Text = "更新固件"
+        Me.btnYuzuUpdateFirmware.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained
+        Me.btnYuzuUpdateFirmware.UseAccentColor = False
+        Me.btnYuzuUpdateFirmware.UseVisualStyleBackColor = True
+        '
         'btnUpdateYuzu
         '
         Me.btnUpdateYuzu.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
@@ -350,7 +371,7 @@ Partial Class frmMain
         Me.btnUpdateYuzu.Depth = 0
         Me.btnUpdateYuzu.HighEmphasis = True
         Me.btnUpdateYuzu.Icon = Nothing
-        Me.btnUpdateYuzu.Location = New System.Drawing.Point(489, 322)
+        Me.btnUpdateYuzu.Location = New System.Drawing.Point(378, 322)
         Me.btnUpdateYuzu.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
         Me.btnUpdateYuzu.MouseState = MaterialSkin.MouseState.HOVER
         Me.btnUpdateYuzu.Name = "btnUpdateYuzu"
@@ -369,7 +390,7 @@ Partial Class frmMain
         Me.btnChekUpdateYuzu.Depth = 0
         Me.btnChekUpdateYuzu.HighEmphasis = True
         Me.btnChekUpdateYuzu.Icon = Nothing
-        Me.btnChekUpdateYuzu.Location = New System.Drawing.Point(594, 322)
+        Me.btnChekUpdateYuzu.Location = New System.Drawing.Point(592, 322)
         Me.btnChekUpdateYuzu.Margin = New System.Windows.Forms.Padding(4, 6, 4, 6)
         Me.btnChekUpdateYuzu.MouseState = MaterialSkin.MouseState.HOVER
         Me.btnChekUpdateYuzu.Name = "btnChekUpdateYuzu"
@@ -1491,4 +1512,5 @@ Partial Class frmMain
     Friend WithEvents btnLaunchYuzu As MaterialSkin.Controls.MaterialButton
     Friend WithEvents btnChekUpdateYuzu As MaterialSkin.Controls.MaterialButton
     Friend WithEvents btnUpdateYuzu As MaterialSkin.Controls.MaterialButton
+    Friend WithEvents btnYuzuUpdateFirmware As MaterialSkin.Controls.MaterialButton
 End Class

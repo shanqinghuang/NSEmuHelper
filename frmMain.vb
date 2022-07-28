@@ -185,7 +185,7 @@ Public Class frmMain
         Next
         checkProxyGitHubAPI.Checked = Config.GitHubAPIProxy
         ConfigUILoaded = True
-    End Sub
+    End Sub '配置文件窗体
     Private Sub MaterialButton3_Click(sender As Object, e As EventArgs) Handles MaterialButton3.Click
         InputBox("群号", , "867575912")
     End Sub '群
@@ -320,6 +320,7 @@ Public Class frmMain
         CreateDirectory(Config.YuzuPath)
     End Sub
     Private Async Sub YuzuInstallStep1()
+        picInstall.Image = My.Resources.yuzu
         ProgressMajor.Hide()
         ProgressMinor.Hide()
         lblInstallProgress.Hide()
@@ -654,6 +655,15 @@ Public Class frmMain
                         picInstall.Image = My.Resources.yuzu_mainline
                         txtVersion.Text = Await LatestVersion.YuzuMainline
                 End Select
+            Case EmulatorType.YuzuUpdate
+                Select Case comboBranch.SelectedItem
+                    Case "预先测试版"
+                        picInstall.Image = My.Resources.yuzu
+                        txtVersion.Text = Await LatestVersion.YuzuEarlyAccess
+                    Case "主线版"
+                        picInstall.Image = My.Resources.yuzu_mainline
+                        txtVersion.Text = Await LatestVersion.YuzuMainline
+                End Select
         End Select
         txtVersion.Enabled = True
         btnNextStep.Enabled = True
@@ -666,6 +676,8 @@ Public Class frmMain
                 YuzuRefreshInstall()
             Case EmulatorType.YuzuUpdate
                 YuzuRefreshUpdate()
+            Case EmulatorType.YuzuFirmware
+                YuzuRefreshFirmware()
         End Select
     End Sub '下一步
     Private Sub btnPreviousStep_Click(sender As Object, e As EventArgs) Handles btnPreviousStep.Click
@@ -812,6 +824,7 @@ Public Class frmMain
     Private Sub btnInstallLaunch_Click(sender As Object, e As EventArgs) Handles btnInstallLaunch.Click
         Select Case InstallingEmulator
             Case EmulatorType.Yuzu : Shell(Config.YuzuPath & "\yuzu.exe", vbNormalFocus)
+            Case EmulatorType.YuzuUpdate : Shell(Config.YuzuPath & "\yuzu.exe", vbNormalFocus)
         End Select
     End Sub '安装界面启动按钮
     Private Sub btnInstallShortcut_Click(sender As Object, e As EventArgs) Handles btnInstallShortcut.Click
@@ -855,8 +868,7 @@ Public Class frmMain
         IgnoreLockTab = False
         InstallingEmulator = EmulatorType.YuzuUpdate
         YuzuRefreshUpdate()
-    End Sub '开始更新
-
+    End Sub '开始更新 yuzu
     Private Sub YuzuRefreshUpdate()
         '下一步
         Select Case InstallStep
@@ -870,6 +882,7 @@ Public Class frmMain
         End Select
     End Sub
     Private Async Sub YuzuUpdateStep1()
+        picInstall.Image = My.Resources.yuzu
         ProgressMajor.Hide()
         ProgressMinor.Hide()
         lblInstallProgress.Hide()
@@ -1016,4 +1029,197 @@ Public Class frmMain
         Config.YuzuBranch = InstallProperties("Branch")
         WriteConfig()
     End Sub
+
+    Private Sub btnYuzuUpdateFirmware_Click(sender As Object, e As EventArgs) Handles btnYuzuUpdateFirmware.Click
+        InstallStep = 0
+        IgnoreLockTab = True
+        Tabs.SelectedTab = Tabs.TabPages(3)
+        LockTab = True
+        IgnoreLockTab = False
+        InstallingEmulator = EmulatorType.YuzuFirmware
+        YuzuRefreshFirmware()
+    End Sub '开始更新固件
+    Private Sub YuzuRefreshFirmware()
+        '下一步
+        Select Case InstallStep
+            Case 0
+                InstallStep = 1
+                YuzuFirmwareStep1()
+            Case 1
+                YuzuPostFirmwareStep1()
+                InstallStep = 2
+                YuzuFirmwareProgress()
+        End Select
+    End Sub
+    Private Sub YuzuFirmwareStep1()
+        picInstall.Image = My.Resources.firmware
+        comboBranch.Hide()
+        txtVersion.Hide()
+        ProgressMajor.Hide()
+        ProgressMinor.Hide()
+        lblInstallProgress.Hide()
+        btnInstallComplete.Hide()
+        btnInstallLaunch.Hide()
+        btnExitInstall.Show()
+        btnDownloadKeys.Hide()
+        btnInstallShortcut.Hide()
+        InstallProperties = New Dictionary(Of String, Object)
+        btnPreviousStep.Hide()
+        btnNextStep.Show()
+        btnNextStep.Enabled = False '加载时暂时禁用按钮
+        btnFirmwareOnline.Show()
+        btnFirmwareLocal.Show()
+        txtFirmware.Show()
+        comboFirmware.Show()
+        lblFirmwareTip.Show()
+        InstallTitle.Text = "更新固件 - 选择固件版本"
+        InstallMessage.Text = "固件更新不建议过于频繁，" & vbCrLf & "建议固件版本小于密钥版本。"
+        Application.DoEvents()
+        btnFirmwareOnline.Select()
+        btnNextStep.Enabled = True
+    End Sub
+    Private Function YuzuPostFirmwareStep1(Optional ForceTrue As Boolean = False) As Boolean
+        Select Case btnFirmwareOnline.Checked
+            Case True
+                btnFirmwareOnline.Hide()
+                btnFirmwareLocal.Hide()
+                txtFirmware.Hide()
+                comboFirmware.Hide()
+                lblFirmwareTip.Hide()
+                btnNextStep.Hide()
+                btnPreviousStep.Hide()
+                btnExitInstall.Enabled = False
+                SetProperty("FirmwareMode", "Online")
+                SetProperty("FirmwareVersion", comboFirmware.Text)
+                Return True
+            Case False
+                If (txtFirmware.Text <> "双击选择固件包 ..." And txtFirmware.Text <> "") Or ForceTrue Then
+                    btnFirmwareOnline.Hide()
+                    btnFirmwareLocal.Hide()
+                    txtFirmware.Hide()
+                    comboFirmware.Hide()
+                    lblFirmwareTip.Hide()
+                    btnNextStep.Hide()
+                    btnPreviousStep.Hide()
+                    btnExitInstall.Enabled = False
+                    SetProperty("FirmwareMode", "Local")
+                    SetProperty("FirmwareVersion", comboFirmware.Text)
+                    SetProperty("FirmwarePath", txtFirmware.Text)
+                    Return True
+                Else
+                    Return False
+                End If
+        End Select
+    End Function
+    Private Async Sub YuzuFirmwareProgress()
+        InstallTitle.Text = "正在更新固件到 " & InstallProperties("FirmwareVersion")
+        InstallMessage.Text = "安装可能需要几分钟，请喝杯茶并耐心等待。" & vbCrLf & "根据您的网络质量，安装速度会有所不同。"
+        ProgressMajor.Show()
+        ProgressMajor.Maximum = 100
+        ProgressMinor.Hide()
+        '创建临时文件夹
+        CreateDirectory(Config.YuzuPath & "\tmp")
+        CreateDirectory(Config.YuzuPath & "\tmp\fw")
+        lblInstallProgress.Text = "正在准备安装 ... "
+        lblInstallProgress.Show()
+
+        '固件
+        Select Case InstallProperties("FirmwareMode")
+            Case "Local"
+                '本地
+                'skip
+            Case "Online"
+                '创建aria2下载对象并且下载固件
+                With New Aria2
+                    If Config.DownloadSource = "US3" Then
+                        .Url = DownloadSources("US3")("url").ToString & "NSFirmware/Firmware_" & InstallProperties("FirmwareVersion") & ".zip"
+                    Else
+                        .Url = DownloadSources("OneDrive")("url").ToString
+                    End If
+                    .SaveFolder = Config.YuzuPath & "\tmp"
+                    .SaveFileName = "Firmware.zip"
+                    .StartDownload()
+                    Do Until .Finished
+                        Threading.Thread.Sleep(50)
+                        lblInstallProgress.Text = "正在下载固件 ... (" & .DownloadSpeed & "/s " & .DownloadPercentage & "% 剩余" & .ETA & ")"
+                        ProgressMajor.Value = .DownloadPercentage
+                        Application.DoEvents()
+                    Loop
+                End With
+                While My.Computer.FileSystem.FileExists(Config.YuzuPath & "\tmp\Firmware.zip.aria2")
+                    Threading.Thread.Sleep(100)
+                    Application.DoEvents()
+                End While
+                lblInstallProgress.Text = "正在比对固件 MD5 校验码 ..."
+                If MD5Sums(Config.YuzuPath & "\tmp\Firmware.zip") <> Await GetFirmwareMD5(InstallProperties("FirmwareVersion")) Then
+                    MsgBox("固件包 MD5 校验码错误，请尝试重新安装！", vbCritical + vbOKOnly)
+                    End
+                End If
+
+        End Select
+
+        lblInstallProgress.Text = "固件下载完成！"
+
+        '解压缩
+        Select Case InstallProperties("FirmwareMode")
+            Case "Online"
+                '解压缩
+                lblInstallProgress.Text = "正在解压固件 ..."
+                With New SevenZipWrapper
+                    .Extract(Config.YuzuPath & "\tmp\Firmware.zip", Config.YuzuPath & "\tmp\fw")
+                    While .Finished = False
+                        Threading.Thread.Sleep(50)
+                        lblInstallProgress.Text = "正在解压固件 ... (" & .PercentDone & "%)"
+                        ProgressMinor.Value = .PercentDone
+                        ProgressMajor.Value = Int(.PercentDone / 6) + 66
+                        Application.DoEvents()
+                    End While
+                    ProgressMinor.Value = 100
+                    ProgressMajor.Value = 100
+                End With
+
+                ProgressMinor.Value = 0
+                lblInstallProgress.Text = "正在安装固件 ..."
+                CreateDirectory(Config.YuzuPath & "\user")
+                CreateDirectory(Config.YuzuPath & "\user\nand")
+                CreateDirectory(Config.YuzuPath & "\user\nand\system")
+                CreateDirectory(Config.YuzuPath & "\user\nand\system\Contents")
+                CreateDirectory(Config.YuzuPath & "\user\nand\system\Contents\registered")
+                FileIO.FileSystem.MoveDirectory(Config.YuzuPath & "\tmp\fw", Config.YuzuPath & "\user\nand\system\Contents\registered", True)
+            Case "Local"
+                '解压缩
+                lblInstallProgress.Text = "正在解压并安装固件 ..."
+                CreateDirectory(Config.YuzuPath & "\user")
+                CreateDirectory(Config.YuzuPath & "\user\nand")
+                CreateDirectory(Config.YuzuPath & "\user\nand\system")
+                CreateDirectory(Config.YuzuPath & "\user\nand\system\Contents")
+                CreateDirectory(Config.YuzuPath & "\user\nand\system\Contents\registered")
+                With New SevenZipWrapper
+                    .Extract(InstallProperties("FirmwarePath"), Config.YuzuPath & "\user\nand\system\Contents\registered")
+                    While .Finished = False
+                        Threading.Thread.Sleep(50)
+                        lblInstallProgress.Text = "正在解压并安装固件 ... (" & .PercentDone & "%)"
+                        ProgressMinor.Value = .PercentDone
+                        ProgressMajor.Value = Int(.PercentDone / 6) + 66
+                        Application.DoEvents()
+                    End While
+                    ProgressMinor.Value = 100
+                    ProgressMajor.Value = 100
+                End With
+        End Select
+        ProgressMajor.Hide()
+        ProgressMinor.Hide()
+        lblInstallProgress.Hide()
+
+        InstallTitle.Text = "固件" & InstallProperties("FirmwareVersion") & " 安装完成!"
+        InstallMessage.Text = "现在可以启动模拟器，体验更新的游戏了，" & vbCrLf & "同时也别忘记更新密钥哦！"
+        btnInstallLaunch.Show()
+        btnInstallShortcut.Hide()
+        btnInstallComplete.Show()
+        btnExitInstall.Hide()
+
+        Config.YuzuFirmwareVersion = InstallProperties("FirmwareVersion")
+        WriteConfig()
+    End Sub
+
 End Class
