@@ -193,6 +193,7 @@ Partial Class frmMain
         Me.Button1.Text = "测试用" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "请勿点击"
         Me.FormToolTip.SetToolTip(Me.Button1, "测试按钮")
         Me.Button1.UseVisualStyleBackColor = True
+        Me.Button1.Visible = False
         '
         'MaterialLabel1
         '
