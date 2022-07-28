@@ -13,6 +13,9 @@ Public Class frmMain
     Dim InstallProperties As Dictionary(Of String, Object)
     Dim InstallingEmulator As EmulatorType
 
+    Dim GameModListCache As String = ""
+    Dim TitleListCache As String = ""
+
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         SystemCheck()
         IntegrityCheck()
@@ -55,7 +58,8 @@ Public Class frmMain
             Case "TabInstall"
                 Me.Text = "NS 模拟器助手 - 安装 / 更新"
             Case "TabMods"
-                Me.Text = "NS 模拟器助手 - Yuzu 模组管理"
+                Me.Text = "NS 模拟器助手 - 模组下载"
+                RefreshMods()
             Case "TabConfig"
                 Me.Text = "NS 模拟器助手 - 设置"
                 RefreshConfig()
@@ -822,7 +826,6 @@ Public Class frmMain
             Next
             comboFirmware.Text = comboFirmware.Items(0).ToString
             comboFirmware.Enabled = True
-            txtFirmware.Enabled = True
             btnFirmwareLocal.Enabled = True
             btnFirmwareOnline.Enabled = True
             btnNextStep.Enabled = True
@@ -882,7 +885,7 @@ Public Class frmMain
         End If
     End Sub '操作系统检查
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        MsgBox("测试版本不代表最终品质")
+
     End Sub '测试用
     Private Sub frmMain_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         Shell("cmd /c taskkill /f /im aria2.exe", vbHide)
@@ -1667,7 +1670,7 @@ Public Class frmMain
                 CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents\registered")
                 For Each FirmwareFile In Directory.GetFiles(Config.RyujinxPath & "\tmp\fw")
                     CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", ""))
-                    FileIO.FileSystem.MoveFile(FirmwareFile, Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", "") & "\00")
+                    FileIO.FileSystem.MoveFile(FirmwareFile, Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", "") & "\00", True)
                 Next
             Case "Local"
                 '解压缩
@@ -1694,7 +1697,7 @@ Public Class frmMain
                 CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents\registered")
                 For Each FirmwareFile In Directory.GetFiles(Config.RyujinxPath & "\tmp\fw")
                     CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", ""))
-                    FileIO.FileSystem.MoveFile(FirmwareFile, Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", "") & "\00")
+                    FileIO.FileSystem.MoveFile(FirmwareFile, Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", "") & "\00", True)
                 Next
         End Select
         CreateDirectory(Config.RyujinxPath & "\portable")
@@ -1923,9 +1926,10 @@ Public Class frmMain
         End Select
     End Sub
     Private Sub RyujinxFirmwareStep1()
+        Me.Icon = My.Resources.ryujinx_icon
+        picInstall.Image = My.Resources.firmware
         comboBranch.Hide()
         txtVersion.Hide()
-        Me.Icon = My.Resources.ryujinx_icon
         ProgressMajor.Hide()
         ProgressMinor.Hide()
         lblInstallProgress.Hide()
@@ -1934,18 +1938,20 @@ Public Class frmMain
         btnExitInstall.Show()
         btnDownloadKeys.Hide()
         btnInstallShortcut.Hide()
-
+        InstallProperties = New Dictionary(Of String, Object)
+        btnPreviousStep.Hide()
+        btnNextStep.Show()
+        btnNextStep.Enabled = False '加载时暂时禁用按钮
         btnFirmwareOnline.Show()
         btnFirmwareLocal.Show()
         txtFirmware.Show()
         comboFirmware.Show()
         lblFirmwareTip.Show()
-        btnNextStep.Show()
-
-        picInstall.Image = My.Resources.firmware
         InstallTitle.Text = "更新固件 - 选择固件版本"
         InstallMessage.Text = "固件更新不建议过于频繁，" & vbCrLf & "建议固件版本小于密钥版本。"
+        Application.DoEvents()
         btnFirmwareOnline.Select()
+        btnNextStep.Enabled = True
     End Sub
     Private Function RyujinxPostFirmwareStep1(Optional ForceTrue As Boolean = False) As Boolean
         Select Case btnFirmwareOnline.Checked
@@ -2054,7 +2060,7 @@ Public Class frmMain
                 CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents\registered")
                 For Each FirmwareFile In Directory.GetFiles(Config.RyujinxPath & "\tmp\fw")
                     CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", ""))
-                    FileIO.FileSystem.MoveFile(FirmwareFile, Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", "") & "\00")
+                    FileIO.FileSystem.MoveFile(FirmwareFile, Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", "") & "\00", True)
                 Next
             Case "Local"
                 '解压缩
@@ -2079,7 +2085,7 @@ Public Class frmMain
                 CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents\registered")
                 For Each FirmwareFile In Directory.GetFiles(Config.RyujinxPath & "\tmp\fw")
                     CreateDirectory(Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", ""))
-                    FileIO.FileSystem.MoveFile(FirmwareFile, Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", "") & "\00")
+                    FileIO.FileSystem.MoveFile(FirmwareFile, Config.RyujinxPath & "\portable\bis\system\Contents\registered\" & Path.GetFileName(FirmwareFile).Replace(".cnmt", "") & "\00", True)
                 Next
         End Select
 
@@ -2098,4 +2104,48 @@ Public Class frmMain
         WriteConfig()
     End Sub
 
+
+
+    Private Async Sub RefreshMods()
+        lstTitles.Clear()
+        lstMods.Clear()
+        lstTitles.AddItem("加载中 ...")
+        If GameModListCache = "" Then GameModListCache = Await HTTPGetAsync(Config.ModDownloadSource)
+        If TitleListCache = "" Then TitleListCache = Await HTTPGetAsync(Config.TitleListSource)
+        Dim TitleList As ArrayList = ModDownloader.ParseTitleList(FileIO.FileSystem.GetDirectories(Config.YuzuPath & "\user\load"), TitleListCache)
+        lstTitles.Clear()
+        For Each Title As String In TitleList
+            lstTitles.AddItem(Title)
+        Next
+        lstTitles.SelectedIndex = 0
+
+    End Sub
+
+    Private Sub lstTitles_SelectedIndexChanged(sender As Object, selectedItem As MaterialListBoxItem) Handles lstTitles.SelectedIndexChanged
+        lstMods.Clear()
+        If lstTitles.SelectedItem.Text = "加载中 ..." Then Exit Sub
+        Dim ModList As ArrayList = ModDownloader.GetModList(lstTitles.SelectedItem.Text, GameModListCache)
+        If ModList Is Nothing Then
+            lstMods.AddItem("没有查找到这款游戏的模组")
+            lstMods.AddItem("可以前往相关论坛或群碰碰运气")
+        Else
+            For Each ModItem As Dictionary(Of String, String) In ModList
+                lstMods.AddItem(ModItem("Name"))
+            Next
+        End If
+    End Sub
+
+    Private Sub lstMods_SelectedIndexChanged(sender As Object, selectedItem As MaterialListBoxItem) Handles lstMods.SelectedIndexChanged
+        If lstMods.SelectedItem.Text = "没有查找到这款游戏的模组" Or lstMods.SelectedItem.Text = "可以前往相关论坛或群碰碰运气" Then Exit Sub
+        Dim ModList As ArrayList = ModDownloader.GetModList(lstTitles.SelectedItem.Text, GameModListCache)
+        For Each ModItem As Dictionary(Of String, String) In ModList
+            If ModItem("Name") = lstMods.SelectedItem.Text Then
+                If MsgBox(ModItem("Name") & vbCrLf & "适用版本：" & ModItem("Version") & vbCrLf & "简介：" & ModItem("Desc") & vbCrLf & vbCrLf &
+                          "在下载模组时请确认你的游戏版本是否支持。下载模组需要特殊网络环境。",
+                    vbYesNo) = vbYes Then
+                    Process.Start(ModItem("Url"))
+                End If
+            End If
+        Next
+    End Sub
 End Class

@@ -1,12 +1,13 @@
 ﻿Imports System.IO
 Imports System.Net
 Imports System.Net.Http
+Imports System.Text.RegularExpressions
 Imports System.Xml
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
 Module NSEmuHelperModule
-    'Public AppPath As String = Application.StartupPath
-    Public AppPath As String = "C:\Users\yidaozhan\source\repos\NSEmuHelper"
+    Public AppPath As String = Application.StartupPath
+    'Public AppPath As String = "C:\Users\yidaozhan\source\repos\NSEmuHelper"
     Public Config As New ConfigFilePattern
     Public MainUILoaded As Boolean = False
     Public ConfigUILoaded As Boolean = False
@@ -213,4 +214,44 @@ Module LatestVersion
         End Select
     End Function
 
+End Module
+
+Module ModDownloader
+    Function ParseTitleList(FileList As ObjectModel.ReadOnlyCollection(Of String), TitleList As String) As ArrayList
+        Dim TitleListXML As New XmlDocument, ReturnList As New ArrayList
+        TitleListXML.LoadXml(TitleList)
+        Dim TitleNodeList As XmlNodeList = TitleListXML.SelectNodes("/games/game")
+        For Each TitleNode As XmlNode In TitleNodeList
+            For Each TitleIDFolder In FileList
+                If IO.Path.GetFileName(TitleIDFolder) = TitleNode.LastChild.InnerText Then
+                    ReturnList.Add(TitleNode.FirstChild.InnerText)
+                End If
+            Next
+        Next
+        Return ReturnList
+    End Function
+
+    Function GetModList(GameName As String, GameModListCache As String) As ArrayList
+        Dim GameModList As String() = Split(Split(GameModListCache,
+                                      vbLf & vbLf & "---" & vbLf & vbLf)(1).Replace("# " & vbLf, "#" & vbLf).Replace("#" & vbLf & "#", "#"),
+                                      vbLf & "#" & vbLf)
+        Dim ReturnList As New ArrayList
+        Dim TempDictionary As Dictionary(Of String, String)
+        Dim ModList As String()
+        For Each GameMod As String In GameModList
+            ModList = GameMod.Trim(vbLf).Split(vbLf)
+            If ModList(0) = "### " & GameName Then
+                For i As Integer = 3 To UBound(ModList)
+                    TempDictionary = New Dictionary(Of String, String)
+                    TempDictionary.Add("Name", New Regex("\[.*?\]").Match(Split(ModList(i), "| ")(1)).ToString.Replace("[", "").Replace("]", ""))
+                    TempDictionary.Add("Url", New Regex("\(.*?\)").Match(Split(ModList(i), "| ")(1)).ToString.Replace("(", "").Replace(")", ""))
+                    TempDictionary.Add("Desc", Split(ModList(i), "| ")(2).Trim())
+                    TempDictionary.Add("Version", Split(ModList(i), "| ")(3).Trim().Replace("`", ""))
+                    TempDictionary.Add("Author", Split(ModList(i), "| ")(4).Trim())
+                    ReturnList.Add(TempDictionary)
+                Next
+                Return ReturnList
+            End If
+        Next
+    End Function
 End Module

@@ -19,9 +19,10 @@
     Public ColorScheme As String = "IndigoLight"
 
     Public GitHubAPIProxy As Boolean = True
-    Public CloudflareProxyPrefix As String = "https://rp.ydz1.gq/"
 
     '以下的配置不会在 GUI 中出现
-    Public ModDownloadSource As String = "https://www.githubs.cn/raw-githubusercontent/wiki/yuzu-emu/yuzu/Switch-Mods.md“
+    Public CloudflareProxyPrefix As String = "https://rp.ydz1.gq/"
+    Public ModDownloadSource As String = "https://www.githubs.cn/raw-githubusercontent/wiki/yuzu-emu/yuzu/Switch-Mods.md"
+    Public TitleListSource As String = "https://www.githubs.cn/raw-githubusercontent/amakvana/YuzuModDownloader/main/assets/GameTitleIDs.xml"
     Public SkipCheckMD5 As Boolean = False
 End Class

@@ -117,6 +117,8 @@ Partial Class frmMain
         Me.lblAbout = New System.Windows.Forms.Label()
         Me.imgTabs = New System.Windows.Forms.ImageList(Me.components)
         Me.FormToolTip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.lstTitles = New MaterialSkin.Controls.MaterialListBox()
+        Me.lstMods = New MaterialSkin.Controls.MaterialListBox()
         Me.Tabs.SuspendLayout()
         Me.TabMain.SuspendLayout()
         Me.MaterialCard4.SuspendLayout()
@@ -132,6 +134,7 @@ Partial Class frmMain
         Me.TabInstall.SuspendLayout()
         Me.MaterialCard9.SuspendLayout()
         CType(Me.picInstall, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabMods.SuspendLayout()
         Me.TabConfig.SuspendLayout()
         Me.MaterialCard7.SuspendLayout()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -202,7 +205,6 @@ Partial Class frmMain
         Me.Button1.Text = "测试用" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "请勿点击"
         Me.FormToolTip.SetToolTip(Me.Button1, "测试按钮")
         Me.Button1.UseVisualStyleBackColor = True
-        Me.Button1.Visible = False
         '
         'MaterialLabel1
         '
@@ -1129,6 +1131,8 @@ Partial Class frmMain
         'TabMods
         '
         Me.TabMods.BackColor = System.Drawing.Color.White
+        Me.TabMods.Controls.Add(Me.lstMods)
+        Me.TabMods.Controls.Add(Me.lstTitles)
         Me.TabMods.ImageKey = "puzzle.png"
         Me.TabMods.Location = New System.Drawing.Point(4, 24)
         Me.TabMods.Name = "TabMods"
@@ -1582,6 +1586,34 @@ Partial Class frmMain
         Me.imgTabs.Images.SetKeyName(5, "briefcase-download.png")
         Me.imgTabs.Images.SetKeyName(6, "puzzle.png")
         '
+        'lstTitles
+        '
+        Me.lstTitles.BackColor = System.Drawing.Color.White
+        Me.lstTitles.BorderColor = System.Drawing.Color.LightGray
+        Me.lstTitles.Depth = 0
+        Me.lstTitles.Font = New System.Drawing.Font("Microsoft YaHei UI", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel)
+        Me.lstTitles.Location = New System.Drawing.Point(73, 11)
+        Me.lstTitles.MouseState = MaterialSkin.MouseState.HOVER
+        Me.lstTitles.Name = "lstTitles"
+        Me.lstTitles.SelectedIndex = -1
+        Me.lstTitles.SelectedItem = Nothing
+        Me.lstTitles.Size = New System.Drawing.Size(262, 360)
+        Me.lstTitles.TabIndex = 0
+        '
+        'lstMods
+        '
+        Me.lstMods.BackColor = System.Drawing.Color.White
+        Me.lstMods.BorderColor = System.Drawing.Color.LightGray
+        Me.lstMods.Depth = 0
+        Me.lstMods.Font = New System.Drawing.Font("Microsoft YaHei UI", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel)
+        Me.lstMods.Location = New System.Drawing.Point(351, 11)
+        Me.lstMods.MouseState = MaterialSkin.MouseState.HOVER
+        Me.lstMods.Name = "lstMods"
+        Me.lstMods.SelectedIndex = -1
+        Me.lstMods.SelectedItem = Nothing
+        Me.lstMods.Size = New System.Drawing.Size(424, 360)
+        Me.lstMods.TabIndex = 1
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
@@ -1619,6 +1651,7 @@ Partial Class frmMain
         Me.TabInstall.PerformLayout()
         Me.MaterialCard9.ResumeLayout(False)
         CType(Me.picInstall, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabMods.ResumeLayout(False)
         Me.TabConfig.ResumeLayout(False)
         Me.MaterialCard7.ResumeLayout(False)
         Me.MaterialCard7.PerformLayout()
@@ -1731,4 +1764,6 @@ Partial Class frmMain
     Friend WithEvents btnYuzuChangeKey As MaterialSkin.Controls.MaterialButton
     Friend WithEvents btnRyujinxChangeKey As MaterialSkin.Controls.MaterialButton
     Friend WithEvents lblRyujinxVersion As MaterialSkin.Controls.MaterialLabel
+    Friend WithEvents lstTitles As MaterialSkin.Controls.MaterialListBox
+    Friend WithEvents lstMods As MaterialSkin.Controls.MaterialListBox
 End Class
