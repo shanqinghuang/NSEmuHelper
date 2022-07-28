@@ -2148,4 +2148,8 @@ Public Class frmMain
             End If
         Next
     End Sub
+
+    Private Sub btnCheckUpdate_Click(sender As Object, e As EventArgs) Handles btnCheckUpdate.Click
+        MsgBox("检查更新暂未加入，敬请期待后续版本！")
+    End Sub
 End Class

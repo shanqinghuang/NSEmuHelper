@@ -26,7 +26,6 @@ Partial Class frmMain
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
         Me.Tabs = New MaterialSkin.Controls.MaterialTabControl()
         Me.TabMain = New System.Windows.Forms.TabPage()
-        Me.Label10 = New System.Windows.Forms.Label()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.MaterialLabel1 = New MaterialSkin.Controls.MaterialLabel()
         Me.MaterialCard4 = New MaterialSkin.Controls.MaterialCard()
@@ -171,7 +170,6 @@ Partial Class frmMain
         'TabMain
         '
         Me.TabMain.BackColor = System.Drawing.Color.White
-        Me.TabMain.Controls.Add(Me.Label10)
         Me.TabMain.Controls.Add(Me.Button1)
         Me.TabMain.Controls.Add(Me.MaterialLabel1)
         Me.TabMain.Controls.Add(Me.MaterialCard4)
@@ -185,16 +183,6 @@ Partial Class frmMain
         Me.TabMain.Size = New System.Drawing.Size(778, 354)
         Me.TabMain.TabIndex = 0
         Me.TabMain.Text = "首页"
-        '
-        'Label10
-        '
-        Me.Label10.AutoSize = True
-        Me.Label10.ForeColor = System.Drawing.Color.Red
-        Me.Label10.Location = New System.Drawing.Point(78, 321)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(139, 15)
-        Me.Label10.TabIndex = 8
-        Me.Label10.Text = "测试版本不代表最终品质"
         '
         'Button1
         '
@@ -1570,9 +1558,9 @@ Partial Class frmMain
         Me.lblAbout.Name = "lblAbout"
         Me.lblAbout.Size = New System.Drawing.Size(280, 165)
         Me.lblAbout.TabIndex = 0
-        Me.lblAbout.Text = "NS 模拟器助手 —— 简单高效的 NS 模拟器管理工具" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "版本 2.0.0 Beta 3" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "© 2022 是一刀斩哒" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "本程序使用了以下开源项目" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- ar" &
-    "ia2" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Newtonsoft.Json" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- MaterialSkin" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Powered by Visual Basic .NET" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & ".NET Fra" &
-    "mework 4.5"
+        Me.lblAbout.Text = "NS 模拟器助手 —— 简单高效的 NS 模拟器管理工具" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "版本 2.0.0" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "© 2022 是一刀斩哒" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "本程序使用了以下开源项目" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- aria2" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- " &
+    "Newtonsoft.Json" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- MaterialSkin" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Powered by Visual Basic .NET" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & ".NET Framework " &
+    "4.5"
         '
         'imgTabs
         '
@@ -1748,7 +1736,6 @@ Partial Class frmMain
     Friend WithEvents btnInstallLaunch As MaterialSkin.Controls.MaterialButton
     Friend WithEvents btnInstallShortcut As MaterialSkin.Controls.MaterialButton
     Friend WithEvents btnInstallComplete As MaterialSkin.Controls.MaterialButton
-    Friend WithEvents Label10 As Label
     Friend WithEvents btnLaunchYuzu As MaterialSkin.Controls.MaterialButton
     Friend WithEvents btnYuzuCheckUpdate As MaterialSkin.Controls.MaterialButton
     Friend WithEvents btnUpdateYuzu As MaterialSkin.Controls.MaterialButton
