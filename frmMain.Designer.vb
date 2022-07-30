@@ -118,6 +118,7 @@ Partial Class frmMain
         Me.lblAbout = New System.Windows.Forms.Label()
         Me.imgTabs = New System.Windows.Forms.ImageList(Me.components)
         Me.FormToolTip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.checkSkipMD5 = New MaterialSkin.Controls.MaterialCheckbox()
         Me.Tabs.SuspendLayout()
         Me.TabMain.SuspendLayout()
         Me.MaterialCard4.SuspendLayout()
@@ -1261,6 +1262,7 @@ Partial Class frmMain
         'MaterialCard6
         '
         Me.MaterialCard6.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.MaterialCard6.Controls.Add(Me.checkSkipMD5)
         Me.MaterialCard6.Controls.Add(Me.Label9)
         Me.MaterialCard6.Controls.Add(Me.checkProxyGitHubAPI)
         Me.MaterialCard6.Controls.Add(Me.cbDownloadSource)
@@ -1602,6 +1604,23 @@ Partial Class frmMain
         Me.imgTabs.Images.SetKeyName(5, "briefcase-download.png")
         Me.imgTabs.Images.SetKeyName(6, "puzzle.png")
         '
+        'checkSkipMD5
+        '
+        Me.checkSkipMD5.AutoSize = True
+        Me.checkSkipMD5.Depth = 0
+        Me.checkSkipMD5.Location = New System.Drawing.Point(14, 231)
+        Me.checkSkipMD5.Margin = New System.Windows.Forms.Padding(0)
+        Me.checkSkipMD5.MouseLocation = New System.Drawing.Point(-1, -1)
+        Me.checkSkipMD5.MouseState = MaterialSkin.MouseState.HOVER
+        Me.checkSkipMD5.Name = "checkSkipMD5"
+        Me.checkSkipMD5.ReadOnly = False
+        Me.checkSkipMD5.Ripple = True
+        Me.checkSkipMD5.Size = New System.Drawing.Size(153, 37)
+        Me.checkSkipMD5.TabIndex = 9
+        Me.checkSkipMD5.Text = "不校验固件 MD5"
+        Me.FormToolTip.SetToolTip(Me.checkSkipMD5, "始终使用 CloudFlare 反向代理 GitHub API")
+        Me.checkSkipMD5.UseVisualStyleBackColor = True
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
@@ -1753,4 +1772,5 @@ Partial Class frmMain
     Friend WithEvents lblRyujinxVersion As MaterialSkin.Controls.MaterialLabel
     Friend WithEvents lstTitles As MaterialSkin.Controls.MaterialListBox
     Friend WithEvents lstMods As MaterialSkin.Controls.MaterialListBox
+    Friend WithEvents checkSkipMD5 As MaterialSkin.Controls.MaterialCheckbox
 End Class

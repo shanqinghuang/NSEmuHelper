@@ -268,6 +268,7 @@ Public Class frmMain
             End If
         Next
         checkProxyGitHubAPI.Checked = Config.GitHubAPIProxy
+        checkSkipMD5.Checked = Config.SkipCheckMD5
         ConfigUILoaded = True
     End Sub '配置文件窗体
     Private Sub MaterialButton3_Click(sender As Object, e As EventArgs) Handles MaterialButton3.Click
@@ -2165,8 +2166,23 @@ Public Class frmMain
         Next
     End Sub
 
-    Private Sub btnCheckUpdate_Click(sender As Object, e As EventArgs) Handles btnCheckUpdate.Click
-        MsgBox("检查更新暂未加入，敬请期待后续版本！")
+    Private Async Sub btnCheckUpdate_Click(sender As Object, e As EventArgs) Handles btnCheckUpdate.Click
+        Dim CurrentVersion As String = "v" & Application.ProductVersion
+        CurrentVersion = CurrentVersion.Substring(0, CurrentVersion.Length - 2)
+        Dim GHAPI As String = Await GitHubAPI("https://api.github.com/repos/YidaozhanYa/NSEmuHelper/releases/latest")
+        Dim NewVersion As String = JsonConvert.DeserializeObject(GHAPI)("tag_name")
+        If CurrentVersion <> NewVersion Then
+            If MsgBox(JsonConvert.DeserializeObject(GHAPI)("body").ToString.Replace("\r\n", vbCrLf).Replace("##### ", "最新版本：") & vbCrLf & "是否更新？", vbYesNo + vbInformation, "发现新版本！") = vbYes Then
+                Process.Start("https://pan.baidu.com/s/196POA4UWVKAiydz73q2iKA?pwd=f81w")
+                End
+            End If
+        Else
+            MsgBox(CurrentVersion & " 已经是最新版本。", vbInformation)
+        End If
     End Sub
 
+    Private Sub checkSkipMD5_CheckedChanged(sender As Object, e As EventArgs) Handles checkSkipMD5.CheckedChanged
+        Config.SkipCheckMD5 = checkSkipMD5.Checked
+        WriteConfig()
+    End Sub
 End Class
