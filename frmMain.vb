@@ -84,9 +84,11 @@ Public Class frmMain
         End With
     End Sub
     Private Sub RefreshMain()
+        Dim Tmp As Short = 0
         If Config.YuzuVersion = "" Then
             lblYuzu.Text = "尚未安装"
             lblYuzuFirmware.Text = ""
+            Tmp += 1
         Else
             Select Case Config.YuzuBranch
                 Case "EarlyAccess"
@@ -99,6 +101,7 @@ Public Class frmMain
         If Config.RyujinxVersion = "" Then
             lblRyujinx.Text = "尚未安装"
             lblRyujinxFirmware.Text = ""
+            Tmp += 1
         Else
             Select Case Config.RyujinxBranch
                 Case "Avalonia"
@@ -108,17 +111,24 @@ Public Class frmMain
             End Select
             lblRyujinxFirmware.Text = "固件 " & Config.RyujinxFirmwareVersion
         End If
+        If Tmp = 2 Then Label1.Text &= vbCrLf & "您还没有安装模拟器，现在就安装或者从本地导入吧！"
     End Sub
     Private Sub RefreshYuzu()
         '处理旧版配置文件
         If Config.YuzuVersion = "" Then
             If My.Computer.FileSystem.FileExists(Config.YuzuPath & "\YuzuConfig.ini") Then
                 Dim OldYuzuConfig As IniParser.Model.IniData
-                With New IniParser.FileIniDataParser
-                    OldYuzuConfig = .ReadFile(Config.YuzuPath & "\YuzuConfig.ini")
-                End With
-                Config.YuzuVersion = OldYuzuConfig.Item("Yuzu").Item("Version")
-                Config.YuzuFirmwareVersion = OldYuzuConfig.Item("Yuzu").Item("Firmware")
+                Try
+                    With New IniParser.FileIniDataParser
+                        OldYuzuConfig = .ReadFile(Config.YuzuPath & "\YuzuConfig.ini")
+                    End With
+                    Config.YuzuVersion = OldYuzuConfig.Item("Yuzu").Item("Version")
+                    Config.YuzuFirmwareVersion = OldYuzuConfig.Item("Yuzu").Item("Firmware")
+                Catch ex As Exception
+                    FileSystem.Kill(Config.YuzuPath & "\YuzuConfig.ini")
+                    MsgBox("检测到您的 Yuzu 模拟器是使用之前版本的 NS 模拟器助手安装的，" & vbCrLf & "要继续使用，请重新打开 NS 模拟器助手。", vbInformation)
+                    End
+                End Try
                 If OldYuzuConfig.Item("Yuzu").Item("CustomDataFolder") = "False" Then
                     Config.YuzuDataFolder = ""
                 Else
@@ -182,11 +192,17 @@ Public Class frmMain
         If Config.RyujinxVersion = "" Then
             If My.Computer.FileSystem.FileExists(Config.RyujinxPath & "\RyujinxConfig.ini") Then
                 Dim OldRyujinxConfig As IniParser.Model.IniData
-                With New IniParser.FileIniDataParser
-                    OldRyujinxConfig = .ReadFile(Config.RyujinxPath & "\RyujinxConfig.ini")
-                End With
-                Config.RyujinxVersion = OldRyujinxConfig.Item("Ryujinx").Item("Version")
-                Config.RyujinxFirmwareVersion = OldRyujinxConfig.Item("Ryujinx").Item("Firmware")
+                Try
+                    With New IniParser.FileIniDataParser
+                        OldRyujinxConfig = .ReadFile(Config.RyujinxPath & "\RyujinxConfig.ini")
+                    End With
+                    Config.RyujinxVersion = OldRyujinxConfig.Item("Ryujinx").Item("Version")
+                    Config.RyujinxFirmwareVersion = OldRyujinxConfig.Item("Ryujinx").Item("Firmware")
+                Catch ex As Exception
+                    FileSystem.Kill(Config.RyujinxPath & "\RyujinxConfig.ini")
+                    MsgBox("检测到您的 Ryujinx 模拟器是使用之前版本的 NS 模拟器助手安装的，" & vbCrLf & "要继续使用，请重新打开 NS 模拟器助手。", vbInformation)
+                    End
+                End Try
                 If OldRyujinxConfig.Item("Ryujinx").Item("CustomDataFolder") = "False" Then
                     Config.RyujinxDataFolder = ""
                 Else
@@ -2152,4 +2168,5 @@ Public Class frmMain
     Private Sub btnCheckUpdate_Click(sender As Object, e As EventArgs) Handles btnCheckUpdate.Click
         MsgBox("检查更新暂未加入，敬请期待后续版本！")
     End Sub
+
 End Class

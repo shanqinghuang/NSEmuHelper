@@ -85,6 +85,8 @@ Partial Class frmMain
         Me.InstallMessage = New System.Windows.Forms.Label()
         Me.InstallTitle = New MaterialSkin.Controls.MaterialLabel()
         Me.TabMods = New System.Windows.Forms.TabPage()
+        Me.lstMods = New MaterialSkin.Controls.MaterialListBox()
+        Me.lstTitles = New MaterialSkin.Controls.MaterialListBox()
         Me.TabConfig = New System.Windows.Forms.TabPage()
         Me.MaterialCard7 = New MaterialSkin.Controls.MaterialCard()
         Me.btnCheckUpdate = New MaterialSkin.Controls.MaterialButton()
@@ -116,8 +118,6 @@ Partial Class frmMain
         Me.lblAbout = New System.Windows.Forms.Label()
         Me.imgTabs = New System.Windows.Forms.ImageList(Me.components)
         Me.FormToolTip = New System.Windows.Forms.ToolTip(Me.components)
-        Me.lstTitles = New MaterialSkin.Controls.MaterialListBox()
-        Me.lstMods = New MaterialSkin.Controls.MaterialListBox()
         Me.Tabs.SuspendLayout()
         Me.TabMain.SuspendLayout()
         Me.MaterialCard4.SuspendLayout()
@@ -269,9 +269,9 @@ Partial Class frmMain
         Me.Label1.AutoSize = True
         Me.Label1.Location = New System.Drawing.Point(78, 40)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(295, 30)
+        Me.Label1.Size = New System.Drawing.Size(307, 30)
         Me.Label1.TabIndex = 5
-        Me.Label1.Text = "本工具可以帮您方便地安装和管理 NS 模拟器。" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "您还没有安装模拟器，现在就安装或者从本地导入吧！"
+        Me.Label1.Text = "本工具可以帮您方便地安装和管理 NS 模拟器。" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "如果下载速度很慢或无法下载，请在设置中更换下载源。"
         '
         'MaterialCard1
         '
@@ -1129,6 +1129,34 @@ Partial Class frmMain
         Me.TabMods.TabIndex = 6
         Me.TabMods.Text = "模组"
         '
+        'lstMods
+        '
+        Me.lstMods.BackColor = System.Drawing.Color.White
+        Me.lstMods.BorderColor = System.Drawing.Color.LightGray
+        Me.lstMods.Depth = 0
+        Me.lstMods.Font = New System.Drawing.Font("Microsoft YaHei UI", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel)
+        Me.lstMods.Location = New System.Drawing.Point(351, 11)
+        Me.lstMods.MouseState = MaterialSkin.MouseState.HOVER
+        Me.lstMods.Name = "lstMods"
+        Me.lstMods.SelectedIndex = -1
+        Me.lstMods.SelectedItem = Nothing
+        Me.lstMods.Size = New System.Drawing.Size(424, 360)
+        Me.lstMods.TabIndex = 1
+        '
+        'lstTitles
+        '
+        Me.lstTitles.BackColor = System.Drawing.Color.White
+        Me.lstTitles.BorderColor = System.Drawing.Color.LightGray
+        Me.lstTitles.Depth = 0
+        Me.lstTitles.Font = New System.Drawing.Font("Microsoft YaHei UI", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel)
+        Me.lstTitles.Location = New System.Drawing.Point(73, 11)
+        Me.lstTitles.MouseState = MaterialSkin.MouseState.HOVER
+        Me.lstTitles.Name = "lstTitles"
+        Me.lstTitles.SelectedIndex = -1
+        Me.lstTitles.SelectedItem = Nothing
+        Me.lstTitles.Size = New System.Drawing.Size(262, 360)
+        Me.lstTitles.TabIndex = 0
+        '
         'TabConfig
         '
         Me.TabConfig.BackColor = System.Drawing.Color.White
@@ -1559,9 +1587,8 @@ Partial Class frmMain
         Me.lblAbout.Name = "lblAbout"
         Me.lblAbout.Size = New System.Drawing.Size(280, 165)
         Me.lblAbout.TabIndex = 0
-        Me.lblAbout.Text = "NS 模拟器助手 —— 简单高效的 NS 模拟器管理工具" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "版本 2.0.0" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "© 2022 是一刀斩哒" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "本程序使用了以下开源项目" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- aria2" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- " &
-    "Newtonsoft.Json" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- MaterialSkin" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Powered by Visual Basic .NET" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & ".NET Framework " &
-    "4.5"
+        Me.lblAbout.Text = "NS 模拟器助手 —— 简单高效的 NS 模拟器管理工具" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "版本 2.0.1 (2022.7.30)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "© 2022 是一刀斩哒" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "本程序使用了以下开源项目" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- aria2" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Newtonsoft.Json" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- MaterialSkin" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Powered by Visual Basic .NET" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & ".NE" &
+    "T Framework 4.5"
         '
         'imgTabs
         '
@@ -1574,34 +1601,6 @@ Partial Class frmMain
         Me.imgTabs.Images.SetKeyName(4, "about.png")
         Me.imgTabs.Images.SetKeyName(5, "briefcase-download.png")
         Me.imgTabs.Images.SetKeyName(6, "puzzle.png")
-        '
-        'lstTitles
-        '
-        Me.lstTitles.BackColor = System.Drawing.Color.White
-        Me.lstTitles.BorderColor = System.Drawing.Color.LightGray
-        Me.lstTitles.Depth = 0
-        Me.lstTitles.Font = New System.Drawing.Font("Microsoft YaHei UI", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel)
-        Me.lstTitles.Location = New System.Drawing.Point(73, 11)
-        Me.lstTitles.MouseState = MaterialSkin.MouseState.HOVER
-        Me.lstTitles.Name = "lstTitles"
-        Me.lstTitles.SelectedIndex = -1
-        Me.lstTitles.SelectedItem = Nothing
-        Me.lstTitles.Size = New System.Drawing.Size(262, 360)
-        Me.lstTitles.TabIndex = 0
-        '
-        'lstMods
-        '
-        Me.lstMods.BackColor = System.Drawing.Color.White
-        Me.lstMods.BorderColor = System.Drawing.Color.LightGray
-        Me.lstMods.Depth = 0
-        Me.lstMods.Font = New System.Drawing.Font("Microsoft YaHei UI", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel)
-        Me.lstMods.Location = New System.Drawing.Point(351, 11)
-        Me.lstMods.MouseState = MaterialSkin.MouseState.HOVER
-        Me.lstMods.Name = "lstMods"
-        Me.lstMods.SelectedIndex = -1
-        Me.lstMods.SelectedItem = Nothing
-        Me.lstMods.Size = New System.Drawing.Size(424, 360)
-        Me.lstMods.TabIndex = 1
         '
         'frmMain
         '
