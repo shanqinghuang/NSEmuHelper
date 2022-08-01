@@ -34,5 +34,3 @@
 联系我：📺 [哔哩哔哩](https://b23.tv/29j35Sc) 
 
 或加入 🐧 QQ 群 992181692
-
-Telegram 群：https://t.me/NSEmuHelper
