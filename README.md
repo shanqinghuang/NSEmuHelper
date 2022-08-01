@@ -4,6 +4,8 @@
 
 ⌨️ 受到 [Yuzu Tool](https://tieba.baidu.com/p/7482949878) 启发，使用 Visual Basic .NET 语言编写，100% 开源。
 
+有问题请在此仓库提 issue，尽量不要在贴吧回复，谢谢！
+
 <!-- 🚧 项目 -->
 
 ---
