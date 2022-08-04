@@ -287,7 +287,7 @@ Public Class frmMain
         ConfigUILoaded = True
     End Sub '配置文件窗体
     Private Sub MaterialButton3_Click(sender As Object, e As EventArgs) Handles MaterialButton3.Click
-        InputBox("群号", , "867575912")
+        InputBox("群号", , "992181692")
     End Sub '群
     Private Sub MaterialButton1_Click(sender As Object, e As EventArgs) Handles MaterialButton1.Click
         Process.Start("https://github.com/YidaozhanYa")
