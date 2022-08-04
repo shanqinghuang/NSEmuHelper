@@ -95,7 +95,9 @@ Partial Class frmMain
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.MaterialCard6 = New MaterialSkin.Controls.MaterialCard()
-        Me.Label9 = New System.Windows.Forms.Label()
+        Me.cbBackends = New MaterialSkin.Controls.MaterialComboBox()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.checkSkipMD5 = New MaterialSkin.Controls.MaterialCheckbox()
         Me.checkProxyGitHubAPI = New MaterialSkin.Controls.MaterialCheckbox()
         Me.cbDownloadSource = New MaterialSkin.Controls.MaterialComboBox()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
@@ -118,7 +120,6 @@ Partial Class frmMain
         Me.lblAbout = New System.Windows.Forms.Label()
         Me.imgTabs = New System.Windows.Forms.ImageList(Me.components)
         Me.FormToolTip = New System.Windows.Forms.ToolTip(Me.components)
-        Me.checkSkipMD5 = New MaterialSkin.Controls.MaterialCheckbox()
         Me.Tabs.SuspendLayout()
         Me.TabMain.SuspendLayout()
         Me.MaterialCard4.SuspendLayout()
@@ -1262,8 +1263,9 @@ Partial Class frmMain
         'MaterialCard6
         '
         Me.MaterialCard6.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.MaterialCard6.Controls.Add(Me.cbBackends)
+        Me.MaterialCard6.Controls.Add(Me.Label10)
         Me.MaterialCard6.Controls.Add(Me.checkSkipMD5)
-        Me.MaterialCard6.Controls.Add(Me.Label9)
         Me.MaterialCard6.Controls.Add(Me.checkProxyGitHubAPI)
         Me.MaterialCard6.Controls.Add(Me.cbDownloadSource)
         Me.MaterialCard6.Controls.Add(Me.PictureBox2)
@@ -1279,20 +1281,59 @@ Partial Class frmMain
         Me.MaterialCard6.Size = New System.Drawing.Size(205, 342)
         Me.MaterialCard6.TabIndex = 5
         '
-        'Label9
+        'cbBackends
         '
-        Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(17, 158)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(79, 15)
-        Me.Label9.TabIndex = 8
-        Me.Label9.Text = "下载相关选项"
+        Me.cbBackends.AutoResize = False
+        Me.cbBackends.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.cbBackends.Depth = 0
+        Me.cbBackends.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable
+        Me.cbBackends.DropDownHeight = 174
+        Me.cbBackends.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbBackends.DropDownWidth = 121
+        Me.cbBackends.Font = New System.Drawing.Font("Microsoft YaHei UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel)
+        Me.cbBackends.ForeColor = System.Drawing.Color.FromArgb(CType(CType(222, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.cbBackends.FormattingEnabled = True
+        Me.cbBackends.IntegralHeight = False
+        Me.cbBackends.ItemHeight = 43
+        Me.cbBackends.Location = New System.Drawing.Point(17, 186)
+        Me.cbBackends.MaxDropDownItems = 4
+        Me.cbBackends.MouseState = MaterialSkin.MouseState.OUT
+        Me.cbBackends.Name = "cbBackends"
+        Me.cbBackends.Size = New System.Drawing.Size(171, 49)
+        Me.cbBackends.StartIndex = 0
+        Me.cbBackends.TabIndex = 11
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Location = New System.Drawing.Point(17, 158)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(52, 15)
+        Me.Label10.TabIndex = 10
+        Me.Label10.Text = "API 后端"
+        '
+        'checkSkipMD5
+        '
+        Me.checkSkipMD5.AutoSize = True
+        Me.checkSkipMD5.Depth = 0
+        Me.checkSkipMD5.Location = New System.Drawing.Point(12, 291)
+        Me.checkSkipMD5.Margin = New System.Windows.Forms.Padding(0)
+        Me.checkSkipMD5.MouseLocation = New System.Drawing.Point(-1, -1)
+        Me.checkSkipMD5.MouseState = MaterialSkin.MouseState.HOVER
+        Me.checkSkipMD5.Name = "checkSkipMD5"
+        Me.checkSkipMD5.ReadOnly = False
+        Me.checkSkipMD5.Ripple = True
+        Me.checkSkipMD5.Size = New System.Drawing.Size(153, 37)
+        Me.checkSkipMD5.TabIndex = 9
+        Me.checkSkipMD5.Text = "不校验固件 MD5"
+        Me.FormToolTip.SetToolTip(Me.checkSkipMD5, "始终使用 CloudFlare 反向代理 GitHub API")
+        Me.checkSkipMD5.UseVisualStyleBackColor = True
         '
         'checkProxyGitHubAPI
         '
         Me.checkProxyGitHubAPI.AutoSize = True
         Me.checkProxyGitHubAPI.Depth = 0
-        Me.checkProxyGitHubAPI.Location = New System.Drawing.Point(12, 185)
+        Me.checkProxyGitHubAPI.Location = New System.Drawing.Point(12, 248)
         Me.checkProxyGitHubAPI.Margin = New System.Windows.Forms.Padding(0)
         Me.checkProxyGitHubAPI.MouseLocation = New System.Drawing.Point(-1, -1)
         Me.checkProxyGitHubAPI.MouseState = MaterialSkin.MouseState.HOVER
@@ -1587,10 +1628,9 @@ Partial Class frmMain
         Me.lblAbout.AutoSize = True
         Me.lblAbout.Location = New System.Drawing.Point(17, 14)
         Me.lblAbout.Name = "lblAbout"
-        Me.lblAbout.Size = New System.Drawing.Size(280, 165)
+        Me.lblAbout.Size = New System.Drawing.Size(280, 195)
         Me.lblAbout.TabIndex = 0
-        Me.lblAbout.Text = "NS 模拟器助手 —— 简单高效的 NS 模拟器管理工具" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "版本 2.0.1 (2022.7.30)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "© 2022 是一刀斩哒" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "本程序使用了以下开源项目" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- aria2" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- Newtonsoft.Json" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "- MaterialSkin" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Powered by Visual Basic .NET" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & ".NE" &
-    "T Framework 4.5"
+        Me.lblAbout.Text = resources.GetString("lblAbout.Text")
         '
         'imgTabs
         '
@@ -1603,23 +1643,6 @@ Partial Class frmMain
         Me.imgTabs.Images.SetKeyName(4, "about.png")
         Me.imgTabs.Images.SetKeyName(5, "briefcase-download.png")
         Me.imgTabs.Images.SetKeyName(6, "puzzle.png")
-        '
-        'checkSkipMD5
-        '
-        Me.checkSkipMD5.AutoSize = True
-        Me.checkSkipMD5.Depth = 0
-        Me.checkSkipMD5.Location = New System.Drawing.Point(14, 231)
-        Me.checkSkipMD5.Margin = New System.Windows.Forms.Padding(0)
-        Me.checkSkipMD5.MouseLocation = New System.Drawing.Point(-1, -1)
-        Me.checkSkipMD5.MouseState = MaterialSkin.MouseState.HOVER
-        Me.checkSkipMD5.Name = "checkSkipMD5"
-        Me.checkSkipMD5.ReadOnly = False
-        Me.checkSkipMD5.Ripple = True
-        Me.checkSkipMD5.Size = New System.Drawing.Size(153, 37)
-        Me.checkSkipMD5.TabIndex = 9
-        Me.checkSkipMD5.Text = "不校验固件 MD5"
-        Me.FormToolTip.SetToolTip(Me.checkSkipMD5, "始终使用 CloudFlare 反向代理 GitHub API")
-        Me.checkSkipMD5.UseVisualStyleBackColor = True
         '
         'frmMain
         '
@@ -1739,7 +1762,6 @@ Partial Class frmMain
     Friend WithEvents btnPreviousStep As MaterialSkin.Controls.MaterialButton
     Friend WithEvents btnNextStep As MaterialSkin.Controls.MaterialButton
     Friend WithEvents txtKeySelector As MaterialSkin.Controls.MaterialTextBox2
-    Friend WithEvents Label9 As Label
     Friend WithEvents checkProxyGitHubAPI As MaterialSkin.Controls.MaterialCheckbox
     Friend WithEvents btnCheckUpdate As MaterialSkin.Controls.MaterialButton
     Friend WithEvents btnDownloadKeys As MaterialSkin.Controls.MaterialButton
@@ -1773,4 +1795,6 @@ Partial Class frmMain
     Friend WithEvents lstTitles As MaterialSkin.Controls.MaterialListBox
     Friend WithEvents lstMods As MaterialSkin.Controls.MaterialListBox
     Friend WithEvents checkSkipMD5 As MaterialSkin.Controls.MaterialCheckbox
+    Friend WithEvents cbBackends As MaterialSkin.Controls.MaterialComboBox
+    Friend WithEvents Label10 As Label
 End Class

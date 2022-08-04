@@ -37,6 +37,12 @@ Public Class frmMain
             cbDownloadSource.Items.Add(GitHubSource.Value("name"))
         Next
 
+        '加载 API 后端
+        Backends = JObject.Parse(My.Resources.Backends)
+        For Each Backend In Backends
+            cbBackends.Items.Add(Backend.Value("name"))
+        Next
+
         '主面板
         RefreshForm()
         RefreshMain()
@@ -96,7 +102,7 @@ Public Class frmMain
                 Case "Mainline"
                     lblYuzu.Text = "主线版 " & Config.YuzuVersion
             End Select
-            lblYuzuFirmware.Text = "固件 " & Config.YuzuFirmwareVersion
+            lblYuzuFirmware.Text = "固件 " & Config.YuzuFirmwareVersion.Replace("(Rebootless Update)", "R")
         End If
         If Config.RyujinxVersion = "" Then
             lblRyujinx.Text = "尚未安装"
@@ -109,11 +115,12 @@ Public Class frmMain
                 Case "Mainline"
                     lblRyujinx.Text = "主线版 " & Config.RyujinxVersion
             End Select
-            lblRyujinxFirmware.Text = "固件 " & Config.RyujinxFirmwareVersion
+            lblRyujinxFirmware.Text = "固件 " & Config.RyujinxFirmwareVersion.Replace("(Rebootless Update)", "R")
         End If
         If Tmp = 2 Then Label1.Text &= vbCrLf & "您还没有安装模拟器，现在就安装或者从本地导入吧！"
     End Sub
     Private Sub RefreshYuzu()
+        Debug.Print("Yuzu窗体")
         '处理旧版配置文件
         If Config.YuzuVersion = "" Then
             If My.Computer.FileSystem.FileExists(Config.YuzuPath & "\YuzuConfig.ini") Then
@@ -188,6 +195,7 @@ Public Class frmMain
         End If
     End Sub 'yuzu窗体
     Private Sub RefreshRyujinx()
+        Debug.Print("Ryujinx窗体")
         '处理旧版配置文件
         If Config.RyujinxVersion = "" Then
             If My.Computer.FileSystem.FileExists(Config.RyujinxPath & "\RyujinxConfig.ini") Then
@@ -264,6 +272,13 @@ Public Class frmMain
         For Each GitHubSource In DownloadSources
             If GitHubSource.Key = Config.DownloadSource Then
                 cbDownloadSource.SelectedItem = GitHubSource.Value("name")
+                Exit For
+            End If
+        Next
+        'API
+        For Each Backend In Backends
+            If Backend.Key = Config.Backend Then
+                cbBackends.SelectedItem = Backend.Value("name")
                 Exit For
             End If
         Next
@@ -682,6 +697,7 @@ Public Class frmMain
                 End With
         End Select
         CreateDirectory(Config.YuzuPath & "\user\keys")
+        CreateDirectory(Config.YuzuPath & "\user\load")
         FileSystem.FileCopy(InstallProperties("Keys"), Config.YuzuPath & "\user\keys\prod.keys")
 
         If Not My.Computer.FileSystem.FileExists(Environment.GetEnvironmentVariable("WinDir") & "\System32\msvcp140_atomic_wait.dll") Then
@@ -2129,18 +2145,21 @@ Public Class frmMain
         lstTitles.AddItem("加载中 ...")
         If GameModListCache = "" Then GameModListCache = Await HTTPGetAsync(Config.ModDownloadSource)
         If TitleListCache = "" Then TitleListCache = Await HTTPGetAsync(Config.TitleListSource)
-        Dim TitleList As ArrayList = ModDownloader.ParseTitleList(FileIO.FileSystem.GetDirectories(Config.YuzuPath & "\user\load"), TitleListCache)
-        lstTitles.Clear()
-        For Each Title As String In TitleList
-            lstTitles.AddItem(Title)
-        Next
-        lstTitles.SelectedIndex = 0
-
+        Try
+            Dim TitleList As ArrayList = ModDownloader.ParseTitleList(FileIO.FileSystem.GetDirectories(Config.YuzuPath & "\user\load"), TitleListCache)
+            lstTitles.Clear()
+            For Each Title As String In TitleList
+                lstTitles.AddItem(Title)
+            Next
+            lstTitles.SelectedIndex = 0
+        Catch ex As Exception
+            lstTitles.AddItem("未安装游戏")
+        End Try
     End Sub
 
     Private Sub lstTitles_SelectedIndexChanged(sender As Object, selectedItem As MaterialListBoxItem) Handles lstTitles.SelectedIndexChanged
         lstMods.Clear()
-        If lstTitles.SelectedItem.Text = "加载中 ..." Then Exit Sub
+        If lstTitles.SelectedItem.Text = "加载中 ..." Or lstTitles.SelectedItem.Text = "未安装游戏" Then Exit Sub
         Dim ModList As ArrayList = ModDownloader.GetModList(lstTitles.SelectedItem.Text, GameModListCache)
         If ModList Is Nothing Then
             lstMods.AddItem("没有查找到这款游戏的模组")
@@ -2185,4 +2204,17 @@ Public Class frmMain
         Config.SkipCheckMD5 = checkSkipMD5.Checked
         WriteConfig()
     End Sub
+
+    Private Sub cbBackends_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbBackends.SelectedIndexChanged
+        If Not ConfigUILoaded Then Exit Sub
+        Debug.Print("API 已更改为 " & cbBackends.SelectedItem.ToString)
+        For Each Backend In Backends
+            Debug.Print(Backend.Value("name"))
+            If Backend.Value("name") = cbBackends.SelectedItem.ToString Then
+                Config.Backend = Backend.Key
+                WriteConfig()
+                Exit For
+            End If
+        Next
+    End Sub '设置界面API更改
 End Class

@@ -12,10 +12,12 @@ Module NSEmuHelperModule
     Public MainUILoaded As Boolean = False
     Public ConfigUILoaded As Boolean = False
     Public DownloadSources As New Newtonsoft.Json.Linq.JObject
+    Public Backends As New Newtonsoft.Json.Linq.JObject
 
     'Public Const FIREFOX_USER_AGENT As String = "Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0"
     Public Const GITHUB_PUBLIC_TOKEN As String = "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"
     Public Async Function HTTPGetAsync(Url As String) As Task(Of String)
+        Debug.Print(Url)
         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 Or SecurityProtocolType.Tls11 Or SecurityProtocolType.Tls
         Dim MyClient As New HttpClient, Response As HttpResponseMessage
         MyClient.DefaultRequestHeaders.Add("User-Agent", "NSEmuHelper/" & Application.ProductVersion)
@@ -46,7 +48,7 @@ Module NSEmuHelperModule
         MyClient.DefaultRequestHeaders.Add("Authorization", GITHUB_PUBLIC_TOKEN)
         Try
             If Config.GitHubAPIProxy Then
-                Response = Await MyClient.GetAsync(New Uri(Config.CloudflareProxyPrefix & Url))
+                Response = Await MyClient.GetAsync(New Uri(Backends(Config.Backend)("ghapi_url").ToString & Url.Replace("https://api.github.com", "")))
             Else
                 Response = Await MyClient.GetAsync(New Uri(Url))
             End If
@@ -57,7 +59,9 @@ Module NSEmuHelperModule
         Select Case Response.StatusCode
             Case 200
                 Debug.Print("GitHub API Request Completed")
-                Return (Await Response.Content.ReadAsStringAsync)
+                Dim RetVal As String = Await Response.Content.ReadAsStringAsync
+                Debug.Print(RetVal)
+                Return RetVal
             Case 404
                 frmExpection.ShowMessage("HTTP 错误：404 Not Found")
                 MsgBox("发生错误")
@@ -91,7 +95,7 @@ Module NSEmuHelperModule
     Public Async Function GetFullFirmwareList() As Task(Of ArrayList)
         Dim FirmwareList As New ArrayList, tmpFirmwareVersion As String
         Dim FirmwareXML As New XmlDocument
-        FirmwareXML.LoadXml(Await HTTPGetAsync(Config.CloudflareProxyPrefix & "https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"))
+        FirmwareXML.LoadXml(Await HTTPGetAsync(Backends(Config.Backend)("fwfull_url").ToString))
         Dim FirmwareNodeList As XmlNodeList = FirmwareXML.SelectNodes("/files/file")
         For Each FirmwareNode As XmlNode In FirmwareNodeList
             tmpFirmwareVersion = FirmwareNode.Attributes("name").Value
@@ -108,7 +112,7 @@ Module NSEmuHelperModule
     End Function
 
     Public Async Function GetFirmwareMD5(FirmwareVersion As String) As Task(Of String)
-        Dim MD5Text As String = Await HTTPGetAsync(Config.CloudflareProxyPrefix & "https://archive.org/download/nintendo-switch-global-firmwares/Official%20Global%20Firmware%20MD5%20Hashs.txt")
+        Dim MD5Text As String = Await HTTPGetAsync(Backends(Config.Backend)("fwmd5_url").ToString)
         For Each Line As String In MD5Text.Replace(Chr(9), "/").Replace("Firmware ", "").Split(vbCrLf)
             If Line.Split("/")(0).Replace(vbLf, "") = FirmwareVersion Then Return Line.Split("/").Last
         Next

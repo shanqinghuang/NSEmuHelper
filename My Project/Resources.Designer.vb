@@ -61,7 +61,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  查找类似 {&quot;CF1&quot;:{&quot;name&quot;:&quot;Cloudflare&quot;,&quot;ghapi_url&quot;:&quot;https://rp.ydz1.gq/https://api.github.com&quot;,&quot;fwmd5_url&quot;:&quot;https://rp.ydz1.gq/https://ia801909.us.archive.org/4/items/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml&quot;},&quot;AWS1&quot;:{&quot;name&quot;:&quot;AWS 1&quot;,&quot;ghapi_url&quot;:&quot;https://ghapi.aws1.nsemuhelper.yidaozhan.top&quot;,&quot;fwmd5_url&quot;:&quot;https://ghapi.aws1.nsemuhelper.yidaozhan.top/firmware_hashs&quot;}} 的本地化字符串。
+        '''  查找类似 {&quot;CF1&quot;:{&quot;name&quot;:&quot;Cloudflare&quot;,&quot;ghapi_url&quot;:&quot;https://rp.ydz1.gq/https://api.github.com&quot;,&quot;fwmd5_url&quot;:&quot;https://rp.ydz1.gq/https://ia801909.us.archive.org/4/items/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml&quot;,&quot;fwfull_url&quot;:&quot;https://rp.ydz1.gq/https://ia801909.us.archive.org/4/items/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml&quot;},&quot;AWS1&quot;:{&quot;name&quot;:&quot;AWS 1&quot;,&quot;ghapi_url&quot;:&quot;https://ghapi.aws1.nsemuhelper.yidaozhan.top&quot;,&quot;fwmd5_url&quot;:&quot;https://ghapi.aws1.nsemuhelper.yi [字符串的其余部分被截断]&quot;; 的本地化字符串。
         '''</summary>
         Friend ReadOnly Property Backends() As String
             Get
