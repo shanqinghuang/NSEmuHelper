@@ -25,7 +25,7 @@
     Public CloudflareProxyPrefix As String = "https://rp.ydz1.gq/" 'DEPRECATED!
 
 
-    Public ConfigVersion As String = "2.0.3"
+    Public ConfigVersion As String = "2.0.2"
 
     Public ModDownloadSource As String = "https://www.githubs.cn/raw-githubusercontent/wiki/yuzu-emu/yuzu/Switch-Mods.md"
     Public TitleListSource As String = "https://www.githubs.cn/raw-githubusercontent/amakvana/YuzuModDownloader/main/assets/GameTitleIDs.xml"
