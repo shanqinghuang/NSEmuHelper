@@ -61,6 +61,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  查找类似 {&quot;CF1&quot;:{&quot;name&quot;:&quot;Cloudflare&quot;,&quot;ghapi_url&quot;:&quot;https://rp.ydz1.gq/https://api.github.com&quot;,&quot;fwmd5_url&quot;:&quot;https://rp.ydz1.gq/https://ia801909.us.archive.org/4/items/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml&quot;},&quot;AWS1&quot;:{&quot;name&quot;:&quot;AWS 1&quot;,&quot;ghapi_url&quot;:&quot;https://ghapi.aws1.nsemuhelper.yidaozhan.top&quot;,&quot;fwmd5_url&quot;:&quot;https://ghapi.aws1.nsemuhelper.yidaozhan.top/firmware_hashs&quot;}} 的本地化字符串。
+        '''</summary>
+        Friend ReadOnly Property Backends() As String
+            Get
+                Return ResourceManager.GetString("Backends", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  查找 System.Drawing.Bitmap 类型的本地化资源。
         '''</summary>
         Friend ReadOnly Property bilibili() As System.Drawing.Bitmap
@@ -71,7 +80,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  查找类似 {&quot;OneDrive&quot;:{&quot;name&quot;:&quot;OneDrive | 助手自建&quot;,&quot;type&quot;:&quot;onemanager&quot;,&quot;url&quot;:&quot;https://pan.yidaozhan.top/ns_emu_helper/&quot;},&quot;Direct&quot;:{&quot;name&quot;:&quot;GitHub 直连&quot;,&quot;type&quot;:&quot;github&quot;,&quot;url&quot;:&quot;https://github.com&quot;},&quot;US1&quot;:{&quot;name&quot;:&quot;美国 1 | CDN&quot;,&quot;type&quot;:&quot;github&quot;,&quot;url&quot;:&quot;https://gh.ddlc.top/https://github.com&quot;},&quot;US2&quot;:{&quot;name&quot;:&quot;美国 2 | 圣何塞&quot;,&quot;type&quot;:&quot;github&quot;,&quot;url&quot;:&quot;https://download.xn--p8jhe.tw&quot;},&quot;US3&quot;:{&quot;name&quot;:&quot;美国 3 | CDN | 助手自建&quot;,&quot;type&quot;:&quot;onemanager&quot;,&quot;url&quot;:&quot;https://pan.yidaozhan.top/ns_emu_helper_cdn/&quot;},&quot;US4&quot;:{&quot;name&quot;:&quot;美国 4 | CDN | 助手自建&quot;,&quot;type&quot;:&quot;github&quot;, [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        '''  查找类似 {&quot;OneDrive&quot;:{&quot;name&quot;:&quot;OneDrive AWS | 助手自建&quot;,&quot;type&quot;:&quot;onemanager&quot;,&quot;url&quot;:&quot;https://download.aws1.nsemuhelper.yidaozhan.top/ns_emu_helper/&quot;},&quot;Direct&quot;:{&quot;name&quot;:&quot;GitHub 直连&quot;,&quot;type&quot;:&quot;github&quot;,&quot;url&quot;:&quot;https://github.com&quot;},&quot;US1&quot;:{&quot;name&quot;:&quot;美国 1 | CDN&quot;,&quot;type&quot;:&quot;github&quot;,&quot;url&quot;:&quot;https://gh.ddlc.top/https://github.com&quot;},&quot;US2&quot;:{&quot;name&quot;:&quot;美国 2 | 圣何塞&quot;,&quot;type&quot;:&quot;github&quot;,&quot;url&quot;:&quot;https://download.xn--p8jhe.tw&quot;},&quot;US3&quot;:{&quot;name&quot;:&quot;日本东京 | CDN | 助手自建&quot;,&quot;type&quot;:&quot;onemanager&quot;,&quot;url&quot;:&quot;https://download.aws1.nsemuhelper.yidaozhan.top/ns_emu_helper/&quot;},&quot;US4&quot;: [字符串的其余部分被截断]&quot;; 的本地化字符串。
         '''</summary>
         Friend ReadOnly Property DownloadSources() As String
             Get
