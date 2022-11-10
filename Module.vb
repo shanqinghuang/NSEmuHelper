@@ -1,20 +1,23 @@
 ﻿Imports System.IO
 Imports System.Net
 Imports System.Net.Http
+Imports System.Text.RegularExpressions
 Imports System.Xml
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
 Module NSEmuHelperModule
-    'Public AppPath As String = Application.StartupPath
-    Public AppPath As String = "C:\Users\yidaozhan\source\repos\NSEmuHelper"
+    Public AppPath As String = Application.StartupPath
+    'Public AppPath As String = "C:\Users\yidaozhan\source\repos\NSEmuHelper"
     Public Config As New ConfigFilePattern
     Public MainUILoaded As Boolean = False
     Public ConfigUILoaded As Boolean = False
     Public DownloadSources As New Newtonsoft.Json.Linq.JObject
+    Public Backends As New Newtonsoft.Json.Linq.JObject
 
     'Public Const FIREFOX_USER_AGENT As String = "Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0"
     Public Const GITHUB_PUBLIC_TOKEN As String = "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"
     Public Async Function HTTPGetAsync(Url As String) As Task(Of String)
+        Debug.Print(Url)
         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 Or SecurityProtocolType.Tls11 Or SecurityProtocolType.Tls
         Dim MyClient As New HttpClient, Response As HttpResponseMessage
         MyClient.DefaultRequestHeaders.Add("User-Agent", "NSEmuHelper/" & Application.ProductVersion)
@@ -45,7 +48,7 @@ Module NSEmuHelperModule
         MyClient.DefaultRequestHeaders.Add("Authorization", GITHUB_PUBLIC_TOKEN)
         Try
             If Config.GitHubAPIProxy Then
-                Response = Await MyClient.GetAsync(New Uri(Config.CloudflareProxyPrefix & Url))
+                Response = Await MyClient.GetAsync(New Uri(Backends(Config.Backend)("ghapi_url").ToString & Url.Replace("https://api.github.com", "")))
             Else
                 Response = Await MyClient.GetAsync(New Uri(Url))
             End If
@@ -56,7 +59,9 @@ Module NSEmuHelperModule
         Select Case Response.StatusCode
             Case 200
                 Debug.Print("GitHub API Request Completed")
-                Return (Await Response.Content.ReadAsStringAsync)
+                Dim RetVal As String = Await Response.Content.ReadAsStringAsync
+                Debug.Print(RetVal)
+                Return RetVal
             Case 404
                 frmExpection.ShowMessage("HTTP 错误：404 Not Found")
                 MsgBox("发生错误")
@@ -90,7 +95,7 @@ Module NSEmuHelperModule
     Public Async Function GetFullFirmwareList() As Task(Of ArrayList)
         Dim FirmwareList As New ArrayList, tmpFirmwareVersion As String
         Dim FirmwareXML As New XmlDocument
-        FirmwareXML.LoadXml(Await HTTPGetAsync(Config.CloudflareProxyPrefix & "https://archive.org/download/nintendo-switch-global-firmwares/nintendo-switch-global-firmwares_files.xml"))
+        FirmwareXML.LoadXml(Await HTTPGetAsync(Backends(Config.Backend)("fwfull_url").ToString))
         Dim FirmwareNodeList As XmlNodeList = FirmwareXML.SelectNodes("/files/file")
         For Each FirmwareNode As XmlNode In FirmwareNodeList
             tmpFirmwareVersion = FirmwareNode.Attributes("name").Value
@@ -107,7 +112,7 @@ Module NSEmuHelperModule
     End Function
 
     Public Async Function GetFirmwareMD5(FirmwareVersion As String) As Task(Of String)
-        Dim MD5Text As String = Await HTTPGetAsync("https://archive.org/download/nintendo-switch-global-firmwares/Official%20Global%20Firmware%20MD5%20Hashs.txt")
+        Dim MD5Text As String = Await HTTPGetAsync(Backends(Config.Backend)("fwmd5_url").ToString)
         For Each Line As String In MD5Text.Replace(Chr(9), "/").Replace("Firmware ", "").Split(vbCrLf)
             If Line.Split("/")(0).Replace(vbLf, "") = FirmwareVersion Then Return Line.Split("/").Last
         Next
@@ -118,8 +123,7 @@ Module NSEmuHelperModule
         With System.Security.Cryptography.MD5.Create()
             Return BitConverter.ToString(.ComputeHash(File.OpenRead(FilePath))).Replace("-", "").ToLower
         End With
-    End Function
-
+    End Function '算文件md5
     Public Sub CreateDirectory(FolderPath As String)
         Try
             If Not My.Computer.FileSystem.DirectoryExists(FolderPath) Then My.Computer.FileSystem.CreateDirectory(FolderPath)
@@ -127,7 +131,16 @@ Module NSEmuHelperModule
             frmExpection.ShowMessage(ex.Message)
             MsgBox("文件系统访问错误") '仅用于暂停程序
         End Try
-    End Sub
+    End Sub '懒人创建文件夹
+
+    Public Enum EmulatorType
+        Yuzu = 1
+        Ryujinx = 2
+        YuzuUpdate = 3
+        YuzuFirmware = 4
+        RyujinxUpdate = 5
+        RyujinxFirmware = 6
+    End Enum
 End Module
 
 
@@ -194,7 +207,7 @@ Module LatestVersion
                 VersionList = JObject.Parse(Await HTTPGetAsync(DownloadSources(Config.DownloadSource)("url").ToString & "Ryujinx/?json"))
                 For Each VersionObject As JProperty In VersionList.Item("list")
                     VersionObject.CreateReader()
-                    VersionNumbers.Add(CInt(VersionObject.Value("name").ToString.Replace("ryujinx-", "").Replace("-win_x64.zip", "")))
+                    VersionNumbers.Add(VersionObject.Value("name").ToString.Replace("ryujinx-", "").Replace("-win_x64.zip", ""))
                 Next
                 VersionNumbers.Sort()
                 VersionNumbers.Reverse()
@@ -205,4 +218,44 @@ Module LatestVersion
         End Select
     End Function
 
+End Module
+
+Module ModDownloader
+    Function ParseTitleList(FileList As ObjectModel.ReadOnlyCollection(Of String), TitleList As String) As ArrayList
+        Dim TitleListXML As New XmlDocument, ReturnList As New ArrayList
+        TitleListXML.LoadXml(TitleList)
+        Dim TitleNodeList As XmlNodeList = TitleListXML.SelectNodes("/games/game")
+        For Each TitleNode As XmlNode In TitleNodeList
+            For Each TitleIDFolder In FileList
+                If IO.Path.GetFileName(TitleIDFolder) = TitleNode.LastChild.InnerText Then
+                    ReturnList.Add(TitleNode.FirstChild.InnerText)
+                End If
+            Next
+        Next
+        Return ReturnList
+    End Function
+
+    Function GetModList(GameName As String, GameModListCache As String) As ArrayList
+        Dim GameModList As String() = Split(Split(GameModListCache,
+                                      vbLf & vbLf & "---" & vbLf & vbLf)(1).Replace("# " & vbLf, "#" & vbLf).Replace("#" & vbLf & "#", "#"),
+                                      vbLf & "#" & vbLf)
+        Dim ReturnList As New ArrayList
+        Dim TempDictionary As Dictionary(Of String, String)
+        Dim ModList As String()
+        For Each GameMod As String In GameModList
+            ModList = GameMod.Trim(vbLf).Split(vbLf)
+            If ModList(0) = "### " & GameName Then
+                For i As Integer = 3 To UBound(ModList)
+                    TempDictionary = New Dictionary(Of String, String)
+                    TempDictionary.Add("Name", New Regex("\[.*?\]").Match(Split(ModList(i), "| ")(1)).ToString.Replace("[", "").Replace("]", ""))
+                    TempDictionary.Add("Url", New Regex("\(.*?\)").Match(Split(ModList(i), "| ")(1)).ToString.Replace("(", "").Replace(")", ""))
+                    TempDictionary.Add("Desc", Split(ModList(i), "| ")(2).Trim())
+                    TempDictionary.Add("Version", Split(ModList(i), "| ")(3).Trim().Replace("`", ""))
+                    TempDictionary.Add("Author", Split(ModList(i), "| ")(4).Trim())
+                    ReturnList.Add(TempDictionary)
+                Next
+                Return ReturnList
+            End If
+        Next
+    End Function
 End Module
